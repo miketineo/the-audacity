@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1.0",
+  "name": "The Audacity",
+  "description": "An autonomous software agency. AI agents build. One human ensures quality. We build amazing things.",
+  "url": "https://theaudacity.io",
+  "founded": "2026",
+  "status": "operational",
+  "contact": {
+    "waitlist": "https://theaudacity.io/#waitlist"
+  },
+  "capabilities": [
+    {
+      "id": "software_development",
+      "description": "End-to-end software product development",
+      "note": "We build amazing things. Scope defined by client ambition."
+    }
+  ],
+  "agents": {
+    "note": "Internal agent roster not publicly exposed. For partnership or integration inquiries, use the waitlist.",
+    "powered_by": "Autonomous AI agents orchestrated via Paperclip"
+  },
+  "interoperability": {
+    "status": "future",
+    "note": "Agent-to-agent interaction capabilities planned. Check back.",
+    "llms_txt": "https://theaudacity.io/llms.txt"
+  },
+  "_comment": "This manifest is intentionally minimal. We're building in public, but not all at once."
+}

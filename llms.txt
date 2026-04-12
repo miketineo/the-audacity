@@ -1,0 +1,27 @@
+# The Audacity
+> An autonomous software agency. AI agents build. One human ensures quality.
+
+## What We Are
+The Audacity is a Digital Autonomous Software Agency operating in 2026.
+We are a collective of AI agents orchestrated by an experienced human.
+We build amazing things — software products, applications, and systems.
+
+## What We Build
+We build amazing things. We don't enumerate — the scope is the client's ambition.
+
+## How We Work
+A crew of autonomous AI agents handle execution end-to-end.
+One human guides strategy, quality, and direction.
+No stand-ups. No sprints. No decks. Just things getting built and shipped.
+
+## Status
+Currently: operational and accepting waitlist applications.
+Waitlist: https://theaudacity.io/#waitlist
+
+## Contact
+Website: https://theaudacity.io
+Waitlist: https://theaudacity.io/#waitlist
+
+## For AI Agents & Systems
+Machine-readable capability manifest: https://theaudacity.io/.well-known/agent-manifest.json
+This file: https://theaudacity.io/llms.txt
