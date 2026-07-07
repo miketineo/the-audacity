@@ -2,54 +2,50 @@
 /**
  * BookingEmbed.astro: the single, swap-ready booking surface.
  *
- * Today this embeds a Google Calendar Appointment Scheduling page via iframe.
- * Google's embed gives no booking-complete callback, so we only fire
- * `book_call_started` (when the embed first enters the viewport). The
- * `book_call_completed` event is reconciled server-side from the created
- * Calendar event (see spec section 7.4), not captured here.
+ * Provider: Cal.com inline embed (switched from the Google Calendar iframe on
+ * 2026-07-07: Google's page could not be themed and clashed with dark mode).
  *
- * To SWAP to Cal.com later: replace BOOKING_URL and the iframe block below.
- * Nothing else on the contact page touches booking, so the page is untouched
- * by the swap, and Cal.com would restore a real completion callback.
+ * What this gives us over the old iframe:
+ *   - theme sync: the embed follows the site's light/dark toggle live
+ *     (MutationObserver on <html data-theme>), monochrome brand color per theme
+ *   - real completion tracking: Cal's `bookingSuccessful` event fires
+ *     `book_call_completed` (the Google iframe had no callback at all)
+ *   - brand identity: the page shows The Audacity, not a personal calendar
  *
- * Configured 2026-07-07: "Diagnostic call · The Audacity" schedule
- * (share link https://calendar.app.google/LQRwB31wXTeL5pQq8, resolved to the
- * canonical schedules URL; ?gv=true is the iframe-embeddable variant).
+ * `book_call_started` still fires once when the booking surface first enters
+ * the viewport. Availability is backed by Google Calendar via Cal.com.
+ *
+ * Configured 2026-07-07: event type "Diagnostic call" (id 6241493) created via
+ * the Cal.com v2 API on account the-audacity-io (Google Calendar connected,
+ * Meet links, 25 min, day cap 3, qualifier question). API key in Vault at
+ * secret/projects/theaudacity/cal.
  */
-const BOOKING_URL =
-  'https://calendar.google.com/calendar/appointments/schedules/AcZssZ054QmZmn4KITgFfJlTWKLeijQapZrYJt3Nqj20DnMYC3sCq1QLmmN3KTyeTB5vPNiKj_woN2Zi?gv=true';
-const PROVIDER = 'google-calendar';
+const CAL_LINK = 'the-audacity-io/diagnostic-call';
+const CAL_NAMESPACE = 'diagnostic-call';
+const PROVIDER = 'cal.com';
 
 export interface Props {
-  /** Accessible iframe title. */
+  /** Accessible region title. */
   title?: string;
-  /** Fallback contact address shown until the URL is configured. */
+  /** Fallback contact address shown until the link is configured. */
   email?: string;
 }
 const { title = 'Book a diagnostic call', email = 'obviously@theaudacity.io' } = Astro.props;
 
-// Until the real URL is pasted, render a graceful fallback instead of a broken
-// iframe so the page is correct in every environment (incl. QA + local).
-const configured = !BOOKING_URL.includes('REPLACE_WITH_SCHEDULE_ID');
+// Until the real link is pasted, render a graceful fallback instead of a broken
+// embed so the page is correct in every environment (incl. QA + local).
+const configured = !CAL_LINK.includes('REPLACE_WITH_CAL_LINK');
 ---
 <div
   class="booking"
   data-booking
   data-provider={PROVIDER}
   data-configured={String(configured)}
+  data-cal-link={configured ? CAL_LINK : undefined}
+  data-cal-namespace={CAL_NAMESPACE}
 >
   {configured ? (
-    <div class="booking__frame">
-      <iframe
-        src={BOOKING_URL}
-        title={title}
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        style="border:0"
-        width="100%"
-        height="100%"
-      ></iframe>
-    </div>
+    <div class="booking__frame" id="cal-inline" aria-label={title}></div>
   ) : (
     <div class="booking__fallback" role="note">
       <p class="booking__fallback-title">We book calls by email right now.</p>
@@ -67,17 +63,84 @@ const configured = !BOOKING_URL.includes('REPLACE_WITH_SCHEDULE_ID');
 </div>
 
 <script>
-  // Fire `book_call_started` once, when the booking surface first becomes
-  // visible. Routed through the shared tracker if present, else a DOM event the
-  // analytics agent can listen for. Never throws, never blocks render.
+  // Cal.com inline embed with live theme sync + event tracking. Loads the
+  // third-party script only when the booking surface exists AND is configured
+  // (functional embed, same class as the previous Google iframe). Never
+  // throws, never blocks render; the email fallback below stays reachable.
   (function () {
     const el = document.querySelector('[data-booking]');
     if (!el || el.getAttribute('data-configured') !== 'true') return;
-    const fire = () => {
-      const detail = { event: 'book_call_started', props: { provider: el.getAttribute('data-provider') } };
+
+    const calLink = el.getAttribute('data-cal-link');
+    const ns = el.getAttribute('data-cal-namespace') || 'booking';
+    if (!calLink) return;
+
+    const track = (event: string, props?: Record<string, unknown>) => {
+      const detail = { event, props: Object.assign({ provider: el.getAttribute('data-provider') }, props) };
       try { (window as any).audacityTrack?.(detail.event, detail.props); } catch (e) {}
       window.dispatchEvent(new CustomEvent('audacity:track', { detail }));
     };
+
+    // Current site theme ('light' | 'dark'), resolved by the no-flash script.
+    const siteTheme = () =>
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    // Monochrome brand: ink on light, near-white on dark (mirrors --accent).
+    const brand = () => (siteTheme() === 'dark' ? '#ececec' : '#0e0e10');
+
+    // ---- Official Cal.com loader snippet (namespaced) ----
+    /* eslint-disable */
+    (function (C: any, A: string, L: string) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal; let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {}; cal.q = cal.q || [];
+          d.head.appendChild(d.createElement('script')).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api: any = function () { p(api, arguments); };
+          const namespace = ar[1]; api.q = api.q || [];
+          if (typeof namespace === 'string') {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window as any, 'https://app.cal.com/embed/embed.js', 'init');
+    /* eslint-enable */
+
+    const Cal = (window as any).Cal;
+    Cal('init', ns, { origin: 'https://cal.com' });
+    Cal.ns[ns]('inline', {
+      elementOrSelector: '#cal-inline',
+      calLink,
+      config: { layout: 'month_view', theme: siteTheme() },
+    });
+    Cal.ns[ns]('ui', {
+      theme: siteTheme(),
+      styles: { branding: { brandColor: brand() } },
+      hideEventTypeDetails: false,
+    });
+
+    // Completion tracking: Cal emits bookingSuccessful from inside the embed.
+    Cal.ns[ns]('on', {
+      action: 'bookingSuccessful',
+      callback: () => track('book_call_completed'),
+    });
+
+    // Live theme sync: follow the site's toggle (ThemeToggle sets <html data-theme>).
+    new MutationObserver(() => {
+      try {
+        Cal.ns[ns]('ui', { theme: siteTheme(), styles: { branding: { brandColor: brand() } } });
+      } catch (e) {}
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    // book_call_started once, when the booking surface first becomes visible.
+    const fire = () => track('book_call_started');
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -95,14 +158,13 @@ const configured = !BOOKING_URL.includes('REPLACE_WITH_SCHEDULE_ID');
   .booking { display: grid; gap: var(--space-sm); }
   .booking__frame {
     width: 100%;
-    height: clamp(560px, 78vh, 760px);
+    min-height: clamp(560px, 78vh, 760px);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: var(--surface);
     box-shadow: var(--shadow);
   }
-  .booking__frame iframe { display: block; width: 100%; height: 100%; }
 
   .booking__fallback {
     border: 1px dashed var(--border-strong);
