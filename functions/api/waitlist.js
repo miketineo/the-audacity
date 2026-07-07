@@ -1,4 +1,5 @@
 import { sendEmail } from '../_lib/resend.js';
+import { notifySlack } from '../_lib/slack.js';
 import { welcomeSubject, welcomeHtml, welcomeText } from '../_lib/emails/welcome.js';
 
 export async function onRequestPost(context) {
@@ -53,7 +54,15 @@ export async function onRequestPost(context) {
       console.error('welcome_email_failed', email, err?.message || err);
     });
 
-    context.waitUntil(welcomeSend);
+    // Slack ping so a signup is never silent (API contract unchanged).
+    const slackPing = notifySlack({
+      webhookUrl: env.SLACK_WEBHOOK_URL,
+      text: `:tada: *New waitlist signup*\n${email}${project ? `\nProject: ${project}` : ''}`,
+    }).catch((err) => {
+      console.error('waitlist_slack_failed', email, err?.message || err);
+    });
+
+    context.waitUntil(Promise.all([welcomeSend, slackPing]));
   }
 
   return new Response(JSON.stringify({ ok: true }), {

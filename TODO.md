@@ -33,11 +33,13 @@ A serious AI software house generating **revenue within 90 days**, proven by two
 
 ## Pending — post-release
 
-- [ ] Booking URL: paste the Google Calendar appointment-schedule link into `v2/src/components/BookingEmbed.astro` (Book-a-call currently uses the email fallback)
-- [ ] P.IVA in the footer imprint (art. 35 DPR 633/72) — needs Miguel's number + decision on legal-holder name on the imprint page
-- [ ] Commit the whole v2 body of work (still uncommitted in the working tree)
+- [x] Booking live: Cal.com (`the-audacity-io/diagnostic-call`), theme-synced embed, book_call_completed wired (2026-07-07)
+- [x] P.IVA in the footer imprint (IT04098710926, 2026-07-07)
+- [x] All work committed + pushed to main (public repo; internal strategy docs gitignored), tag v2.0.0
 - [ ] Start the outreach motion using `docs/gtm/` (target list, templates, follow-up, pipeline)
-- [ ] PostHog: decide multiproject setup (A: paid per-product projects / B: free single project + `product` property)
+- [x] PostHog: option B live (`product` super property on theaudacity.io)
+- [ ] RESEND: the ONE open production item — no account/key/domain verification exists, so inquiry/waitlist emails do not send (leads are safe in KV + Slack pings live). Miguel: resend.com -> add domain theaudacity.io -> paste DNS records + API key
+- [ ] Instrument Washiiba / Bloop / miketineo.com with the shared PostHog key + their `product` values (when convenient)
 - [x] Run the v2 build via ultracode
 - [x] Pick a logo direction (C "bracketed period", monochrome)
 - [x] Review v2 at `theaudacity.io/v2`

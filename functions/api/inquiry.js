@@ -1,4 +1,5 @@
 import { sendEmail } from '../_lib/resend.js';
+import { notifySlack } from '../_lib/slack.js';
 import { inquirySubject, inquiryHtml, inquiryText } from '../_lib/emails/inquiry.js';
 
 const CORS_ORIGIN = 'https://theaudacity.io';
@@ -141,7 +142,15 @@ ${fields
     console.error('inquiry_autoreply_failed', data.email, err?.message || err);
   });
 
-  context.waitUntil(Promise.all([notify, autoReply]));
+  // Slack ping so a lead is never silent, even while email is unprovisioned.
+  const slack = notifySlack({
+    webhookUrl: env.SLACK_WEBHOOK_URL,
+    text: `:incoming_envelope: *New project inquiry*\n${notifyText}`,
+  }).catch((err) => {
+    console.error('inquiry_slack_failed', data.email, err?.message || err);
+  });
+
+  context.waitUntil(Promise.all([notify, autoReply, slack]));
 
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
