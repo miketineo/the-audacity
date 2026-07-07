@@ -1,0 +1,624 @@
+---
+/**
+ * Work (/v2/work/)
+ * Bloop + Washiiba as capability proof. Each block leads with the product,
+ * then a "What it demonstrates" line that sells the studio's claim.
+ *
+ * Honest framing (spec §3):
+ *   - Bloop:    own product, in active MVP / launch. Emphasis on the live
+ *               conversational concierge.
+ *   - Washiiba: build-capability proof ONLY. No commercial state, roadmap,
+ *               or exit/monetization intent appears here. It is a receipt.
+ *
+ * Consumes: Base.astro, Logo, Button, content/proof.json, content/pages.json,
+ * content/site.json. Screenshots live in public/work/<id>/ (served at
+ * <base>work/<id>/...). Dimensions are set on every <img> to kill CLS.
+ */
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import Button from '../../components/Button.astro';
+import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+import SoftwareApplicationLD from '../../components/jsonld/SoftwareApplication.astro';
+import CreativeWorkLD from '../../components/jsonld/CreativeWork.astro';
+import proof from '../../content/proof.json';
+import pages from '../../content/pages.json';
+
+const base = import.meta.env.BASE_URL;          // '/v2/'
+const { work } = pages;
+
+// Per-project screenshot galleries. Real screenshots, copied into public/work/.
+// `w`/`h` are intrinsic pixel dimensions (for CLS); the CSS sizes them down.
+// shots[0] is the single thumbnail shown by default; the click-to-expand
+// lightbox reveals the full set (including shots[0]) in source order.
+const galleries: Record<string, {
+  shots: { src: string; w: number; h: number; alt: string; frame: 'phone' | 'web' }[];
+}> = {
+  bloop: {
+    shots: [
+      { src: 'work/bloop/concierge.png', w: 1206, h: 2622, frame: 'phone',
+        alt: 'Bloop answering a plain-language question with a grounded reply over a live catalogue of what is on in the city.' },
+      { src: 'work/bloop/feed.png', w: 1206, h: 2622, frame: 'phone',
+        alt: "Bloop's mobile feed of live events across the city." },
+      { src: 'work/bloop/admin.png', w: 1514, h: 985, frame: 'web',
+        alt: "Bloop's web admin surface for curating the live events catalogue." },
+    ],
+  },
+  washiiba: {
+    shots: [
+      { src: 'work/washiiba/03-order.png', w: 1284, h: 2778, frame: 'phone',
+        alt: 'A Washiiba order on mobile with a live status tracker, service line items, pickup window and total.' },
+      { src: 'work/washiiba/02-home.png', w: 1284, h: 2778, frame: 'phone',
+        alt: 'The Washiiba home screen on mobile with services to book and a list of active orders.' },
+      { src: 'work/washiiba/01-signin.png', w: 1284, h: 2778, frame: 'phone',
+        alt: 'Signing in to Washiiba on mobile.' },
+    ],
+  },
+};
+
+const ordered = proof.items; // [bloop, washiiba]
+
+// Structured data lives in src/components/jsonld/ (one source of truth):
+//   Bloop    -> SoftwareApplication (a live app)
+//   Washiiba -> CreativeWork (capability receipt only: no offers/price/status)
+//   plus a BreadcrumbList. See the `jsonld` slot in the body below.
+---
+<Base
+  title={work.seo.title}
+  description={work.seo.description}
+  path="/work/"
+>
+  <Logo slot="logo" direction="c" />
+
+  <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Work', path: '/work/' }]} />
+  <SoftwareApplicationLD slot="jsonld" name="Bloop" description={proof.items[0].summary} />
+  <CreativeWorkLD slot="jsonld" name="Washiiba" description={proof.items[1].summary} />
+
+  {/* ---------- Hero ---------- */}
+  <header class="container hero" data-animate>
+    <p class="eyebrow">{work.hero.eyebrow}</p>
+    <h1 class="hero__title">{work.hero.headline}</h1>
+    <p class="hero__lede text-dim">{work.hero.lede}</p>
+  </header>
+
+  {/* ---------- Proof claim line ---------- */}
+  <section class="container claim" aria-label="What the work proves" data-animate>
+    <p class="claim__text">{proof.lede}</p>
+  </section>
+
+  {/* ---------- Projects ---------- */}
+  <div class="projects">
+    {ordered.map((item, i) => {
+      const g = galleries[item.id];
+      const n = String(i + 1).padStart(2, '0');
+      return (
+        <article class="project" id={item.id} data-flip={i % 2 === 1}>
+          <div class="container project__grid">
+            <div class="project__body" data-animate>
+              <p class="project__index" aria-hidden="true">{n}</p>
+              <div class="project__head">
+                <h2 class="project__name">{item.name}</h2>
+                <p class="project__kind eyebrow">{item.kind}</p>
+              </div>
+              <p class="project__one">{item.oneLiner}</p>
+              <p class="project__summary text-dim">{item.summary}</p>
+
+              <div class="proves">
+                <p class="proves__label eyebrow">What it demonstrates</p>
+                <p class="proves__text">{item.proves}</p>
+              </div>
+
+              <ul class="stack" role="list" aria-label={`${item.name} stack`}>
+                {item.stack.map((s) => <li class="chip">{s}</li>)}
+              </ul>
+
+              <ul class="tags" role="list" aria-label={`${item.name} highlights`}>
+                {item.tags.map((t) => <li class="tag">{t}</li>)}
+              </ul>
+            </div>
+
+            {(() => {
+              const thumb = g.shots[0];
+              const more = g.shots.length - 1;
+              const lbId = `lb-${item.id}`;
+              return (
+                <div class={`gallery gallery--${thumb.frame}`} data-animate>
+                  {/* Single thumbnail. No-JS: the anchor resolves to the full image.
+                      JS: enhanced into a real dialog trigger (see script). */}
+                  <a
+                    class={`thumb frame frame--${thumb.frame}`}
+                    href={`${base}${thumb.src}`}
+                    data-lightbox-open={lbId}
+                    aria-label={`${item.name}: view all ${g.shots.length} screens`}
+                  >
+                    {thumb.frame === 'web' && (
+                      <span class="frame__chrome" aria-hidden="true">
+                        <span class="frame__dot" /><span class="frame__dot" /><span class="frame__dot" />
+                      </span>
+                    )}
+                    <figure class="shot">
+                      <img
+                        src={`${base}${thumb.src}`}
+                        width={thumb.w}
+                        height={thumb.h}
+                        alt={thumb.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                    <span class="thumb__hint" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                      </svg>
+                      <span>{`+${more} more`}</span>
+                    </span>
+                  </a>
+
+                  {/* No-JS fallback: plain links to every screenshot. */}
+                  <noscript>
+                    <ul class="gallery__fallback" role="list">
+                      {g.shots.map((s) => (
+                        <li><a href={`${base}${s.src}`}>{s.alt}</a></li>
+                      ))}
+                    </ul>
+                  </noscript>
+
+                  {/* Lightbox. Native <dialog> gives focus trap + Escape close. */}
+                  <dialog class="lightbox" id={lbId} aria-label={`${item.name} screenshots`}>
+                    <div class="lightbox__panel">
+                      <div class="lightbox__bar">
+                        <p class="lightbox__title">{item.name}</p>
+                        <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close screenshots">
+                          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                            <path d="M6 6l12 12M18 6L6 18" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="lightbox__grid">
+                        {g.shots.map((s) => (
+                          <figure class={`shot frame frame--${s.frame}`}>
+                            {s.frame === 'web' && (
+                              <span class="frame__chrome" aria-hidden="true">
+                                <span class="frame__dot" /><span class="frame__dot" /><span class="frame__dot" />
+                              </span>
+                            )}
+                            <img
+                              src={`${base}${s.src}`}
+                              width={s.w}
+                              height={s.h}
+                              alt={s.alt}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                            <figcaption>{s.alt}</figcaption>
+                          </figure>
+                        ))}
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
+              );
+            })()}
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  {/* ---------- CTA band ---------- */}
+  <section class="container cta" data-animate>
+    <div class="cta__inner">
+      <h2 class="cta__title">{work.cta.title}</h2>
+      <p class="cta__body text-dim">{work.cta.body}</p>
+      <Button
+        href={`${base}${work.cta.button.href}`}
+        variant="primary"
+        size="lg"
+        data-cta="work-book-call"
+      >{work.cta.button.label}</Button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ===== Hero ===== */
+  .hero {
+    padding-block: var(--space-2xl) var(--space-lg);
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+  .hero__title {
+    font-size: var(--text-2xl);
+    max-width: 16ch;
+  }
+  .hero__lede {
+    font-size: var(--text-md);
+    max-width: 52ch;
+  }
+
+  /* ===== Proof claim ===== */
+  .claim {
+    padding-block: var(--space-sm) var(--space-xl);
+  }
+  .claim__text {
+    font-size: var(--text-lg);
+    max-width: 30ch;
+    line-height: var(--leading-snug);
+    border-left: 3px solid var(--accent);
+    padding-left: var(--space-md);
+  }
+
+  /* ===== Projects ===== */
+  .projects {
+    display: grid;
+  }
+  .project {
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--border);
+  }
+  .project__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(var(--space-lg), 4vw, var(--space-2xl));
+    align-items: center;
+  }
+  /* alternate the image to the other side on every second project */
+  .project[data-flip='true'] .project__grid { direction: rtl; }
+  .project[data-flip='true'] .project__grid > * { direction: ltr; }
+
+  .project__body {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+  .project__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-dim);
+    letter-spacing: var(--tracking-label);
+  }
+  .project__head { display: grid; gap: var(--space-3xs); }
+  .project__name { font-size: var(--text-xl); }
+  .project__kind { color: var(--text-dim); }
+  .project__one {
+    font-size: var(--text-md);
+    font-weight: 500;
+    max-width: 30ch;
+  }
+  .project__summary {
+    font-size: var(--text-base);
+    max-width: 46ch;
+  }
+
+  .proves {
+    margin-top: var(--space-2xs);
+    padding: var(--space-md);
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    display: grid;
+    gap: var(--space-2xs);
+    max-width: 48ch;
+  }
+  .proves__label { color: var(--text); }
+  .proves__label::before {
+    content: '';
+    display: inline-block;
+    width: 0.6em; height: 0.6em;
+    margin-right: 0.55em;
+    background: var(--accent);
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+  .proves__text {
+    font-size: var(--text-base);
+    font-weight: 500;
+    max-width: none;
+  }
+
+  .stack, .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    padding: 0;
+  }
+  .stack { margin-top: var(--space-2xs); }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    padding: 0.35em 0.7em;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+  }
+  .tag {
+    font-size: var(--text-xs);
+    color: var(--text-dim);
+  }
+  .tag:not(:last-child)::after {
+    content: '·';
+    margin-left: var(--space-2xs);
+    color: var(--border-strong);
+  }
+
+  /* ===== Gallery (single thumbnail, click to expand) ===== */
+  .gallery {
+    display: grid;
+    justify-items: center;
+  }
+  .shot { margin: 0; }
+  .shot img { width: 100%; height: auto; display: block; }
+
+  /* --- Device frames (shared by thumbnail + lightbox shots) --- */
+  .frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .frame--phone {
+    border-radius: var(--radius-lg);
+    padding: 6px;
+  }
+  .frame--phone .shot {
+    border-radius: calc(var(--radius-lg) - 5px);
+    overflow: hidden;
+  }
+  .frame--web { border-radius: var(--radius-md); }
+  .frame__chrome {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    height: 28px;
+    padding-inline: var(--space-2xs);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .frame__dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+
+  /* --- Thumbnail (the only thing shown by default) --- */
+  .thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .gallery--web .thumb { max-width: 100%; }
+  .thumb:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .thumb {
+      transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    .thumb:hover { transform: translateY(-3px); }
+  }
+  .thumb__hint {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.4em 0.7em;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+  }
+
+  /* No-JS fallback links */
+  .gallery__fallback {
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3xs);
+  }
+  .gallery__fallback a {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-dim);
+  }
+
+  /* ===== Lightbox ===== */
+  .lightbox {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: clamp(var(--space-sm), 4vw, var(--space-xl));
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    overflow: hidden;
+  }
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+  }
+  .lightbox::backdrop {
+    background: rgba(11, 11, 12, 0.62);
+  }
+  .lightbox__panel {
+    width: min(960px, 100%);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .lightbox__bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border);
+  }
+  .lightbox__title {
+    font-size: var(--text-md);
+    font-weight: 600;
+  }
+  .lightbox__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .lightbox__close:hover { background: var(--surface-2); }
+  .lightbox__close:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .lightbox__grid {
+    flex: 1 1 auto;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+  .lightbox__grid .shot {
+    justify-self: center;
+    width: 100%;
+  }
+  .lightbox__grid .frame--phone { max-width: 280px; }
+  .lightbox__grid figcaption {
+    margin-top: var(--space-2xs);
+    font-size: var(--text-xs);
+    color: var(--text-dim);
+    text-align: center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .lightbox[open] .lightbox__panel {
+      animation: lb-in var(--dur) var(--ease);
+    }
+    @keyframes lb-in {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to   { opacity: 1; transform: none; }
+    }
+  }
+
+  /* ===== CTA ===== */
+  .cta {
+    padding-block: var(--space-2xl) var(--space-3xl);
+    border-top: 1px solid var(--border);
+  }
+  .cta__inner {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+    max-width: 52ch;
+  }
+  .cta__title { font-size: var(--text-xl); }
+  .cta__body { font-size: var(--text-md); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 860px) {
+    .project__grid { grid-template-columns: 1fr; gap: var(--space-lg); }
+    /* never flip on mobile: text always above image, source order wins */
+    .project[data-flip='true'] .project__grid { direction: ltr; }
+    .gallery { order: 2; justify-items: start; }
+    .gallery--phone .thumb { max-width: 260px; }
+  }
+
+  /* ===== Purposeful motion (reveal on scroll) ===== */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-animate].is-ready {
+      opacity: 0;
+      transform: translateY(14px);
+      transition:
+        opacity var(--dur) var(--ease),
+        transform var(--dur) var(--ease);
+    }
+    [data-animate].is-ready.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Reveal-on-scroll. Only arms when motion is allowed AND JS runs, so no-JS
+  // and reduced-motion users always see fully-rendered content (no FOUC trap).
+  const motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const nodes = document.querySelectorAll('[data-animate]');
+  if (motionOK && 'IntersectionObserver' in window) {
+    nodes.forEach((n) => n.classList.add('is-ready'));
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            obs.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+    );
+    nodes.forEach((n) => io.observe(n));
+  }
+
+  // Click-to-expand lightbox. Progressive enhancement: each thumbnail ships as
+  // a plain <a> that resolves to the full image. If native <dialog> is
+  // available we upgrade it into a real dialog trigger (button semantics,
+  // focus management, Escape + backdrop close). No-JS users keep the anchor and
+  // the <noscript> link list.
+  document.querySelectorAll('[data-lightbox-open]').forEach((el) => {
+    const id = el.getAttribute('data-lightbox-open');
+    const dialog = id ? document.getElementById(id) : null;
+    if (!dialog || typeof dialog.showModal !== 'function') return; // keep anchor fallback
+
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-haspopup', 'dialog');
+    el.setAttribute('aria-controls', id);
+
+    let lastFocus = null;
+    const open = (e) => {
+      e.preventDefault();
+      lastFocus = document.activeElement;
+      dialog.showModal();
+      const closeBtn = dialog.querySelector('[data-lightbox-close]');
+      if (closeBtn) closeBtn.focus();
+    };
+
+    el.addEventListener('click', open);
+    // Anchors fire click on Enter natively; add Space for button parity.
+    el.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Spacebar') open(e);
+    });
+
+    dialog.querySelectorAll('[data-lightbox-close]').forEach((b) =>
+      b.addEventListener('click', () => dialog.close())
+    );
+    // Backdrop click: the dialog fills the viewport, the panel is a child, so a
+    // click whose target is the dialog itself is outside the panel.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    // Fires on close button, Escape, and backdrop. Restore focus to trigger.
+    dialog.addEventListener('close', () => {
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    });
+  });
+</script>

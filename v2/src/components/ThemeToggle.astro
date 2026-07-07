@@ -1,0 +1,115 @@
+---
+/**
+ * ThemeToggle.astro — light / dark / system, default light.
+ *
+ * Single cycling button: light -> dark -> system -> light. Persists the
+ * PREFERENCE to localStorage 'audacity-theme'; the resolved value lives on
+ * <html data-theme>. Keeps in sync with the OS when preference is 'system'.
+ * Keyboard accessible (native <button>), aria-label announces current mode,
+ * an aria-live region announces changes. No props.
+ */
+---
+<button
+  class="theme-toggle"
+  type="button"
+  aria-label="Theme: light. Activate to switch theme."
+  title="Switch theme"
+>
+  {/* three glyphs; CSS shows the active one per [data-theme-pref] */}
+  <svg class="ico ico--light" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <circle cx="12" cy="12" r="4.2" />
+    <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19" />
+  </svg>
+  <svg class="ico ico--dark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z" />
+  </svg>
+  <svg class="ico ico--system" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4.5" width="18" height="12" rx="1.6" />
+    <path d="M8.5 20h7M12 16.5V20" />
+  </svg>
+  <span class="theme-toggle__text" aria-hidden="true">Light</span>
+</button>
+<span class="visually-hidden" role="status" aria-live="polite" id="theme-live"></span>
+
+<script>
+  (function () {
+    const KEY = 'audacity-theme';
+    const order = ['light', 'dark', 'system'];
+    const label = { light: 'Light', dark: 'Dark', system: 'System' };
+
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    const txt = btn?.querySelector('.theme-toggle__text');
+    const live = document.getElementById('theme-live');
+    const mql = matchMedia('(prefers-color-scheme: dark)');
+    if (!btn) return;
+
+    const getPref = () => localStorage.getItem(KEY) || 'light';
+    const resolve = (p) => (p === 'system' ? (mql.matches ? 'dark' : 'light') : p);
+
+    function apply(pref, announce) {
+      const resolved = resolve(pref);
+      root.setAttribute('data-theme', resolved);
+      root.setAttribute('data-theme-pref', pref);
+      if (txt) txt.textContent = label[pref];
+      btn.setAttribute('aria-label', `Theme: ${label[pref].toLowerCase()}. Activate to switch theme.`);
+      if (announce && live) live.textContent = `Theme set to ${label[pref].toLowerCase()}`;
+    }
+
+    apply(getPref(), false);
+
+    // Report theme changes through the shared tracker (defined by Analytics).
+    // Falls back to the 'audacity:track' DOM event if it is not yet present.
+    function report(event, props) {
+      try { if (window.audacityTrack) return window.audacityTrack(event, props); } catch (e) {}
+      window.dispatchEvent(new CustomEvent('audacity:track', { detail: { event, props } }));
+    }
+
+    btn.addEventListener('click', () => {
+      const next = order[(order.indexOf(getPref()) + 1) % order.length];
+      localStorage.setItem(KEY, next);
+      apply(next, true);
+      report('theme_toggled', { pref: next });
+    });
+
+    // Follow OS only while preference is 'system'.
+    mql.addEventListener('change', () => {
+      if (getPref() === 'system') apply('system', false);
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    height: 2.25rem;
+    padding-inline: 0.7rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .theme-toggle:hover { border-color: var(--text); }
+
+  .theme-toggle__text {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+  }
+
+  /* show only the glyph matching the current preference */
+  .ico { display: none; }
+  :root[data-theme-pref='light']  .ico--light,
+  :root[data-theme-pref='dark']   .ico--dark,
+  :root[data-theme-pref='system'] .ico--system { display: block; }
+  /* fallback before pref attr is set: show light glyph */
+  :root:not([data-theme-pref]) .ico--light { display: block; }
+
+  @media (max-width: 30rem) {
+    .theme-toggle__text { display: none; }
+    .theme-toggle { padding-inline: 0.55rem; }
+  }
+</style>

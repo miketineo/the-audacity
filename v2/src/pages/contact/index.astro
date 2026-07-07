@@ -1,0 +1,626 @@
+---
+/**
+ * /v2/contact/ : the conversion page. Three surfaces, one job each.
+ *   1. Send a project brief    -> inquiry form, POST /api/inquiry (+ UTM,
+ *      + optional ?interest= intent carried in a hidden field).
+ *   2. Book a diagnostic call  -> BookingEmbed (swap-ready, see component).
+ *   3. Join the waitlist       -> waitlist form, POST /api/waitlist (contract
+ *      preserved: { email, project }).
+ * The brief leads: it never dead-ends, while booking depends on a configured
+ * scheduler. A "what happens next" strip renders when content provides it.
+ *
+ * All copy comes from src/content/{pages,site}.json. Forms are progressively
+ * enhanced: server-validating endpoints back them up, but the client adds
+ * inline validation, aria-live status, disabled-on-submit, success/error
+ * states and a honeypot. No blocking dialogs.
+ */
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import Button from '../../components/Button.astro';
+import BookingEmbed from '../../components/BookingEmbed.astro';
+import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+import site from '../../content/site.json';
+import pages from '../../content/pages.json';
+
+const base = import.meta.env.BASE_URL;
+const c = pages.contact;
+const s = c.surfaces;
+
+// "What happens next" strip: owned by content (pages.json contact.nextSteps).
+// Rendered only when the block exists, so the page stays correct either way.
+const nextSteps = (c as { nextSteps?: { eyebrow?: string; steps?: string[] } }).nextSteps;
+const hasNextSteps = Boolean(nextSteps?.steps?.length);
+
+// Select options kept aligned with the confirmed Studio Sprint price bands,
+// expressed in the "X to Y" form (no em-dash phrase separators per house rules).
+const budgetOptions = [
+  'Under €6k',
+  '€6k to €15k',
+  '€15k to €30k',
+  '€30k or more',
+  'Retainer, from €4k a month',
+  'Not sure yet',
+];
+const timelineOptions = [
+  'As soon as possible',
+  '1 to 3 months',
+  '3 to 6 months',
+  'Just exploring',
+];
+
+const orgUrl = site.url;
+const pageUrl = new URL(`${base}contact/`, orgUrl + '/').href;
+// ContactPage stays inline (not part of the shared jsonld helper set); the
+// breadcrumb uses the shared BreadcrumbList helper.
+const contactLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': pageUrl,
+  url: pageUrl,
+  name: c.seo.title,
+  description: c.seo.description,
+  isPartOf: { '@type': 'Organization', name: site.brand, url: orgUrl },
+};
+---
+<Base title={c.seo.title} description={c.seo.description} path="/contact/">
+  <Logo slot="logo" direction="c" />
+  <script type="application/ld+json" slot="jsonld" set:html={JSON.stringify(contactLd)} />
+  <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact/' }]} />
+
+  {/* ---------------------------------------------------------------- Hero */}
+  <section class="container hero">
+    <p class="eyebrow">{c.hero.eyebrow}</p>
+    <h1>{c.hero.headline}</h1>
+    <p class="hero__lede text-dim">{c.hero.lede}</p>
+    <nav class="hero__jump" aria-label="On this page">
+      <a href="#brief">Send a brief</a>
+      <a href="#book">Book a call</a>
+      <a href="#waitlist">Join the waitlist</a>
+    </nav>
+  </section>
+
+  {/* --------------------------------------------- What happens next strip */}
+  {hasNextSteps && (
+    <section class="container next" aria-label={nextSteps.eyebrow || 'What happens next'}>
+      <p class="eyebrow">{nextSteps.eyebrow || 'What happens next'}</p>
+      <ol class="next__steps" role="list">
+        {nextSteps.steps.map((step, i) => (
+          <li class="next__step">
+            <span class="next__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <p class="next__body">{step}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {/* ----------------------------------------------------------- 1. Brief */}
+  <section id="brief" class="container surface" aria-labelledby="brief-title">
+    <header class="surface__head">
+      <p class="surface__index eyebrow">01</p>
+      <div>
+        <h2 id="brief-title">{s.inquiry.title}</h2>
+        <p class="surface__body text-dim">{s.inquiry.body}</p>
+      </div>
+    </header>
+
+    <form
+      class="form"
+      id="inquiry-form"
+      novalidate
+      data-endpoint="/api/inquiry"
+      data-kind="inquiry"
+      aria-describedby="inquiry-status"
+    >
+      {/* honeypot: real people leave this empty; bots fill it */}
+      <div class="hp" aria-hidden="true">
+        <label for="inq-company-url">Company website</label>
+        <input id="inq-company-url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      {/* intent carried in from CTAs elsewhere (e.g. contact/?interest=audit);
+          populated from the URL by the script below so it survives into the payload */}
+      <input type="hidden" name="interest" id="inq-interest" />
+
+      <div class="form__grid">
+        <div class="field">
+          <label for="inq-name">{s.inquiry.fields.name} <span class="req" aria-hidden="true">*</span></label>
+          <input id="inq-name" name="name" type="text" required autocomplete="name"
+                 aria-describedby="inq-name-err" />
+          <p class="field__err" id="inq-name-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="inq-email">{s.inquiry.fields.email} <span class="req" aria-hidden="true">*</span></label>
+          <input id="inq-email" name="email" type="email" required autocomplete="email"
+                 inputmode="email" aria-describedby="inq-email-err" />
+          <p class="field__err" id="inq-email-err" hidden></p>
+        </div>
+
+        <div class="field field--full">
+          <label for="inq-company">{s.inquiry.fields.company}</label>
+          <input id="inq-company" name="company" type="text" autocomplete="organization" />
+        </div>
+
+        <div class="field field--full">
+          <label for="inq-idea">{s.inquiry.fields.project_idea} <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="inq-idea" name="project_idea" rows="4" required
+                    aria-describedby="inq-idea-err"></textarea>
+          <p class="field__err" id="inq-idea-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="inq-budget">{s.inquiry.fields.budget}</label>
+          <select id="inq-budget" name="budget">
+            <option value="">Select a range</option>
+            {budgetOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="inq-timeline">{s.inquiry.fields.timeline}</label>
+          <select id="inq-timeline" name="timeline">
+            <option value="">Select a timeline</option>
+            {timelineOptions.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="field field--full">
+          <label for="inq-message">{s.inquiry.fields.message}</label>
+          <textarea id="inq-message" name="message" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="form__footer">
+        <Button type="submit" variant="primary" size="md" class="form__submit">
+          {s.inquiry.submit}
+        </Button>
+        <p
+          class="form__status"
+          id="inquiry-status"
+          role="status"
+          aria-live="polite"
+          data-success={s.inquiry.success}
+          data-error={s.inquiry.error}
+        ></p>
+      </div>
+      <p class="form__note text-dim">
+        We only use this to reply to you. <a href={`${base}privacy/`}>Privacy policy</a>.
+      </p>
+    </form>
+  </section>
+
+  {/* ------------------------------------------------------------ 2. Book */}
+  <section id="book" class="container surface" aria-labelledby="book-title">
+    <header class="surface__head">
+      <p class="surface__index eyebrow">02</p>
+      <div>
+        <h2 id="book-title">{s.booking.title}</h2>
+        <p class="surface__body text-dim">{s.booking.body}</p>
+      </div>
+    </header>
+    <BookingEmbed title={s.booking.title} email={site.email} />
+  </section>
+
+  {/* -------------------------------------------------------- 3. Waitlist */}
+  <section id="waitlist" class="container surface surface--waitlist" aria-labelledby="waitlist-title">
+    <header class="surface__head">
+      <p class="surface__index eyebrow">03</p>
+      <div>
+        <h2 id="waitlist-title">{s.waitlist.title}</h2>
+        <p class="surface__body text-dim">{s.waitlist.body}</p>
+      </div>
+    </header>
+
+    <form
+      class="form form--inline"
+      id="waitlist-form"
+      novalidate
+      data-endpoint="/api/waitlist"
+      data-kind="waitlist"
+      aria-describedby="waitlist-status"
+    >
+      <div class="hp" aria-hidden="true">
+        <label for="wl-company-url">Company website</label>
+        <input id="wl-company-url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="form__inline-row">
+        <div class="field field--grow">
+          <label class="visually-hidden" for="wl-email">{s.inquiry.fields.email}</label>
+          <input id="wl-email" name="email" type="email" required autocomplete="email"
+                 inputmode="email" placeholder="you@example.com" aria-describedby="wl-email-err" />
+          <p class="field__err" id="wl-email-err" hidden></p>
+        </div>
+        <Button type="submit" variant="primary" size="md" class="form__submit">
+          {s.waitlist.submit}
+        </Button>
+      </div>
+      <p
+        class="form__status"
+        id="waitlist-status"
+        role="status"
+        aria-live="polite"
+        data-success={s.waitlist.success}
+        data-error={s.waitlist.error}
+      ></p>
+      <p class="form__note text-dim">
+        We only use this to reply to you. <a href={`${base}privacy/`}>Privacy policy</a>.
+      </p>
+    </form>
+  </section>
+
+  {/* ----- Shared, dependency-free form + attribution + tracking logic ----- */}
+  <script>
+    (function () {
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const ATTR_KEY = 'audacity-attribution';
+
+      // ---- Tracking shim: use the global tracker if the analytics agent has
+      // installed one, else emit a DOM event it (or anyone) can subscribe to.
+      function track(event, props) {
+        try { if (window.audacityTrack) return window.audacityTrack(event, props); } catch (e) {}
+        window.dispatchEvent(new CustomEvent('audacity:track', { detail: { event, props } }));
+      }
+
+      // ---- UTM / attribution capture (first-touch + last-touch), persisted.
+      function readParams() {
+        const p = new URLSearchParams(location.search);
+        const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid'];
+        const out = {};
+        keys.forEach((k) => { const v = p.get(k); if (v) out[k] = v; });
+        return out;
+      }
+      function collectAttribution() {
+        let store = {};
+        try { store = JSON.parse(localStorage.getItem(ATTR_KEY) || '{}'); } catch (e) {}
+        const now = readParams();
+        const hasNow = Object.keys(now).length > 0;
+        const touch = {
+          ...now,
+          referrer: document.referrer || '',
+          landing_page: location.pathname + location.search,
+          ts: new Date().toISOString(),
+        };
+        if (!store.first_touch) store.first_touch = touch;
+        if (hasNow || !store.last_touch) store.last_touch = touch;
+        try { localStorage.setItem(ATTR_KEY, JSON.stringify(store)); } catch (e) {}
+        return store;
+      }
+      // Persist on load so attribution survives even if the user never submits.
+      const attribution = collectAttribution();
+
+      // ---- Intent handoff: CTAs elsewhere link to contact/?interest=<x>
+      // (e.g. the audit CTA). Copy the param into the hidden field so it
+      // travels with the inquiry payload.
+      const interestEl = document.getElementById('inq-interest');
+      if (interestEl) {
+        const interest = new URLSearchParams(location.search).get('interest');
+        if (interest) interestEl.value = interest;
+      }
+
+      // ---- Field-level error helpers
+      function setError(input, msgEl, message) {
+        input.setAttribute('aria-invalid', 'true');
+        if (msgEl) { msgEl.textContent = message; msgEl.hidden = false; }
+      }
+      function clearError(input, msgEl) {
+        input.removeAttribute('aria-invalid');
+        if (msgEl) { msgEl.textContent = ''; msgEl.hidden = true; }
+      }
+      function errEl(form, input) {
+        const id = input.getAttribute('aria-describedby');
+        return id ? form.querySelector('#' + id) : null;
+      }
+
+      function validate(form) {
+        let ok = true;
+        let firstBad = null;
+        form.querySelectorAll('input, textarea, select').forEach((el) => {
+          if (el.name === 'company_url') return; // honeypot, never validated
+          const msgEl = errEl(form, el);
+          const value = (el.value || '').trim();
+          // required
+          if (el.hasAttribute('required') && !value) {
+            setError(el, msgEl, 'This field is required.');
+            ok = false; firstBad = firstBad || el; return;
+          }
+          // email shape
+          if (el.type === 'email' && value && !EMAIL_RE.test(value)) {
+            setError(el, msgEl, 'Enter a valid email address.');
+            ok = false; firstBad = firstBad || el; return;
+          }
+          clearError(el, msgEl);
+        });
+        if (firstBad) firstBad.focus();
+        return ok;
+      }
+
+      function payloadFor(form, kind, data) {
+        if (kind === 'waitlist') {
+          // Contract preserved exactly: waitlist endpoint reads { email, project }.
+          return { email: data.email, project: data.project || '' };
+        }
+        // inquiry: full brief + attribution
+        return {
+          name: data.name,
+          email: data.email,
+          company: data.company || '',
+          project_idea: data.project_idea || '',
+          budget: data.budget || '',
+          timeline: data.timeline || '',
+          message: data.message || '',
+          interest: data.interest || '',
+          utm: attribution,
+        };
+      }
+
+      function wire(form) {
+        if (!form) return;
+        const kind = form.getAttribute('data-kind');
+        const endpoint = form.getAttribute('data-endpoint');
+        const statusEl = form.querySelector('.form__status');
+        const submitBtn = form.querySelector('button[type="submit"], .form__submit');
+
+        // Clear a field's error as the user corrects it.
+        form.querySelectorAll('input, textarea, select').forEach((el) => {
+          el.addEventListener('input', () => clearError(el, errEl(form, el)));
+        });
+
+        function setStatus(kindClass, message) {
+          if (!statusEl) return;
+          statusEl.textContent = message;
+          statusEl.classList.remove('is-error', 'is-success');
+          if (kindClass) statusEl.classList.add(kindClass);
+        }
+        function busy(on) {
+          if (!submitBtn) return;
+          if (on) {
+            submitBtn.setAttribute('aria-disabled', 'true');
+            submitBtn.setAttribute('aria-busy', 'true');
+          } else {
+            submitBtn.removeAttribute('aria-disabled');
+            submitBtn.removeAttribute('aria-busy');
+          }
+        }
+        function succeed() {
+          form.classList.add('is-done');
+          setStatus('is-success', statusEl.getAttribute('data-success') || 'Done.');
+          // Remove fields from tab order once submitted successfully.
+          form.querySelectorAll('input, textarea, select, button').forEach((el) => {
+            if (el !== statusEl) el.setAttribute('disabled', '');
+          });
+        }
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (form.classList.contains('is-done')) return;
+
+          // Honeypot: silently pretend success, send nothing.
+          const hp = form.querySelector('input[name="company_url"]');
+          if (hp && hp.value.trim() !== '') { succeed(); return; }
+
+          if (!validate(form)) {
+            setStatus('is-error', 'Please fix the highlighted fields.');
+            return;
+          }
+
+          const data = {};
+          new FormData(form).forEach((v, k) => { data[k] = typeof v === 'string' ? v.trim() : v; });
+          const body = payloadFor(form, kind, data);
+
+          busy(true);
+          setStatus('', 'Sending…');
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            let ok = res.ok;
+            try { const j = await res.json(); if (j && typeof j.ok === 'boolean') ok = j.ok; } catch (e2) {}
+            if (!ok) throw new Error('bad_response');
+
+            track(kind === 'waitlist' ? 'waitlist_joined' : 'inquiry_submitted', {
+              source: location.pathname,
+            });
+            succeed();
+          } catch (err) {
+            busy(false);
+            setStatus('is-error', statusEl.getAttribute('data-error') || 'Something went wrong.');
+          }
+        });
+      }
+
+      wire(document.getElementById('inquiry-form'));
+      wire(document.getElementById('waitlist-form'));
+
+      // Expose the tracker name the analytics agent should define, for clarity.
+      // (No-op if it already exists; we never overwrite a real implementation.)
+      if (!window.audacityTrack) {
+        // left intentionally undefined so the agent can own it; track() falls
+        // back to the 'audacity:track' DOM event until then.
+      }
+    })();
+  </script>
+</Base>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    padding-block: var(--space-2xl) var(--space-lg);
+    display: grid;
+    gap: var(--space-md);
+    justify-items: start;
+  }
+  .hero h1 { font-size: var(--text-2xl); max-width: 18ch; }
+  .hero__lede { font-size: var(--text-md); max-width: 52ch; }
+  .hero__jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-md);
+    margin-top: var(--space-2xs);
+  }
+  .hero__jump a {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration-color: var(--border-strong);
+  }
+  .hero__jump a:hover { color: var(--text); text-decoration-color: var(--accent); }
+
+  /* ---- What happens next (compact strip, echoes home process steps) ---- */
+  .next {
+    padding-block: var(--space-md) var(--space-lg);
+    display: grid;
+    gap: var(--space-sm);
+  }
+  .next__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+  .next__step {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--border);
+  }
+  .next__n {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+  .next__body { font-size: var(--text-sm); max-width: 32ch; }
+
+  /* ---- Surfaces ---- */
+  .surface {
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--border);
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .surface__head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    align-items: start;
+  }
+  .surface__index { padding-top: 0.35rem; }
+  .surface__head h2 { font-size: var(--text-xl); }
+  .surface__body { font-size: var(--text-md); margin-top: var(--space-2xs); max-width: 56ch; }
+
+  /* ---- Forms ---- */
+  .form { display: grid; gap: var(--space-lg); max-width: 46rem; }
+  .form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+  .field { display: grid; gap: var(--space-2xs); }
+  .field--full { grid-column: 1 / -1; }
+  .field--grow { flex: 1 1 auto; min-width: 0; }
+
+  .field label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .req { color: var(--accent); }
+
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    font-size: var(--text-base);
+    padding: 0.7em 0.85em;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  }
+  .field textarea { resize: vertical; min-height: 3.5rem; line-height: var(--leading-snug); }
+  .field select { appearance: none; background-image: none; cursor: pointer; }
+
+  .field input:hover,
+  .field textarea:hover,
+  .field select:hover { border-color: var(--text-dim); }
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .field select:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  .field [aria-invalid='true'] { border-color: #d23b2f; }
+  :root[data-theme='dark'] .field [aria-invalid='true'] { border-color: #ff6b5e; }
+
+  .field__err {
+    font-size: var(--text-xs);
+    color: #c2362b;
+    font-weight: 500;
+  }
+  :root[data-theme='dark'] .field__err { color: #ff8a80; }
+
+  .form__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+  .form__status { font-size: var(--text-sm); min-height: 1.2em; }
+  .form__note { font-size: var(--text-xs); }
+  .form__note a { color: inherit; }
+  .form.is-done .form__note { display: none; }
+  .form__status.is-error { color: #c2362b; }
+  .form__status.is-success { color: var(--text); font-weight: 600; }
+  :root[data-theme='dark'] .form__status.is-error { color: #ff8a80; }
+  .form__status.is-success::before {
+    content: '';
+    display: inline-block;
+    width: 0.6em; height: 0.6em;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: middle;
+  }
+
+  /* Once submitted, collapse the inputs and lead with the confirmation. */
+  .form.is-done .form__grid,
+  .form.is-done .form__inline-row { display: none; }
+  .form.is-done .form__status { font-size: var(--text-md); }
+
+  /* ---- Waitlist (compact inline) ---- */
+  .surface--waitlist { padding-bottom: var(--space-2xl); }
+  .form--inline { gap: var(--space-sm); max-width: 38rem; }
+  .form__inline-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: start;
+  }
+  .form--inline .form__submit { flex: 0 0 auto; }
+
+  /* ---- Honeypot: visually + AT hidden, still fillable by bots ---- */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px; height: 1px;
+    overflow: hidden;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 40rem) {
+    .next__steps { grid-template-columns: 1fr; gap: var(--space-sm); }
+    .surface__head { grid-template-columns: 1fr; gap: var(--space-2xs); }
+    .surface__index { padding-top: 0; }
+    .form__grid { grid-template-columns: 1fr; }
+    .form__inline-row { flex-direction: column; align-items: stretch; }
+    .form--inline .form__submit { width: 100%; }
+  }
+</style>

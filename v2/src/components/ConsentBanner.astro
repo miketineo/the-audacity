@@ -1,0 +1,114 @@
+---
+/**
+ * ConsentBanner.astro — opt-in consent gate for analytics.
+ *
+ * Nothing analytics-related loads until the visitor accepts. Choice persists to
+ * localStorage 'audacity-consent' ('granted' | 'denied'). On grant it dispatches
+ * 'audacity:consent-granted' so the (future) PostHog loader can boot; on a stored
+ * grant at load it re-dispatches once. Re-openable from the Footer's
+ * "Cookie settings" via the 'audacity:open-consent' event.
+ *
+ * Non-blocking (no modal trap): a dismissible region pinned bottom-left.
+ * Keyboard accessible, labelled. No props.
+ */
+const base = import.meta.env.BASE_URL; // '/v2/'
+---
+<aside
+  class="consent"
+  id="consent-banner"
+  role="region"
+  aria-label="Cookie consent"
+  hidden
+>
+  <div class="consent__body">
+    <p class="consent__title">We keep analytics quiet until you say yes.</p>
+    <p class="consent__copy text-dim">
+      Optional product analytics help us understand what is useful. No ad
+      trackers, ever. You can change this anytime from the footer. Details in
+      the <a href={`${base}privacy/`}>privacy policy</a>.
+    </p>
+  </div>
+  <div class="consent__actions">
+    <button type="button" class="consent__btn consent__btn--ghost" data-consent="denied">Decline</button>
+    <button type="button" class="consent__btn consent__btn--primary" data-consent="granted">Accept</button>
+  </div>
+</aside>
+
+<script>
+  (function () {
+    const KEY = 'audacity-consent';
+    const banner = document.getElementById('consent-banner');
+    if (!banner) return;
+
+    const show = () => { banner.hidden = false; };
+    const hide = () => { banner.hidden = true; };
+
+    function set(choice) {
+      localStorage.setItem(KEY, choice);
+      hide();
+      if (choice === 'granted') {
+        window.dispatchEvent(new CustomEvent('audacity:consent-granted'));
+      } else {
+        window.dispatchEvent(new CustomEvent('audacity:consent-denied'));
+      }
+    }
+
+    const stored = localStorage.getItem(KEY);
+    if (stored === 'granted') {
+      // already opted in — boot consumers without showing the banner
+      window.dispatchEvent(new CustomEvent('audacity:consent-granted'));
+    } else if (stored !== 'denied') {
+      show();
+    }
+
+    banner.querySelectorAll('[data-consent]').forEach((b) =>
+      b.addEventListener('click', () => set(b.getAttribute('data-consent')))
+    );
+
+    // Footer "Cookie settings" re-opens the banner to let the choice change.
+    window.addEventListener('audacity:open-consent', show);
+  })();
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    left: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 200;
+    width: min(28rem, calc(100vw - 2 * var(--space-md)));
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: var(--space-md);
+    display: grid;
+    gap: var(--space-sm);
+    animation: consent-in var(--dur) var(--ease);
+  }
+  .consent[hidden] { display: none; }
+  @keyframes consent-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .consent__title { font-weight: 650; font-size: var(--text-sm); }
+  .consent__copy { font-size: var(--text-xs); line-height: var(--leading-snug); }
+
+  .consent__actions { display: flex; gap: var(--space-2xs); justify-content: flex-end; }
+  .consent__btn {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 0.6em 1.1em;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .consent__btn--ghost { color: var(--text-dim); border-color: var(--border-strong); }
+  .consent__btn--ghost:hover { color: var(--text); border-color: var(--text); }
+  .consent__btn--primary { background: var(--accent); color: var(--accent-ink); }
+  .consent__btn--primary:hover { filter: brightness(1.06); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .consent { animation: none; }
+  }
+</style>

@@ -1,0 +1,87 @@
+{
+  "eyebrow": "The offer",
+  "title": "The Studio Sprint",
+  "lede": "One fixed price and one deadline, agreed before we write code. You get the whole product in production: auth, a managed backend, payments where needed, analytics, web or app-store deployment, and continuous delivery. The deadline is in the agreement and payment is tied to accepted milestones, so the risk of a slipped build sits with us, not you.",
+  "differentiator": {
+    "title": "Senior judgment, AI acceleration",
+    "body": "The best builds pair experienced engineering with the speed AI now makes possible. We bring senior judgment to the decisions that matter, architecture, security and launch readiness, and let AI accelerate everything else. Fast, with structure underneath."
+  },
+  "pattern": {
+    "title": "One proven approach, repeated",
+    "body": "Every build runs on the same spine: web and mobile from one codebase, a managed backend, an AI assistant layer, continuous delivery, and production deployment. Proven on our own products, Bloop and Washiiba, both shipped on this exact spine, not a one-off experiment. Standardized scope protects your timeline and keeps senior attention where it counts. The same spine ships founder MVPs, internal tools, customer portals and ops automation."
+  },
+  "packages": [
+    {
+      "id": "pilot",
+      "name": "Studio Sprint: Pilot",
+      "scope": "One core flow, one platform, deployed to production.",
+      "summary": "Prove your idea works as production software in users' hands: deployed, usable, and live rather than a local demo.",
+      "timeline": "2 to 3 weeks",
+      "priceFrom": "from €6k",
+      "priceRange": "€6k to €10k",
+      "model": "Fixed milestone",
+      "includes": [
+        "One core user flow, built end to end",
+        "One platform (mobile or web)",
+        "Persistent data, auth and a managed API",
+        "Deployed to production with continuous delivery"
+      ]
+    },
+    {
+      "id": "launch",
+      "name": "Studio Sprint: Launch",
+      "scope": "Investor-ready MVP. Auth, data, analytics and deployment, the whole spine of a production-grade product.",
+      "summary": "Everything you need to put a credible product in front of users or investors and start learning.",
+      "timeline": "4 to 6 weeks",
+      "priceFrom": "from €15k",
+      "priceRange": "€15k to €30k",
+      "model": "Fixed milestone",
+      "includes": [
+        "Multiple flows across mobile and web from one codebase",
+        "Auth, persistent data, a managed API and an AI assistant layer",
+        "Analytics and consent wired in",
+        "Web or app-store deployment plus continuous delivery"
+      ]
+    },
+    {
+      "id": "retainer",
+      "name": "Build Partner Retainer",
+      "scope": "Ongoing delivery against a roadmap.",
+      "summary": "A senior build partner without hiring a team. We keep shipping while you focus on the business.",
+      "timeline": "Monthly",
+      "priceFrom": "from €4k/mo",
+      "priceRange": "from €4k/mo",
+      "model": "Rolling engagement, cancel anytime",
+      "includes": [
+        "Continuous delivery on your roadmap",
+        "Senior architecture and security oversight",
+        "Predictable monthly cadence"
+      ]
+    }
+  ],
+  "changeOrder": {
+    "title": "What is in, what is a change order",
+    "body": "Each package states exactly what is included. Anything outside that scope is a clear, priced change order agreed in writing before we build it, so the timeline you signed off on holds. You pay per accepted milestone: a deposit books the slot, the balance is due when the milestone ships and you sign it off."
+  },
+  "audit": {
+    "eyebrow": "Start small",
+    "name": "AI-Readiness & Build Audit",
+    "scope": "A fixed-scope audit of your idea, codebase or AI ambition, delivered as a report you can act on.",
+    "summary": "The low-commitment way in. We assess what you have, what it would take to ship, and where AI actually earns its place. Most audits turn into a Sprint, but the report stands on its own.",
+    "timeline": "~1 week",
+    "priceFrom": "from €1.5k",
+    "priceRange": "€1.5k to €3k",
+    "model": "Fixed scope, written report",
+    "funnel": "A first step toward a Sprint, not the main event. If you already know you want to build, skip it and book a call."
+  },
+  "notFor": {
+    "title": "When we are the right fit",
+    "items": [
+      "You want a product in production, not a mockup to look at.",
+      "You want a studio that owns delivery end to end, rather than extra hands to manage.",
+      "You value the right outcome and a predictable timeline over the lowest bid.",
+      "You see AI as a way to move faster on serious engineering, not a box to tick.",
+      "You want a partner with a point of view on scope and architecture, and the conversations that come with it."
+    ]
+  }
+}

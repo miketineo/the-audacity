@@ -1,0 +1,150 @@
+---
+/**
+ * Privacy (/v2/privacy/): plain-language privacy policy in the firm's voice.
+ *
+ * Covers exactly what the site actually does: the project-brief form, the
+ * waitlist email, consent-gated product analytics, and UTM/referrer
+ * attribution. Providers are named generically (a transactional email
+ * provider, an analytics provider) per house rules: no vendor names in
+ * public copy. Monochrome, minimal, matches the shared section rhythm.
+ *
+ * Linked from: the consent banner, the notices under both contact-page form
+ * submit buttons. Footer link is a one-line follow-up owned by the footer's
+ * workstream.
+ */
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+import site from '../../content/site.json';
+
+const updated = 'July 2026';
+
+const sections = [
+  {
+    id: 'controller',
+    title: 'Who is responsible',
+    body: [
+      `The Audacity operates this site and decides how the data described here is used. That makes the studio the data controller. Questions, requests and complaints all go to ${site.email}.`,
+    ],
+  },
+  {
+    id: 'collect',
+    title: 'What we collect, and when',
+    body: [
+      'If you send a project brief, we receive what you type into the form: your name, email, company or project name, what you want to build, rough budget, rough timeline, and anything else you add.',
+      'If you join the waitlist, we receive your email address.',
+      'If you accept analytics, we collect product analytics about how the site is used: pages viewed, buttons clicked, and similar usage events. Nothing analytics-related loads until you say yes, and declining changes nothing about how the site works.',
+      'We also record basic attribution when it is present: campaign parameters in the link you arrived from and the page that referred you. It tells us which of our own efforts brought you here.',
+    ],
+  },
+  {
+    id: 'use',
+    title: 'What we use it for',
+    body: [
+      'To reply to you. A brief exists so we can answer it; a waitlist email exists so we can write when there is something worth saying.',
+      'To run the studio: knowing which pages and campaigns actually work, and keeping the forms free of spam.',
+      'We do not sell your data. We do not run ad trackers. We do not send marketing you did not ask for.',
+    ],
+  },
+  {
+    id: 'recipients',
+    title: 'Who else sees it',
+    body: [
+      'Two categories of processor, both bound by their own data-processing terms: a transactional email provider, which delivers the emails we send and receive through the forms, and an analytics provider, which stores the consent-gated usage events described above.',
+      'Form submissions and site delivery run on our hosting infrastructure. No one else receives your data unless the law requires it.',
+    ],
+  },
+  {
+    id: 'retention',
+    title: 'How long we keep it',
+    body: [
+      'Briefs and the correspondence they start: for the life of the conversation and up to two years after the last exchange, so a returning project does not start from zero.',
+      'Waitlist emails: until you unsubscribe or ask us to remove you.',
+      'Analytics events: per the analytics provider’s standard retention, and your consent choice is stored in your own browser, where you can change it anytime from the footer.',
+    ],
+  },
+  {
+    id: 'rights',
+    title: 'Your rights',
+    body: [
+      'You can ask what we hold about you, ask for a copy, ask us to correct it, or ask us to delete it. You can withdraw analytics consent at any time from the footer’s cookie settings, and you can object to any processing described here.',
+      `One email to ${site.email} is enough. We answer within one business day, the same as everything else. If you are in the EU and unhappy with our answer, you can complain to your local data-protection authority.`,
+    ],
+  },
+];
+---
+<Base
+  title={`Privacy · ${site.brand}`}
+  description="What The Audacity collects through this site, why, who processes it, how long it is kept, and how to exercise your rights."
+  path="/privacy/"
+>
+  <Logo slot="logo" direction="c" />
+  <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Privacy', path: '/privacy/' }]} />
+
+  <header class="container hero">
+    <p class="eyebrow">Privacy</p>
+    <h1 class="hero__title">Short, because we collect little.</h1>
+    <p class="hero__lede text-dim">
+      This site does four things with data: it takes project briefs, it keeps a
+      waitlist, it runs analytics only if you opt in, and it notes which link
+      brought you here. This page covers all four. Last updated {updated}.
+    </p>
+  </header>
+
+  <div class="container policy">
+    {sections.map((s) => (
+      <section class="policy__section" id={s.id} aria-labelledby={`${s.id}-h`}>
+        <h2 id={`${s.id}-h`} class="policy__title">{s.title}</h2>
+        <div class="policy__body">
+          {s.body.map((p) => <p class="text-dim">{p}</p>)}
+        </div>
+      </section>
+    ))}
+
+    <section class="policy__section" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h" class="policy__title">Contact</h2>
+      <div class="policy__body">
+        <p class="text-dim">
+          Anything about this policy or your data:{' '}
+          <a href={`mailto:${site.email}?subject=Privacy`}>{site.email}</a>.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl) var(--space-lg);
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+  .hero__title { font-size: var(--text-2xl); max-width: 18ch; }
+  .hero__lede { font-size: var(--text-md); max-width: 56ch; }
+
+  .policy {
+    padding-block: var(--space-lg) var(--space-3xl);
+    display: grid;
+    gap: 0;
+  }
+  .policy__section {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) 1fr;
+    gap: var(--space-md) var(--space-xl);
+    align-items: start;
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--border);
+  }
+  .policy__title { font-size: var(--text-lg); }
+  .policy__body {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 62ch;
+  }
+  .policy__body p { font-size: var(--text-base); }
+
+  @media (max-width: 48rem) {
+    .policy__section { grid-template-columns: 1fr; gap: var(--space-sm); }
+  }
+</style>

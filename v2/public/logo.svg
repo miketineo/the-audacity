@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 56" role="img" aria-label="The Audacity">
+  <!-- Canonical lockup: Direction C "Bracketed period", monochrome.
+       currentColor ink throughout so it themes; color accent deferred "for now". -->
+  <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 12 H14 V46 H25" />
+    <path d="M39 12 H50 V46 H39" />
+  </g>
+  <circle cx="32" cy="42" r="3.6" fill="currentColor" />
+  <text x="66" y="39" font-family="'Big Shoulders Display','Arial Narrow',sans-serif"
+        font-size="32" font-weight="900" letter-spacing="0.5" fill="currentColor">THE AUDACITY</text>
+</svg>

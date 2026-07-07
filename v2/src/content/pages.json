@@ -1,0 +1,99 @@
+{
+  "home": {
+    "seo": {
+      "title": "The Audacity · AI-first products shipped fast",
+      "description": "An AI-first software studio. We take an idea to a deployed product in weeks, with senior judgment on architecture and AI doing the acceleration. Book a call."
+    },
+    "hero": {
+      "eyebrow": "AI-first software studio",
+      "headline": "Your idea, shipped to production. Fast.",
+      "lede": "Fixed price and fixed deadline, agreed before we write a line of code, published on this page. We take an idea to a deployed product in weeks: auth, data, payments, analytics, deployment, the parts that make it real. From €6k.",
+      "ctaPrimary": { "label": "Book a call", "href": "contact/" },
+      "ctaSecondary": { "label": "See the work", "href": "work/" }
+    },
+    "proofTeaser": {
+      "eyebrow": "Proof",
+      "title": "Two products. Both ours. Both real.",
+      "body": "Instead of a wall of client logos, we point to two AI-first products we designed, built and shipped ourselves. The clearest proof we can offer is the work itself.",
+      "cta": { "label": "See the work", "href": "work/" }
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "title": "Scoped, built, shipped",
+      "steps": [
+        { "n": "01", "title": "Scope", "body": "We pin the offer to one clear outcome and a fixed milestone. You know the price and the deadline before we write code." },
+        { "n": "02", "title": "Build", "body": "Senior judgment on architecture and security, AI acceleration on delivery. You see working software early and often." },
+        { "n": "03", "title": "Ship", "body": "Deployed to production with the auth, data, analytics and continuous delivery a live product needs. In users' hands, not a demo." }
+      ]
+    },
+    "ctaBand": {
+      "title": "Have an idea that should already be in production?",
+      "body": "Book a diagnostic call. We will tell you what it takes to ship it and whether we are the right studio to do it.",
+      "cta": { "label": "Book a call", "href": "contact/" }
+    }
+  },
+  "work": {
+    "seo": {
+      "title": "Work · Bloop and Washiiba · The Audacity",
+      "description": "Two AI-first products designed, built and shipped in-house. Bloop, a conversational events concierge. Washiiba, a complete marketplace across mobile and web from one codebase."
+    },
+    "hero": {
+      "eyebrow": "Work",
+      "headline": "Built on our own products first.",
+      "lede": "Instead of a wall of client logos, we point to the work itself: two products we designed, built and shipped ourselves. Here is what each one proves."
+    },
+    "cta": {
+      "title": "Want yours in this list?",
+      "body": "Book a call and tell us what you want to ship.",
+      "button": { "label": "Book a call", "href": "contact/" }
+    }
+  },
+  "contact": {
+    "seo": {
+      "title": "Book a call · The Audacity",
+      "description": "Book a diagnostic call, send a project brief, or join the waitlist. An AI-first software studio that ships products to production fast."
+    },
+    "hero": {
+      "eyebrow": "Contact",
+      "headline": "Book a call. Tell us what you want to ship.",
+      "lede": "Three ways in. Book a diagnostic call, send a project brief, or join the waitlist. Every message about a real project gets a human reply within one business day."
+    },
+    "nextSteps": {
+      "eyebrow": "What happens next",
+      "steps": [
+        "A 30-minute diagnostic call, free.",
+        "A written fixed-price proposal within two business days.",
+        "Deposit, kickoff date, and the build starts."
+      ]
+    },
+    "surfaces": {
+      "booking": {
+        "title": "Book a diagnostic call",
+        "body": "Pick a time. We will talk through what you want to build, what it takes to ship it, and whether the Studio Sprint fits."
+      },
+      "inquiry": {
+        "title": "Send a project brief",
+        "body": "Not ready for a call? Tell us about the project and your rough budget and timeline. We will come back with a straight answer.",
+        "fields": {
+          "name": "Your name",
+          "email": "Email",
+          "company": "Company or project",
+          "project_idea": "What do you want to build?",
+          "budget": "Rough budget",
+          "timeline": "Rough timeline",
+          "message": "Anything else we should know?"
+        },
+        "submit": "Send brief",
+        "success": "Got it. We reply within one business day.",
+        "error": "Something went wrong. Email us directly at obviously@theaudacity.io."
+      },
+      "waitlist": {
+        "title": "Join the waitlist",
+        "body": "Not a project, just curious where this goes? Leave your email and we will keep you posted.",
+        "submit": "Join",
+        "success": "You are on the list.",
+        "error": "Something went wrong. Try again in a moment."
+      }
+    }
+  }
+}

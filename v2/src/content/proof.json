@@ -1,0 +1,27 @@
+{
+  "eyebrow": "Proof",
+  "title": "Built on our own products first",
+  "lede": "Two products we designed, built and shipped in-house. Not client logos, not slideware: working products we build and run ourselves. They make one clear point: we ship AI-first products to production, fast, and built to launch.",
+  "items": [
+    {
+      "id": "bloop",
+      "name": "Bloop",
+      "kind": "Own product · in build and launch",
+      "oneLiner": "An AI events concierge for Bologna.",
+      "stack": ["Conversational AI", "AI assistant layer", "Managed backend", "Web + mobile"],
+      "summary": "A product we are building and launching right now. Bloop runs a live conversational concierge over a catalogue of what is on in the city. You ask in plain language and get a grounded answer over live data, not a list of search results.",
+      "proves": "A genuinely novel AI product surface, shipped: a conversational concierge over a live catalogue, on a managed backend, deployed.",
+      "tags": ["Conversational AI", "Live catalogue", "Mobile + web"]
+    },
+    {
+      "id": "washiiba",
+      "name": "Washiiba",
+      "kind": "Own product · build-capability proof",
+      "oneLiner": "A complete laundry marketplace, mobile and web from one codebase.",
+      "stack": ["One codebase", "Web + mobile", "Managed backend"],
+      "summary": "A complete, production-grade marketplace built end to end. Customer and provider flows, a managed backend, and mobile and web all from a single codebase.",
+      "proves": "Build capability across mobile and web from one codebase, with a managed backend, production-grade and store-ready.",
+      "tags": ["One codebase", "Mobile · Web", "Managed backend"]
+    }
+  ]
+}

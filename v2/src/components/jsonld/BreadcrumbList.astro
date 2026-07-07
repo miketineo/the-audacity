@@ -1,0 +1,37 @@
+---
+/**
+ * BreadcrumbList JSON-LD. Any non-home page.
+ *
+ * Takes an ordered list of { name, path } where path is the page path under the
+ * site ("/", "/work/", "/contact/"). Absolute URLs are built from site.url + the
+ * current BASE_URL ('/v2/' now, '/' after Stage C promotion), mirroring Base's
+ * canonical logic so breadcrumbs and canonicals never disagree.
+ *
+ * Usage (Work):
+ *   import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+ *   <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Work', path: '/work/' }]} />
+ */
+import site from '../../content/site.json';
+
+interface Props {
+  items: { name: string; path: string }[];
+}
+
+const { items } = Astro.props;
+
+const base = import.meta.env.BASE_URL; // '/v2/'
+const root = site.url + '/';
+const abs = (path: string) => new URL(`${base}${path.replace(/^\//, '')}`, root).href;
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((it, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: it.name,
+    item: abs(it.path),
+  })),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

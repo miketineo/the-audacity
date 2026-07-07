@@ -1,0 +1,179 @@
+---
+/**
+ * Analytics.astro — consent-gated PostHog loader + event router.
+ *
+ * Rendered once by Base.astro, so it is present on every page. It does FOUR
+ * things and nothing else:
+ *
+ *   1. Defines the canonical tracker `window.audacityTrack(event, props)` that
+ *      the rest of the site already calls (forms, BookingEmbed, ThemeToggle).
+ *   2. Loads PostHog (EU cloud) ONLY after consent — nothing is fetched or sent
+ *      before `audacity:consent-granted` (or a stored 'granted' choice).
+ *   3. Captures UTM / gclid attribution on every load (via scripts/attribution)
+ *      and registers it as PostHog super properties so every event carries its
+ *      source. The same localStorage bag rides on inquiry / waitlist payloads.
+ *   4. Wires the event taxonomy: page_view, theme_toggled, cta_clicked{location},
+ *      book_call_started, inquiry_submitted, waitlist_joined, outbound_click.
+ *      (book_call_completed is reconciled server-side from the Calendar event,
+ *      per spec 7.4, not captured client-side.)
+ *
+ * NO ad pixels. No Google Ads, no LinkedIn, no social tags (deferred per spec
+ * section 10). The loader is structured so those could be added later behind the
+ * same consent gate without re-plumbing, but they are intentionally absent.
+ *
+ * KEY: the real project key is inlined as the default (it is a public client
+ * key). PUBLIC_POSTHOG_KEY at build time still overrides it (Astro/Vite
+ * statically inlines PUBLIC_*), e.g. to point a preview build elsewhere.
+ *
+ * NOTE: this is a processed (bundled) script — no `define:vars`/`is:inline` — so
+ * the `import` below resolves and `import.meta.env.PUBLIC_*` is replaced at build.
+ */
+---
+<script>
+  import { captureAttribution, getFlatUtm } from '../scripts/attribution.js';
+
+  (function () {
+    const POSTHOG_KEY =
+      import.meta.env.PUBLIC_POSTHOG_KEY || 'phc_CefEYSP2v97ZazvvsctE6r8iKtej6qdubPyyaM8UR7Vs';
+    // Ingestion via the managed reverse proxy (serves /static assets too);
+    // ui_host points links back at PostHog EU (project "The Audacity", id 160291).
+    const POSTHOG_HOST = 'https://z.miketineo.com';
+    const POSTHOG_UI_HOST = 'https://eu.posthog.com';
+
+    const CONSENT_KEY = 'audacity-consent';
+    const consentGranted = () => {
+      try { return localStorage.getItem(CONSENT_KEY) === 'granted'; } catch (e) { return false; }
+    };
+
+    // Capture attribution on every page load (safe pre-consent: data only).
+    captureAttribution();
+
+    let booted = false;   // PostHog snippet injected + init called
+    let ready = false;    // PostHog fully loaded (loaded callback fired)
+    let pageViewSent = false;
+    const queue = [];     // events captured after consent but before ready
+
+    function flat(props) {
+      return Object.assign({}, getFlatUtm(), props || {});
+    }
+
+    // ---- Canonical tracker the whole site calls. Gated on consent; queued
+    // until PostHog is ready. We deliberately do NOT also subscribe to the
+    // 'audacity:track' DOM event: every reporter calls window.audacityTrack
+    // when present, and BookingEmbed calls both, so listening would double-count.
+    function track(event, props) {
+      if (!consentGranted()) return; // nothing fires pre-consent
+      const payload = flat(props);
+      if (ready && window.posthog) {
+        window.posthog.capture(event, payload);
+      } else {
+        queue.push([event, payload]);
+        // A granted consent that has not booted yet means we just turned on:
+        if (consentGranted()) boot();
+      }
+    }
+    window.audacityTrack = track;
+
+    function flush() {
+      while (queue.length) {
+        const [event, payload] = queue.shift();
+        try { window.posthog.capture(event, payload); } catch (e) {}
+      }
+    }
+
+    function sendPageView() {
+      if (pageViewSent || !window.posthog) return;
+      pageViewSent = true;
+      window.posthog.capture('page_view', flat({ path: location.pathname }));
+    }
+
+    // ---- PostHog EU loader (official array snippet). Fetches nothing until
+    // boot() runs, which only happens on consent.
+    function boot() {
+      if (booted) return;
+      booted = true;
+
+      !(function (t, e) {
+        var o, n, p, r;
+        e.__SV || ((window.posthog = e), (e._i = []), (e.init = function (i, s, a) {
+          function g(t, e) {
+            var o = e.split('.');
+            2 == o.length && ((t = t[o[0]]), (e = o[1])),
+              (t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))); });
+          }
+          ((p = t.createElement('script')).type = 'text/javascript'),
+            (p.crossOrigin = 'anonymous'),
+            (p.async = !0),
+            (p.src = s.api_host.replace('.i.posthog.com', '-assets.i.posthog.com') + '/static/array.js'),
+            (r = t.getElementsByTagName('script')[0]).parentNode.insertBefore(p, r);
+          var u = e;
+          for (
+            void 0 !== a ? (u = e[a] = []) : (a = 'posthog'),
+              u.people = u.people || [],
+              u.toString = function (t) { var e = 'posthog'; return 'posthog' !== a && (e += '.' + a), t || (e += ' (stub)'), e; },
+              u.people.toString = function () { return u.toString(1) + '.people (stub)'; },
+              o = 'init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId'.split(' '),
+              n = 0;
+            n < o.length;
+            n++
+          ) g(u, o[n]);
+          e._i.push([i, s, a]);
+        }), (e.__SV = 1));
+      })(document, window.posthog || []);
+
+      window.posthog.init(POSTHOG_KEY, {
+        api_host: POSTHOG_HOST,
+        ui_host: POSTHOG_UI_HOST,
+        defaults: '2026-05-30',
+        person_profiles: 'identified_only',
+        // Quiet by default: we emit explicit events; autocapture + auto-pageview off.
+        autocapture: false,
+        capture_pageview: false,
+        capture_pageleave: true,
+        persistence: 'localStorage+cookie',
+        loaded: function (ph) {
+          ready = true;
+          // Portfolio convention (PostHog option B): one project, every property
+          // registers `product` as a super property so per-product dashboards can
+          // filter. Values: theaudacity | washiiba | bloop | miketineo.
+          try { ph.register(Object.assign({ product: 'theaudacity' }, getFlatUtm())); } catch (e) {}
+          flush();
+          sendPageView();
+        },
+      });
+    }
+
+    // ---- Consent wiring. Self-check the stored choice (covers ConsentBanner
+    // dispatching 'granted' before this script attached) AND listen for changes.
+    if (consentGranted()) boot();
+    window.addEventListener('audacity:consent-granted', boot);
+    window.addEventListener('audacity:consent-denied', function () {
+      ready = false;
+      queue.length = 0;
+      try { window.posthog && window.posthog.opt_out_capturing && window.posthog.opt_out_capturing(); } catch (e) {}
+    });
+
+    // ---- Event taxonomy that this layer owns directly (the rest is reported by
+    // the components via window.audacityTrack): cta_clicked + outbound_click,
+    // through one delegated click listener. Gating happens inside track().
+    document.addEventListener('click', function (e) {
+      const cta = e.target.closest && e.target.closest('[data-cta]');
+      if (cta) track('cta_clicked', { location: cta.getAttribute('data-cta') });
+
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (a) {
+        const raw = a.getAttribute('href') || '';
+        if (/^(mailto:|tel:)/i.test(raw)) {
+          track('outbound_click', { href: raw });
+        } else {
+          try {
+            const u = new URL(a.href, location.href);
+            if (/^https?:$/.test(u.protocol) && u.host && u.host !== location.host) {
+              track('outbound_click', { href: u.href, host: u.host });
+            }
+          } catch (err) {}
+        }
+      }
+    }, true);
+  })();
+</script>

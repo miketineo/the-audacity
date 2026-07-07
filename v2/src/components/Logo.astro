@@ -1,0 +1,66 @@
+---
+/**
+ * Logo.astro — inline brand lockup. Inlined (not <img>) so `currentColor`
+ * inherits the theme's --text and the mark stays crisp at any size.
+ *
+ * Pass into Nav's `logo` slot, or use standalone (e.g. hero, footer).
+ *
+ * Props:
+ *   direction? 'a' | 'b' | 'c'   recommended is 'a' (Caret A). Default 'a'.
+ *   markOnly?  boolean           render just the mark (no wordmark). Default false.
+ *   class?     string
+ */
+interface Props {
+  direction?: 'a' | 'b' | 'c';
+  markOnly?: boolean;
+  class?: string;
+}
+const { direction = 'c', markOnly = false, class: extra = '' } = Astro.props;
+const vb = markOnly ? '0 0 56 56' : '0 0 300 56';
+---
+<svg
+  class={`logo ${extra}`}
+  viewBox={vb}
+  role="img"
+  aria-label="The Audacity"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {direction === 'a' && (
+    <>
+      <g fill="none" stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M28 12 L12 46 M28 12 L44 46" />
+      </g>
+      <path d="M18.6 35 H37.4" fill="none" stroke="var(--accent, currentColor)" stroke-width="4.4" stroke-linecap="round" />
+    </>
+  )}
+  {direction === 'b' && (
+    <>
+      <path d="M42 12 L18 46" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+      <rect x="33" y="37" width="9.5" height="9.5" rx="1.6" fill="var(--accent, currentColor)" />
+    </>
+  )}
+  {direction === 'c' && (
+    <>
+      <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M25 12 H14 V46 H25" />
+        <path d="M39 12 H50 V46 H39" />
+      </g>
+      <circle cx="32" cy="42" r="3.6" fill="var(--accent, currentColor)" />
+    </>
+  )}
+  {!markOnly && (
+    <text
+      x={direction === 'c' ? 66 : 64}
+      y="39"
+      font-family="var(--font-display, 'Big Shoulders Display'), 'Arial Narrow', sans-serif"
+      font-size="32"
+      font-weight="900"
+      letter-spacing="0.5"
+      fill="currentColor"
+    >THE AUDACITY</text>
+  )}
+</svg>
+
+<style>
+  .logo { height: 1.6rem; width: auto; color: var(--text); }
+</style>

@@ -1,0 +1,32 @@
+---
+/**
+ * CreativeWork JSON-LD. Used for Washiiba on the Work page.
+ *
+ * Deliberately a CreativeWork, not a SoftwareApplication with offers: Washiiba
+ * is a build-capability receipt only. No commercial status, roadmap, price, or
+ * intent is ever expressed here. creator is the studio, from content/site.json.
+ *
+ * Usage (Work):
+ *   import CreativeWorkLD from '../../components/jsonld/CreativeWork.astro';
+ *   <CreativeWorkLD slot="jsonld" name="Washiiba" description={proof.items[1].summary} />
+ */
+import site from '../../content/site.json';
+
+interface Props {
+  name: string;
+  description: string;
+  genre?: string;
+}
+
+const { name, description, genre = 'Software product' } = Astro.props;
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name,
+  genre,
+  description,
+  creator: { '@type': 'Organization', name: site.brand, url: site.url },
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

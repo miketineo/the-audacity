@@ -1,0 +1,47 @@
+---
+/**
+ * Service JSON-LD for the Studio Sprint. Home page only.
+ *
+ * Self-contained: reads content/offer.json + content/site.json. Each package and
+ * the audit becomes a schema.org Offer with its confirmed "from EUR X" price band
+ * (expressed as a PriceSpecification.description, since the bands are ranges, not
+ * a single fixed price). provider references the Organization @id from Organization.astro.
+ *
+ * Usage (Home): place in Base's `jsonld` slot, alongside <OrganizationLD />.
+ *   import ServiceLD from '../components/jsonld/Service.astro';
+ *   <ServiceLD slot="jsonld" />
+ */
+import site from '../../content/site.json';
+import offer from '../../content/offer.json';
+
+const { packages, audit } = offer;
+
+const toOffer = (name: string, description: string, priceRange: string) => ({
+  '@type': 'Offer',
+  name,
+  description,
+  priceCurrency: 'EUR',
+  priceSpecification: { '@type': 'PriceSpecification', description: priceRange },
+});
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${site.url}/#studio-sprint`,
+  name: offer.title,
+  serviceType: 'AI-first product design and development',
+  description: offer.lede,
+  provider: {
+    '@type': 'Organization',
+    '@id': `${site.url}/#organization`,
+    name: site.brand,
+    url: site.url,
+  },
+  areaServed: 'Worldwide',
+  offers: [
+    ...packages.map((p) => toOffer(p.name, p.scope, p.priceRange)),
+    toOffer(audit.name, audit.scope, audit.priceRange),
+  ],
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

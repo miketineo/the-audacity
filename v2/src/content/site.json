@@ -1,0 +1,35 @@
+{
+  "brand": "The Audacity",
+  "domain": "theaudacity.io",
+  "url": "https://theaudacity.io",
+  "email": "obviously@theaudacity.io",
+  "elevator": "An AI-first software studio. Senior judgment, AI acceleration, products shipped to production fast.",
+  "tagline": "We ship AI-first products to production. Fast, and built to launch.",
+  "nav": {
+    "links": [
+      { "label": "Home", "href": "" },
+      { "label": "Work", "href": "work/" },
+      { "label": "Contact", "href": "contact/" }
+    ],
+    "cta": { "label": "Book a call", "href": "contact/" }
+  },
+  "footer": {
+    "tag": "An AI-first software studio. Senior judgment, AI acceleration, products shipped to production.",
+    "links": [
+      { "label": "Home", "href": "" },
+      { "label": "Work", "href": "work/" },
+      { "label": "Contact", "href": "contact/" }
+    ],
+    "email": "obviously@theaudacity.io",
+    "llms": "llms.txt",
+    "cookieSettings": "Cookie settings",
+    "legalLeft": "The Audacity",
+    "legalRight": "Built with audacity."
+  },
+  "cta": {
+    "bookCall": "Book a call",
+    "seeWork": "See the work",
+    "sendBrief": "Send a project brief",
+    "startAudit": "Start with an audit"
+  }
+}

@@ -1,0 +1,25 @@
+---
+/**
+ * Organization JSON-LD. Home page only.
+ *
+ * Self-contained: reads content/site.json, emits one <script type="application/ld+json">.
+ * Stable @id (`<url>/#organization`) so other nodes (Service.provider) can reference it.
+ *
+ * Usage (Home): place in Base's `jsonld` slot.
+ *   import OrganizationLD from '../components/jsonld/Organization.astro';
+ *   <OrganizationLD slot="jsonld" />
+ */
+import site from '../../content/site.json';
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${site.url}/#organization`,
+  name: site.brand,
+  url: site.url,
+  email: site.email,
+  description: site.elevator,
+  slogan: site.tagline,
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

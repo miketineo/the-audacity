@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="The Audacity">
+  <!-- Mark = Direction C "Bracketed period", monochrome. Strokes bolder than the
+       wordmark lockup so the brackets + period still read at 16px. currentColor
+       throughout (color accent deferred "for now"). -->
+  <g fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 9 H9 V39 H18" />
+    <path d="M30 9 H39 V39 H30" />
+  </g>
+  <circle cx="24" cy="33" r="3.6" fill="currentColor" />
+</svg>

@@ -1,0 +1,73 @@
+{
+  "schema_version": "0.1.0",
+  "name": "The Audacity",
+  "description": "An AI-first software studio. Senior judgment on architecture, security and launch readiness, AI acceleration on everything else. We ship AI-first products to production, fast and real enough to launch.",
+  "url": "https://theaudacity.io",
+  "status": "operational",
+  "contact": {
+    "email": "obviously@theaudacity.io",
+    "book_a_call": "https://theaudacity.io/contact/",
+    "project_brief": "https://theaudacity.io/contact/",
+    "waitlist": "https://theaudacity.io/contact/"
+  },
+  "stack": ["One codebase for web and mobile", "Managed backend", "AI assistant or concierge layer", "Continuous delivery", "Store or web deployment"],
+  "capabilities": [
+    {
+      "id": "studio_sprint_pilot",
+      "name": "Studio Sprint: Pilot",
+      "description": "One core flow, one platform, deployed to production.",
+      "timeline": "2 to 3 weeks",
+      "price": "from EUR 6k to 10k",
+      "model": "fixed milestone"
+    },
+    {
+      "id": "studio_sprint_launch",
+      "name": "Studio Sprint: Launch",
+      "description": "Investor-ready MVP with auth, data, analytics and deployment.",
+      "timeline": "4 to 6 weeks",
+      "price": "from EUR 15k to 30k",
+      "model": "fixed milestone"
+    },
+    {
+      "id": "build_partner_retainer",
+      "name": "Build Partner Retainer",
+      "description": "Ongoing delivery against a roadmap, a senior build partner without hiring a team.",
+      "timeline": "monthly",
+      "price": "from EUR 4k a month",
+      "model": "monthly retainer"
+    },
+    {
+      "id": "ai_readiness_build_audit",
+      "name": "AI-Readiness and Build Audit",
+      "description": "A fixed-scope report you can act on, and the low-commitment first step toward a Sprint.",
+      "timeline": "about 1 week",
+      "price": "from EUR 1.5k to 3k",
+      "model": "fixed scope, written report"
+    }
+  ],
+  "proof": [
+    {
+      "id": "bloop",
+      "name": "Bloop",
+      "type": "own_product",
+      "stage": "in active MVP and launch",
+      "description": "An AI events concierge for Bologna. A live conversational concierge over a real catalogue of what is on in the city.",
+      "demonstrates": "Ships genuinely novel AI product surfaces to production on a real backend."
+    },
+    {
+      "id": "washiiba",
+      "name": "Washiiba",
+      "type": "own_product",
+      "description": "A complete, production-grade marketplace across mobile and web from a single codebase on a managed backend.",
+      "demonstrates": "Build capability across iOS, Android and web end to end, with a real backend, production-grade and store-ready."
+    }
+  ],
+  "agents": {
+    "note": "Internal agent roster not publicly exposed. For partnership or integration inquiries, book a call or email obviously@theaudacity.io.",
+    "powered_by": "Senior human judgment paired with an AI build platform."
+  },
+  "interoperability": {
+    "llms_txt": "https://theaudacity.io/llms.txt"
+  },
+  "_comment": "Promoted to root 2026-07-07. v1 is archived at /v1/."
+}

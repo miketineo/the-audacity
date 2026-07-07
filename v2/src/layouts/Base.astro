@@ -1,0 +1,123 @@
+---
+/**
+ * Base.astro — the single shell for every v2 page.
+ *
+ * Owns: <head> SEO, JSON-LD slot, the no-flash theme script (runs before first
+ * paint, default light, persists to localStorage), the `staging` noindex flag,
+ * global.css, and the Nav + <slot/> + Footer frame.
+ *
+ * SEO props are per-page. Canonical + OG image are resolved against `site`
+ * (https://theaudacity.io) and BASE_URL ('/v2/') so they stay correct now and
+ * after Stage C promotion to root.
+ */
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
+import Analytics from '../components/Analytics.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Path of THIS page, e.g. "/" or "/work/". Joined to site+base for canonical. */
+  path?: string;
+  /** OG image path relative to base, e.g. "og-image.png". */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** When true, emit robots noindex. Default OFF since the Stage C root promotion. */
+  staging?: boolean;
+}
+
+const {
+  title,
+  description,
+  path = '/',
+  ogImage = 'og-image.png',
+  ogType = 'website',
+  staging = false,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;            // '/v2/'
+const site = Astro.site?.href.replace(/\/$/, '') ?? 'https://theaudacity.io';
+
+// Absolute canonical for the current stage (site + base + page path).
+const cleanPath = path.replace(/^\//, '');
+const canonical = new URL(`${base}${cleanPath}`, site + '/').href;
+const ogImageUrl = new URL(`${base}${ogImage}`, site + '/').href;
+const favicon = `${base}favicon.svg`;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* No-flash theme: resolve light/dark/system BEFORE first paint.
+        Default preference is light; 'system' follows prefers-color-scheme. */}
+    <script is:inline>
+      (function () {
+        try {
+          var pref = localStorage.getItem('audacity-theme') || 'light';
+          var resolved = pref === 'system'
+            ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : pref;
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-pref', pref);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {staging && <meta name="robots" content="noindex, nofollow" />}
+
+    {/* Open Graph / Twitter */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="The Audacity" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {/* Icons + theme color */}
+    <link rel="icon" href={favicon} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)" />
+
+    {/* Fonts: preconnect + display=swap, fallback metrics in global.css kill CLS */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@400;500;600;650&family=Space+Mono:wght@400;700&display=swap"
+    />
+
+    {/* Per-page structured data injected here by each page. */}
+    <slot name="head" />
+    <slot name="jsonld" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav>
+      <slot name="logo" slot="logo" />
+    </Nav>
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ConsentBanner />
+    <Analytics />
+  </body>
+</html>

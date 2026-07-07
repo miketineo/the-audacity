@@ -1,0 +1,118 @@
+---
+/**
+ * BookingEmbed.astro: the single, swap-ready booking surface.
+ *
+ * Today this embeds a Google Calendar Appointment Scheduling page via iframe.
+ * Google's embed gives no booking-complete callback, so we only fire
+ * `book_call_started` (when the embed first enters the viewport). The
+ * `book_call_completed` event is reconciled server-side from the created
+ * Calendar event (see spec section 7.4), not captured here.
+ *
+ * To SWAP to Cal.com later: replace BOOKING_URL and the iframe block below.
+ * Nothing else on the contact page touches booking, so the page is untouched
+ * by the swap, and Cal.com would restore a real completion callback.
+ *
+ * >>> ACTION REQUIRED: paste the real Google Calendar Appointment Scheduling
+ *     booking-page URL into BOOKING_URL. It looks like:
+ *     https://calendar.google.com/calendar/appointments/schedules/<ID>?gv=true
+ */
+const BOOKING_URL =
+  'https://calendar.google.com/calendar/appointments/schedules/REPLACE_WITH_SCHEDULE_ID?gv=true';
+const PROVIDER = 'google-calendar';
+
+export interface Props {
+  /** Accessible iframe title. */
+  title?: string;
+  /** Fallback contact address shown until the URL is configured. */
+  email?: string;
+}
+const { title = 'Book a diagnostic call', email = 'obviously@theaudacity.io' } = Astro.props;
+
+// Until the real URL is pasted, render a graceful fallback instead of a broken
+// iframe so the page is correct in every environment (incl. QA + local).
+const configured = !BOOKING_URL.includes('REPLACE_WITH_SCHEDULE_ID');
+---
+<div
+  class="booking"
+  data-booking
+  data-provider={PROVIDER}
+  data-configured={String(configured)}
+>
+  {configured ? (
+    <div class="booking__frame">
+      <iframe
+        src={BOOKING_URL}
+        title={title}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        style="border:0"
+        width="100%"
+        height="100%"
+      ></iframe>
+    </div>
+  ) : (
+    <div class="booking__fallback" role="note">
+      <p class="booking__fallback-title">We book calls by email right now.</p>
+      <p class="text-dim">
+        Email{' '}
+        <a href={`mailto:${email}?subject=Diagnostic%20call`}>{email}</a>{' '}
+        with two times that suit you and we confirm within one business day.
+      </p>
+    </div>
+  )}
+  <p class="booking__alt text-dim">
+    Prefer to do this by email?{' '}
+    <a href={`mailto:${email}?subject=Diagnostic%20call`}>Reach us directly</a>.
+  </p>
+</div>
+
+<script>
+  // Fire `book_call_started` once, when the booking surface first becomes
+  // visible. Routed through the shared tracker if present, else a DOM event the
+  // analytics agent can listen for. Never throws, never blocks render.
+  (function () {
+    const el = document.querySelector('[data-booking]');
+    if (!el || el.getAttribute('data-configured') !== 'true') return;
+    const fire = () => {
+      const detail = { event: 'book_call_started', props: { provider: el.getAttribute('data-provider') } };
+      try { (window as any).audacityTrack?.(detail.event, detail.props); } catch (e) {}
+      window.dispatchEvent(new CustomEvent('audacity:track', { detail }));
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { fire(); io.disconnect(); }
+        });
+      }, { threshold: 0.4 });
+      io.observe(el);
+    } else {
+      fire();
+    }
+  })();
+</script>
+
+<style>
+  .booking { display: grid; gap: var(--space-sm); }
+  .booking__frame {
+    width: 100%;
+    height: clamp(560px, 78vh, 760px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .booking__frame iframe { display: block; width: 100%; height: 100%; }
+
+  .booking__fallback {
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    padding: var(--space-lg);
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .booking__fallback-title { font-weight: 650; }
+
+  .booking__alt { font-size: var(--text-sm); }
+</style>

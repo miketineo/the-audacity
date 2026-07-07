@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# AI crawlers explicitly welcome — we're an AI software house
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://theaudacity.io/sitemap-index.xml

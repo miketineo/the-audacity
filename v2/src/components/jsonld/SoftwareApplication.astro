@@ -1,0 +1,39 @@
+---
+/**
+ * SoftwareApplication JSON-LD. Used for Bloop (a live app) on the Work page.
+ *
+ * Prop-driven so any live product can reuse it. creator is the studio, pulled
+ * from content/site.json. No offers/price/commercial fields: the proofs are
+ * capability receipts, not commercial listings.
+ *
+ * Usage (Work):
+ *   import SoftwareApplicationLD from '../../components/jsonld/SoftwareApplication.astro';
+ *   <SoftwareApplicationLD slot="jsonld" name="Bloop" description={proof.items[0].summary} />
+ */
+import site from '../../content/site.json';
+
+interface Props {
+  name: string;
+  description: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+}
+
+const {
+  name,
+  description,
+  applicationCategory = 'LifestyleApplication',
+  operatingSystem = 'iOS, Android, Web',
+} = Astro.props;
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name,
+  applicationCategory,
+  operatingSystem,
+  description,
+  creator: { '@type': 'Organization', name: site.brand, url: site.url },
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

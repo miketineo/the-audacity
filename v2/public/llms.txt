@@ -1,0 +1,43 @@
+# The Audacity
+
+An AI-first software studio. Senior judgment on architecture, security and launch readiness, AI acceleration on everything else. We take an idea to a real, deployed product in weeks, not a slide deck or a design mockup.
+
+## What we do
+
+We ship AI-first products to production. Fast, and real enough to launch. The headline offer is the Studio Sprint: a fixed-scope, milestone-priced build that puts a real product in users' hands, with the things that make it real (auth, database, payments where needed, analytics, store or web deployment, CI/CD).
+
+Every build runs on one repeatable stack: one codebase for web and mobile, a managed backend, an AI assistant layer, continuous delivery, and store or web deployment. We sell the pattern, not bespoke chaos.
+
+## The offer (confirmed pricing)
+
+- Studio Sprint: Pilot. One core flow, one platform, deployed to production. 2 to 3 weeks. From EUR 6k to 10k. Fixed milestone.
+- Studio Sprint: Launch. Investor-ready MVP with auth, data, analytics and deployment. 4 to 6 weeks. From EUR 15k to 30k. Fixed milestone.
+- Build Partner Retainer. Ongoing delivery against a roadmap. From EUR 4k a month. Monthly retainer.
+- AI-Readiness and Build Audit. A fixed-scope report you can act on, and the low-commitment first step toward a Sprint. About 1 week. From EUR 1.5k to 3k.
+
+Each package states exactly what is included. Anything outside that scope is a clear, priced change order before we build it.
+
+## Proof
+
+We do not have a wall of client logos yet. We have two AI-first products we designed, built and shipped in-house, which is the harder thing to fake.
+
+- Bloop. An AI events concierge for Bologna, built on the studio's standard spine: one codebase, a managed backend and a conversational AI layer. A product we are building and launching right now. It runs a live conversational concierge over a real catalogue of what is on in the city: you ask in plain language and get a real answer over real data. It proves we ship genuinely novel AI product surfaces to production.
+- Washiiba. A complete, production-grade marketplace across mobile and web from a single codebase on a managed backend. It is a build-capability receipt: proof we deliver real software across iOS, Android and web end to end.
+
+## Who this is not for
+
+Teams who want a mockup instead of a product in production, warm bodies to staff-augment instead of a studio that owns delivery, or AI as a box to tick rather than a way to move faster on real engineering.
+
+## How to work with us
+
+- Book a diagnostic call: https://theaudacity.io/contact/
+- Send a project brief: https://theaudacity.io/contact/ (the brief form)
+- See the work: https://theaudacity.io/work/
+- Email: obviously@theaudacity.io
+
+## For AI agents and systems
+
+- Machine-readable capability manifest: https://theaudacity.io/.well-known/agent-manifest.json
+- This file: https://theaudacity.io/llms.txt
+
+Built with audacity.

@@ -1,0 +1,34 @@
+{
+  "eyebrow": "FAQ",
+  "title": "Straight answers",
+  "items": [
+    {
+      "q": "Who owns the code and IP?",
+      "a": "You do. Full IP transfers on final payment; we keep nothing but the right to say we built it."
+    },
+    {
+      "q": "How does payment work?",
+      "a": "A deposit books your slot, then you pay per accepted milestone. Each milestone has a defined scope; the balance for it is due when it ships and you sign it off. No timesheets, no open-ended invoices."
+    },
+    {
+      "q": "What happens after handoff?",
+      "a": "A structured handover: your code in your accounts, documentation, and a defined post-ship window for fixes at no charge. If you want us to keep building, the retainer picks up where the Sprint ends."
+    },
+    {
+      "q": "What if the deadline slips?",
+      "a": "The deadline is written into the agreement and payment is tied to accepted milestones. If a build slips on our side, you have not paid for the milestone that slipped. The risk sits with us, not you."
+    },
+    {
+      "q": "What is a change order?",
+      "a": "Each package states exactly what is included. Anything outside that scope is a clear, priced change order agreed in writing before we build it, so the timeline you signed off on holds."
+    },
+    {
+      "q": "Who does the work?",
+      "a": "The studio: senior engineering leadership directing an AI-accelerated build platform. Senior judgment on every decision that matters, architecture, security and launch readiness, with AI doing the acceleration underneath."
+    },
+    {
+      "q": "What happens after I book a call or send a brief?",
+      "a": "A 30-minute diagnostic call, free. Then a written fixed-price proposal within two business days. If it fits, a deposit and a kickoff date, and the build starts."
+    }
+  ]
+}
