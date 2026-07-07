@@ -1,3 +1,14 @@
 .wrangler/
 logs/
 node_modules/
+.superpowers/
+.env
+.env.local
+
+# Claude-generated analysis artifacts
+graphify-out/
+
+# Internal strategy docs: repo is PUBLIC; these stay local-only
+# (contain private commercial context + GTM playbooks)
+docs/specs/
+docs/gtm/

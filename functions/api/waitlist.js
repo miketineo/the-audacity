@@ -1,3 +1,6 @@
+import { sendEmail } from '../_lib/resend.js';
+import { welcomeSubject, welcomeHtml, welcomeText } from '../_lib/emails/welcome.js';
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -6,10 +9,11 @@ export async function onRequestPost(context) {
     'Content-Type': 'application/json',
   };
 
-  let email;
+  let email, project;
   try {
     const body = await request.json();
     email = (body.email || '').trim().toLowerCase();
+    project = (body.project || '').trim().slice(0, 300);
   } catch {
     return new Response(JSON.stringify({ ok: false, error: 'invalid_body' }), {
       status: 400,
@@ -30,8 +34,26 @@ export async function onRequestPost(context) {
   if (!existing) {
     await env.WAITLIST.put(key, JSON.stringify({
       email,
+      project,
       timestamp: new Date().toISOString(),
     }));
+
+    // Fire-and-forget welcome. If Resend fails we log and move on — the
+    // signup is already persisted and a missed welcome is not worth failing
+    // the API response for.
+    const welcomeSend = sendEmail({
+      apiKey: env.RESEND_API_KEY,
+      from: 'The Audacity <obviously@theaudacity.io>',
+      to: email,
+      subject: welcomeSubject,
+      html: welcomeHtml,
+      text: welcomeText,
+      replyTo: 'obviously@theaudacity.io',
+    }).catch((err) => {
+      console.error('welcome_email_failed', email, err?.message || err);
+    });
+
+    context.waitUntil(welcomeSend);
   }
 
   return new Response(JSON.stringify({ ok: true }), {
