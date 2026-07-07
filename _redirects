@@ -1,1 +1,4 @@
+# Stage C promotion (2026-07-07): v2 now serves at root; v1 archived at /v1/.
+/v2/* /:splat 301
+/sitemap.xml /sitemap-index.xml 301
 /logs/* / 301

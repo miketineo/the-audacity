@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+# v2 is in staged review under /v2 — not for indexing until promoted to root
+Disallow: /v2/
 
 # AI crawlers explicitly welcome — we're an AI agency
 User-agent: GPTBot
