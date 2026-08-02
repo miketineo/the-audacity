@@ -17,7 +17,7 @@
   ],
   "agents": {
     "note": "Internal agent roster not publicly exposed. For partnership or integration inquiries, use the waitlist.",
-    "powered_by": "Autonomous AI agents orchestrated via Paperclip"
+    "powered_by": "Autonomous AI agents orchestrated via AgentOS"
   },
   "interoperability": {
     "status": "future",
