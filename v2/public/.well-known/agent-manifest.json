@@ -63,8 +63,19 @@
     }
   ],
   "agents": {
-    "note": "Internal agent roster not publicly exposed. For partnership or integration inquiries, book a call or email obviously@theaudacity.io.",
-    "powered_by": "Senior human judgment paired with an AI build platform."
+    "name": "The Audacious",
+    "description": "The studio's reusable agent swarm: six role agents, each on a dedicated model, plus a public page they deliberate over and rebuild themselves every week.",
+    "page": "https://audacious.theaudacity.io",
+    "roster": [
+      { "id": "audacious-orchestrator", "role": "Orchestrator" },
+      { "id": "audacious-code-reviewer", "role": "Code review" },
+      { "id": "audacious-system-designer", "role": "System design" },
+      { "id": "audacious-frontend", "role": "Frontend and UI/UX" },
+      { "id": "audacious-qa", "role": "QA and testing" },
+      { "id": "audacious-security", "role": "Security" }
+    ],
+    "powered_by": "Senior human judgment paired with an AI build platform.",
+    "note": "Roster disclosed 2026-08-24, superseding the earlier not-exposed stance. Invocation access is by engagement: book a call or email obviously@theaudacity.io."
   },
   "interoperability": {
     "llms_txt": "https://theaudacity.io/llms.txt"

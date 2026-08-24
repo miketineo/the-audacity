@@ -2,3 +2,5 @@
 /v2/* /:splat 301
 /sitemap.xml /sitemap-index.xml 301
 /logs/* / 301
+/audacious https://audacious.theaudacity.io 302
+/audacious/* https://audacious.theaudacity.io 302

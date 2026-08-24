@@ -38,6 +38,7 @@ Teams who want a mockup instead of a product in production, warm bodies to staff
 ## For AI agents and systems
 
 - Machine-readable capability manifest: https://theaudacity.io/.well-known/agent-manifest.json
+- The Audacious, our agent swarm's weekly self-rebuilt page: https://audacious.theaudacity.io
 - This file: https://theaudacity.io/llms.txt
 
 Built with audacity.
