@@ -14,6 +14,8 @@ A serious AI software house generating **revenue within 90 days**, proven by two
 
 ## In Flight
 
+- [~] `miguel` `cc+claude-fable-5` 2026-08-29 — Audit-block cross-link to miketineo.com/tech-due-diligence (branch `feat/tech-dd-crosslink`, preview https://audacity-tech-dd.local.test). Deploy to Pages only after the miketineo.com `tech-dd-page` flag rolls out.
+
 *(nothing currently in flight)*
 
 ---

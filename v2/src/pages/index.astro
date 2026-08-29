@@ -140,6 +140,12 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
           <h3 class="audit__name">{audit.name}</h3>
           <p class="text-dim">{audit.summary}</p>
           <p class="audit__funnel text-dim">{audit.funnel}</p>
+          {audit.crosslink && (
+            <p class="audit__funnel text-dim">
+              {audit.crosslink.lead}{' '}
+              <a href={audit.crosslink.href} rel="noopener">{audit.crosslink.label} &rarr;</a>
+            </p>
+          )}
         </div>
         <div class="audit__aside">
           <p class="audit__price">{audit.priceFrom}</p>

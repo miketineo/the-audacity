@@ -72,7 +72,12 @@
     "priceFrom": "from €1.5k",
     "priceRange": "€1.5k to €3k",
     "model": "Fixed scope, written report",
-    "funnel": "A first step toward a Sprint, not the main event. If you already know you want to build, skip it and book a call."
+    "funnel": "A first step toward a Sprint, not the main event. If you already know you want to build, skip it and book a call.",
+    "crosslink": {
+      "lead": "Raising a round?",
+      "label": "Pre-fundraising technical due diligence runs through our fractional CTO practice",
+      "href": "https://miketineo.com/tech-due-diligence.html"
+    }
   },
   "notFor": {
     "title": "When we are the right fit",
