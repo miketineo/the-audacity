@@ -256,11 +256,10 @@ const contactLd = {
       const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const ATTR_KEY = 'audacity-attribution';
 
-      // ---- Tracking shim: use the global tracker if the analytics agent has
-      // installed one, else emit a DOM event it (or anyone) can subscribe to.
+      // ---- Tracking shim: Analytics.astro defines window.audacityTrack and its
+      // script runs before any submit can reach here.
       function track(event, props) {
-        try { if (window.audacityTrack) return window.audacityTrack(event, props); } catch (e) {}
-        window.dispatchEvent(new CustomEvent('audacity:track', { detail: { event, props } }));
+        try { if (window.audacityTrack) window.audacityTrack(event, props); } catch (e) {}
       }
 
       // ---- UTM / attribution capture (first-touch + last-touch), persisted.
@@ -434,13 +433,6 @@ const contactLd = {
 
       wire(document.getElementById('inquiry-form'));
       wire(document.getElementById('waitlist-form'));
-
-      // Expose the tracker name the analytics agent should define, for clarity.
-      // (No-op if it already exists; we never overwrite a real implementation.)
-      if (!window.audacityTrack) {
-        // left intentionally undefined so the agent can own it; track() falls
-        // back to the 'audacity:track' DOM event until then.
-      }
     })();
   </script>
 </Base>

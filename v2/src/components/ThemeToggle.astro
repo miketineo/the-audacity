@@ -58,11 +58,10 @@
 
     apply(getPref(), false);
 
-    // Report theme changes through the shared tracker (defined by Analytics).
-    // Falls back to the 'audacity:track' DOM event if it is not yet present.
+    // Report theme changes through the shared tracker (defined by Analytics,
+    // whose script runs before any click can reach here).
     function report(event, props) {
-      try { if (window.audacityTrack) return window.audacityTrack(event, props); } catch (e) {}
-      window.dispatchEvent(new CustomEvent('audacity:track', { detail: { event, props } }));
+      try { if (window.audacityTrack) window.audacityTrack(event, props); } catch (e) {}
     }
 
     btn.addEventListener('click', () => {
