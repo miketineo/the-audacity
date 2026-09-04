@@ -73,7 +73,7 @@
       } else {
         queue.push([event, payload]);
         // A granted consent that has not booted yet means we just turned on:
-        if (consentGranted()) boot();
+        if (consentGranted()) grant();
       }
     }
     window.audacityTrack = track;
@@ -158,8 +158,20 @@
 
     // ---- Consent wiring. Self-check the stored choice (covers ConsentBanner
     // dispatching 'granted' before this script attached) AND listen for changes.
-    if (consentGranted()) boot();
-    window.addEventListener('audacity:consent-granted', boot);
+    // Consent can be re-granted after a decline within one page load (the footer
+    // reopens the banner). boot() is one-shot, so re-granting has to opt back in
+    // and resume the already-loaded library rather than re-injecting the snippet.
+    function grant() {
+      if (!booted) return boot();
+      try { window.posthog && window.posthog.opt_in_capturing && window.posthog.opt_in_capturing(); } catch (e) {}
+      if (window.posthog && window.posthog.__loaded) {
+        ready = true;
+        flush();
+      }
+    }
+
+    if (consentGranted()) grant();
+    window.addEventListener('audacity:consent-granted', grant);
     window.addEventListener('audacity:consent-denied', function () {
       ready = false;
       queue.length = 0;
