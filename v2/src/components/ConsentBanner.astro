@@ -37,6 +37,7 @@ const base = import.meta.env.BASE_URL; // '/v2/'
 <script>
   (function () {
     const KEY = 'audacity-consent';
+    const V1_KEY = 'audacity-cookie-consent';
     const banner = document.getElementById('consent-banner');
     if (!banner) return;
 
@@ -52,6 +53,16 @@ const base = import.meta.env.BASE_URL; // '/v2/'
         window.dispatchEvent(new CustomEvent('audacity:consent-denied'));
       }
     }
+
+    // v1 (pre-2026-07-07, still archived at /v1/) stored {accepted, ...} under a
+    // different key. Carry a prior acceptance over so we do not silently
+    // re-prompt everyone who had already opted in.
+    try {
+      if (!localStorage.getItem(KEY)) {
+        const v1 = JSON.parse(localStorage.getItem(V1_KEY) || 'null');
+        if (v1 && v1.accepted === true) localStorage.setItem(KEY, 'granted');
+      }
+    } catch (e) { /* noop */ }
 
     const stored = localStorage.getItem(KEY);
     if (stored === 'granted') {

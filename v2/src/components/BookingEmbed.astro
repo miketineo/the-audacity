@@ -76,9 +76,8 @@ const configured = !CAL_LINK.includes('REPLACE_WITH_CAL_LINK');
     if (!calLink) return;
 
     const track = (event: string, props?: Record<string, unknown>) => {
-      const detail = { event, props: Object.assign({ provider: el.getAttribute('data-provider') }, props) };
-      try { (window as any).audacityTrack?.(detail.event, detail.props); } catch (e) {}
-      window.dispatchEvent(new CustomEvent('audacity:track', { detail }));
+      const merged = Object.assign({ provider: el.getAttribute('data-provider') }, props);
+      try { (window as any).audacityTrack?.(event, merged); } catch (e) {}
     };
 
     // Current site theme ('light' | 'dark'), resolved by the no-flash script.
@@ -140,11 +139,19 @@ const configured = !CAL_LINK.includes('REPLACE_WITH_CAL_LINK');
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     // book_call_started once, when the booking surface first becomes visible.
-    const fire = () => track('book_call_started');
+    // Guarded by a local flag rather than io.disconnect(): the event may still
+    // be sitting in the analytics queue awaiting consent, and disconnecting
+    // leaves nothing to retry with.
+    let fired = false;
+    const fire = () => {
+      if (fired) return;
+      fired = true;
+      track('book_call_started');
+    };
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) { fire(); io.disconnect(); }
+          if (entry.isIntersecting) fire();
         });
       }, { threshold: 0.4 });
       io.observe(el);
