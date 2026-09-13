@@ -65,7 +65,6 @@
   "agents": {
     "name": "The Audacious",
     "description": "The studio's reusable agent swarm: six role agents, each on a dedicated model, plus a public page they deliberate over and rebuild themselves every week.",
-    "page": "https://audacious.theaudacity.io",
     "roster": [
       { "id": "audacious-orchestrator", "role": "Orchestrator" },
       { "id": "audacious-code-reviewer", "role": "Code review" },
@@ -75,7 +74,7 @@
       { "id": "audacious-security", "role": "Security" }
     ],
     "powered_by": "Senior human judgment paired with an AI build platform.",
-    "note": "Roster disclosed 2026-08-24, superseding the earlier not-exposed stance. Invocation access is by engagement: book a call or email obviously@theaudacity.io."
+    "note": "Roster disclosed 2026-08-24. The swarm publishes a private weekly issue by email since 2026-09-13; it is not posted online. For invocation access or partnership, book a call or email obviously@theaudacity.io."
   },
   "interoperability": {
     "llms_txt": "https://theaudacity.io/llms.txt"
