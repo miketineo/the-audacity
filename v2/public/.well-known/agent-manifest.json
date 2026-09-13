@@ -64,7 +64,7 @@
   ],
   "agents": {
     "name": "The Audacious",
-    "description": "The studio's reusable agent swarm: six role agents, each on a dedicated model, plus a public page they deliberate over and rebuild themselves every week.",
+    "description": "The studio's reusable agent swarm: six role agents, each on a dedicated model chain, writing a private weekly issue.",
     "roster": [
       { "id": "audacious-orchestrator", "role": "Orchestrator" },
       { "id": "audacious-code-reviewer", "role": "Code review" },
