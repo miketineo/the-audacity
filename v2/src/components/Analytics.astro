@@ -13,9 +13,13 @@
  *      and registers it as PostHog super properties so every event carries its
  *      source. The same localStorage bag rides on inquiry / waitlist payloads.
  *   4. Wires the event taxonomy: page_view, theme_toggled, cta_clicked{location},
- *      book_call_started, inquiry_submitted, waitlist_joined, outbound_click.
- *      (book_call_completed is reconciled server-side from the Calendar event,
- *      per spec 7.4, not captured client-side.)
+ *      book_call_started, book_call_completed, inquiry_submitted,
+ *      waitlist_joined, outbound_click. (book_call_completed comes from Cal.com's
+ *      `bookingSuccessful` callback in BookingEmbed — nothing reconciles it
+ *      server-side; there is no PostHog call anywhere in functions/.)
+ *
+ * page_view is kept alongside PostHog's own $pageview for one migration cycle,
+ * so saved insights built on it keep working. Retire it in a follow-up.
  *
  * NO ad pixels. No Google Ads, no LinkedIn, no social tags (deferred per spec
  * section 10). The loader is structured so those could be added later behind the
@@ -51,25 +55,25 @@
     let booted = false;   // PostHog snippet injected + init called
     let ready = false;    // PostHog fully loaded (loaded callback fired)
     let pageViewSent = false;
-    const queue = [];     // events captured after consent but before ready
+    const queue = [];     // events raised before PostHog is ready (incl. pre-consent)
 
     function flat(props) {
       return Object.assign({}, getFlatUtm(), props || {});
     }
 
-    // ---- Canonical tracker the whole site calls. Gated on consent; queued
-    // until PostHog is ready. We deliberately do NOT also subscribe to the
-    // 'audacity:track' DOM event: every reporter calls window.audacityTrack
-    // when present, and BookingEmbed calls both, so listening would double-count.
+    // ---- Canonical tracker the whole site calls. Events raised before consent
+    // are buffered in-memory and flushed once consent is granted AND PostHog has
+    // loaded; nothing leaves the browser pre-consent and the queue dies with the
+    // page. This is the only tracker: reporters call window.audacityTrack
+    // directly, and Analytics.astro's script runs before any of them can fire.
     function track(event, props) {
-      if (!consentGranted()) return; // nothing fires pre-consent
       const payload = flat(props);
       if (ready && window.posthog) {
         window.posthog.capture(event, payload);
       } else {
         queue.push([event, payload]);
         // A granted consent that has not booted yet means we just turned on:
-        if (consentGranted()) boot();
+        if (consentGranted()) grant();
       }
     }
     window.audacityTrack = track;
@@ -104,7 +108,14 @@
           ((p = t.createElement('script')).type = 'text/javascript'),
             (p.crossOrigin = 'anonymous'),
             (p.async = !0),
-            (p.src = s.api_host.replace('.i.posthog.com', '-assets.i.posthog.com') + '/static/array.js'),
+            (p.src = 'https://z.miketineo.com/static/array.js'),
+            (p.onerror = function () {
+              var f = t.createElement('script');
+              f.async = !0;
+              f.crossOrigin = 'anonymous';
+              f.src = 'https://eu-assets.i.posthog.com/static/array.js';
+              r.parentNode.insertBefore(f, r);
+            }),
             (r = t.getElementsByTagName('script')[0]).parentNode.insertBefore(p, r);
           var u = e;
           for (
@@ -126,9 +137,11 @@
         ui_host: POSTHOG_UI_HOST,
         defaults: '2026-05-30',
         person_profiles: 'identified_only',
-        // Quiet by default: we emit explicit events; autocapture + auto-pageview off.
-        autocapture: false,
-        capture_pageview: false,
+        // Standard web analytics: one $pageview per document load (static MPA,
+        // no ViewTransitions), plus autocapture narrowed to the interactive
+        // elements we actually reason about.
+        autocapture: { element_allowlist: ['a', 'button', 'form'] },
+        capture_pageview: true,
         capture_pageleave: true,
         persistence: 'localStorage+cookie',
         loaded: function (ph) {
@@ -145,8 +158,20 @@
 
     // ---- Consent wiring. Self-check the stored choice (covers ConsentBanner
     // dispatching 'granted' before this script attached) AND listen for changes.
-    if (consentGranted()) boot();
-    window.addEventListener('audacity:consent-granted', boot);
+    // Consent can be re-granted after a decline within one page load (the footer
+    // reopens the banner). boot() is one-shot, so re-granting has to opt back in
+    // and resume the already-loaded library rather than re-injecting the snippet.
+    function grant() {
+      if (!booted) return boot();
+      try { window.posthog && window.posthog.opt_in_capturing && window.posthog.opt_in_capturing(); } catch (e) {}
+      if (window.posthog && window.posthog.__loaded) {
+        ready = true;
+        flush();
+      }
+    }
+
+    if (consentGranted()) grant();
+    window.addEventListener('audacity:consent-granted', grant);
     window.addEventListener('audacity:consent-denied', function () {
       ready = false;
       queue.length = 0;
