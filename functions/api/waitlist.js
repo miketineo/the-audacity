@@ -1,6 +1,6 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
-import { verifyTurnstile, origin } from '../_lib/guard.js';
+import { verifyTurnstile, origin, capture } from '../_lib/guard.js';
 
 // Slack mrkdwn: neutralise <!channel>, <@user> and <url|label> in submitted text.
 function esc(s) {
@@ -16,13 +16,17 @@ export async function onRequestPost(context) {
     'Content-Type': 'application/json',
   };
 
+  const sender = origin(request);
+  let raw = null;
   let email, project, turnstileToken;
   try {
-    const body = await request.json();
+    raw = await request.text();
+    const body = JSON.parse(raw);
     turnstileToken = body.turnstile;
     email = (body.email || '').trim().toLowerCase();
     project = (body.project || '').trim().slice(0, 300);
   } catch {
+    capture(context, 'waitlist', raw, sender, 'invalid_body');
     return new Response(JSON.stringify({ ok: false, error: 'invalid_body' }), {
       status: 400,
       headers: corsHeaders,
@@ -30,16 +34,17 @@ export async function onRequestPost(context) {
   }
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    capture(context, 'waitlist', raw, sender, 'invalid_email');
     return new Response(JSON.stringify({ ok: false, error: 'invalid_email' }), {
       status: 400,
       headers: corsHeaders,
     });
   }
 
-  const sender = origin(request);
   const bot = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, sender.ip);
   if (!bot.ok) {
     console.warn('waitlist_bot_check_failed', JSON.stringify({ reason: bot.reason, ...sender }));
+    capture(context, 'waitlist', raw, sender, `bot_check_failed:${bot.reason}`);
     return new Response(JSON.stringify({ ok: false, error: 'bot_check_failed' }), {
       status: 403,
       headers: corsHeaders,
@@ -48,6 +53,7 @@ export async function onRequestPost(context) {
 
   const key = `email:${email}`;
   const existing = await env.WAITLIST.get(key);
+  capture(context, 'waitlist', raw, sender, existing ? 'accepted_duplicate' : 'accepted');
 
   if (!existing) {
     await env.WAITLIST.put(key, JSON.stringify({

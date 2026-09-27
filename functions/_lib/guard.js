@@ -46,3 +46,29 @@ export function origin(request) {
     http_protocol: cap(cf.httpProtocol, 16),
   };
 }
+
+// capture: forensic copy of every submission (SEC-9 part 2). The raw request body
+// plus origin metadata goes to the FORENSICS R2 bucket under
+// forms/<endpoint>/<yyyy-mm-dd>/<ray>.json, for accepted AND refused requests, so a
+// bot run can be reconstructed byte for byte later. Fire-and-forget via waitUntil:
+// a storage failure is logged and never touches the response. The functions only
+// ever put(); nothing here reads the bucket back. No binding = no-op.
+export function capture(context, endpoint, raw, sender, outcome) {
+  const bucket = context.env.FORENSICS;
+  if (!bucket) return;
+  const now = new Date().toISOString();
+  const id = (sender.ray || '').replace(/[^A-Za-z0-9-]/g, '') || crypto.randomUUID();
+  const key = `forms/${endpoint}/${now.slice(0, 10)}/${id}.json`;
+  const body = JSON.stringify({
+    endpoint,
+    received_at: now,
+    outcome,
+    origin: sender,
+    raw: typeof raw === 'string' ? raw.slice(0, 65536) : null,
+  });
+  context.waitUntil(
+    bucket
+      .put(key, body, { httpMetadata: { contentType: 'application/json' } })
+      .catch((err) => console.error('forensic_capture_failed', endpoint, err?.message || err))
+  );
+}

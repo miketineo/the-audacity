@@ -1,6 +1,6 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
-import { verifyTurnstile, origin } from '../_lib/guard.js';
+import { verifyTurnstile, origin, capture } from '../_lib/guard.js';
 
 const CORS_ORIGIN = 'https://theaudacity.io';
 
@@ -51,10 +51,13 @@ export async function onRequestPost(context) {
     'Content-Type': 'application/json',
   };
 
+  const sender = origin(request);
+  let raw = null;
   let data;
   let turnstileToken;
   try {
-    const body = await request.json();
+    raw = await request.text();
+    const body = JSON.parse(raw);
     turnstileToken = body.turnstile;
     data = {
       name: clean(body.name, CAPS.name),
@@ -67,6 +70,7 @@ export async function onRequestPost(context) {
       utm: cleanUtm(body.utm),
     };
   } catch {
+    capture(context, 'inquiry', raw, sender, 'invalid_body');
     return new Response(JSON.stringify({ ok: false, error: 'invalid_body' }), {
       status: 400,
       headers: corsHeaders,
@@ -74,16 +78,17 @@ export async function onRequestPost(context) {
   }
 
   if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    capture(context, 'inquiry', raw, sender, 'invalid_email');
     return new Response(JSON.stringify({ ok: false, error: 'invalid_email' }), {
       status: 400,
       headers: corsHeaders,
     });
   }
 
-  const sender = origin(request);
   const bot = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, sender.ip);
   if (!bot.ok) {
     console.warn('inquiry_bot_check_failed', JSON.stringify({ reason: bot.reason, ...sender }));
+    capture(context, 'inquiry', raw, sender, `bot_check_failed:${bot.reason}`);
     return new Response(JSON.stringify({ ok: false, error: 'bot_check_failed' }), {
       status: 403,
       headers: corsHeaders,
@@ -98,6 +103,7 @@ export async function onRequestPost(context) {
   // by timestamp+email so repeat inquiries from one sender are all retained.
   const key = `inquiry:${timestamp}:${data.email}`;
   await env.WAITLIST.put(key, JSON.stringify(record));
+  capture(context, 'inquiry', raw, sender, 'accepted');
 
   // Fire-and-forget email. The inquiry is already persisted, so a Resend
   // hiccup must never fail the API response. Mirror waitlist's pattern:
