@@ -35,6 +35,7 @@ A serious AI software house generating **revenue within 90 days**, proven by two
 
 ## Pending — post-release
 
+- [ ] Inquiry auto-reply returns ONLY behind a human approval gate (Miguel 2026-09-27). Removed in `6a87cde` because it let anyone make theaudacity.io email any address, with an unescaped first name in the HTML (phishing relay, `functions/_lib/emails/inquiry.js:76`). Gate design: a submission posts an escaped summary to Slack/Telegram with Approve/Reject; Approve sends a FIXED template (no submitter-supplied text in the body) to the submitter. No LLM reads the submission on the way. Turnstile on the form is a prerequisite.
 - [x] Booking live: Cal.com (`the-audacity-io/diagnostic-call`), theme-synced embed, book_call_completed wired (2026-07-07)
 - [x] P.IVA in the footer imprint (IT04098710926, 2026-07-07)
 - [x] All work committed + pushed to main (public repo; internal strategy docs gitignored), tag v2.0.0
