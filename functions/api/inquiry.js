@@ -1,5 +1,6 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
+import { verifyTurnstile, origin } from '../_lib/guard.js';
 
 const CORS_ORIGIN = 'https://theaudacity.io';
 
@@ -51,8 +52,10 @@ export async function onRequestPost(context) {
   };
 
   let data;
+  let turnstileToken;
   try {
     const body = await request.json();
+    turnstileToken = body.turnstile;
     data = {
       name: clean(body.name, CAPS.name),
       email: clean(body.email, CAPS.email).toLowerCase(),
@@ -77,8 +80,18 @@ export async function onRequestPost(context) {
     });
   }
 
+  const sender = origin(request);
+  const bot = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, sender.ip);
+  if (!bot.ok) {
+    console.warn('inquiry_bot_check_failed', JSON.stringify({ reason: bot.reason, ...sender }));
+    return new Response(JSON.stringify({ ok: false, error: 'bot_check_failed' }), {
+      status: 403,
+      headers: corsHeaders,
+    });
+  }
+
   const timestamp = new Date().toISOString();
-  const record = { ...data, timestamp };
+  const record = { ...data, timestamp, origin: sender };
 
   // Same binding as the waitlist endpoint; namespaced with an 'inquiry:' key
   // prefix so submissions never collide with waitlist 'email:' entries. Keyed

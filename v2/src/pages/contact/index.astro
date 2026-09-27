@@ -23,6 +23,9 @@ import site from '../../content/site.json';
 import pages from '../../content/pages.json';
 
 const base = import.meta.env.BASE_URL;
+// Cloudflare Turnstile site key (public by design); the secret is TURNSTILE_SECRET on the
+// Pages project and is checked server-side in functions/_lib/guard.js.
+const TURNSTILE_SITEKEY = '0x4AAAAAAFFLInkUh_qI20ft';
 const c = pages.contact;
 const s = c.surfaces;
 
@@ -112,6 +115,7 @@ const contactLd = {
       data-kind="inquiry"
       aria-describedby="inquiry-status"
     >
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITEKEY} data-appearance="interaction-only"></div>
       {/* honeypot: real people leave this empty; bots fill it */}
       <div class="hp" aria-hidden="true">
         <label for="inq-company-url">Company website</label>
@@ -220,6 +224,7 @@ const contactLd = {
       data-kind="waitlist"
       aria-describedby="waitlist-status"
     >
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITEKEY} data-appearance="interaction-only"></div>
       <div class="hp" aria-hidden="true">
         <label for="wl-company-url">Company website</label>
         <input id="wl-company-url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
@@ -251,6 +256,7 @@ const contactLd = {
   </section>
 
   {/* ----- Shared, dependency-free form + attribution + tracking logic ----- */}
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
     (function () {
       const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -338,7 +344,7 @@ const contactLd = {
       function payloadFor(form, kind, data) {
         if (kind === 'waitlist') {
           // Contract preserved exactly: waitlist endpoint reads { email, project }.
-          return { email: data.email, project: data.project || '' };
+          return { email: data.email, project: data.project || '', turnstile: data['cf-turnstile-response'] || '' };
         }
         // inquiry: full brief + attribution
         return {
@@ -351,6 +357,7 @@ const contactLd = {
           message: data.message || '',
           interest: data.interest || '',
           utm: attribution,
+          turnstile: data['cf-turnstile-response'] || '',
         };
       }
 
@@ -425,6 +432,9 @@ const contactLd = {
             });
             succeed();
           } catch (err) {
+            // A Turnstile token is single-use: get a fresh one for the retry.
+            const widget = form.querySelector('.cf-turnstile');
+            if (widget && window.turnstile) window.turnstile.reset(widget);
             busy(false);
             setStatus('is-error', statusEl.getAttribute('data-error') || 'Something went wrong.');
           }

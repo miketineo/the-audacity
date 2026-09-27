@@ -1,5 +1,11 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
+import { verifyTurnstile, origin } from '../_lib/guard.js';
+
+// Slack mrkdwn: neutralise <!channel>, <@user> and <url|label> in submitted text.
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 import { welcomeSubject, welcomeHtml, welcomeText } from '../_lib/emails/welcome.js';
 
 export async function onRequestPost(context) {
@@ -10,9 +16,10 @@ export async function onRequestPost(context) {
     'Content-Type': 'application/json',
   };
 
-  let email, project;
+  let email, project, turnstileToken;
   try {
     const body = await request.json();
+    turnstileToken = body.turnstile;
     email = (body.email || '').trim().toLowerCase();
     project = (body.project || '').trim().slice(0, 300);
   } catch {
@@ -29,6 +36,16 @@ export async function onRequestPost(context) {
     });
   }
 
+  const sender = origin(request);
+  const bot = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, sender.ip);
+  if (!bot.ok) {
+    console.warn('waitlist_bot_check_failed', JSON.stringify({ reason: bot.reason, ...sender }));
+    return new Response(JSON.stringify({ ok: false, error: 'bot_check_failed' }), {
+      status: 403,
+      headers: corsHeaders,
+    });
+  }
+
   const key = `email:${email}`;
   const existing = await env.WAITLIST.get(key);
 
@@ -37,6 +54,7 @@ export async function onRequestPost(context) {
       email,
       project,
       timestamp: new Date().toISOString(),
+      origin: sender,
     }));
 
     // Fire-and-forget welcome. If Resend fails we log and move on — the
@@ -57,7 +75,7 @@ export async function onRequestPost(context) {
     // Slack ping so a signup is never silent (API contract unchanged).
     const slackPing = notifySlack({
       webhookUrl: env.SLACK_WEBHOOK_URL,
-      text: `:tada: *New waitlist signup*\n${email}${project ? `\nProject: ${project}` : ''}`,
+      text: `:tada: *New waitlist signup* (untrusted external input)\n${esc(email)}${project ? `\nProject: ${esc(project)}` : ''}`,
     }).catch((err) => {
       console.error('waitlist_slack_failed', email, err?.message || err);
     });
