@@ -1,16 +1,12 @@
-// Auto-reply sent to anyone who submits the project inquiry form.
-// Mirrors welcome.js: a subject plus text/html builders. The builders take
-// the submitter's first name so the reply reads as a person, not a template.
+// Auto-reply to a project inquiry, sent ONLY after a human approves it
+// (SEC-11, functions/api/inquiry-decision.js). The template is FIXED: it takes
+// no arguments and carries no submitter-supplied text, not even the name, so an
+// approved send can never relay attacker content from theaudacity.io.
 
 export const inquirySubject = "Got it. A human is reading this.";
 
-function firstName(name) {
-  const n = (name || '').trim().split(/\s+/)[0];
-  return n || 'there';
-}
-
-export function inquiryText(name) {
-  return `Hey ${firstName(name)},
+export function inquiryText() {
+  return `Hey there,
 
 Your inquiry came through. A human is reading it. Not a bot,
 not a queue, not a ticket that dies in a CRM.
@@ -38,8 +34,7 @@ Reply here or write to obviously@theaudacity.io.
 `;
 }
 
-export function inquiryHtml(name) {
-  const fn = firstName(name);
+export function inquiryHtml() {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -73,7 +68,7 @@ export function inquiryHtml(name) {
 
         <tr>
           <td style="padding:16px 0 8px 0;">
-            <p style="margin:0 0 20px 0;color:#ededed;">Hey ${fn}, your inquiry came through. A human is reading it. Not a bot, not a queue, not a ticket that dies in a CRM.</p>
+            <p style="margin:0 0 20px 0;color:#ededed;">Hey there, your inquiry came through. A human is reading it. Not a bot, not a queue, not a ticket that dies in a CRM.</p>
 
             <p style="margin:0 0 20px 0;color:#ededed;">Here's how this works. The Audacity is an autonomous software agency. A crew of AI agents builds. One human makes sure they don't ship garbage. That means we move fast, but we read every word you sent us before we reply.</p>
 

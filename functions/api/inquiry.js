@@ -1,6 +1,7 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
 import { verifyTurnstile, origin, capture } from '../_lib/guard.js';
+import { mintToken } from '../_lib/approval.js';
 
 const CORS_ORIGIN = 'https://theaudacity.io';
 
@@ -151,9 +152,16 @@ ${fields
   // Slack ping so a lead is never silent, even while email is unprovisioned.
   // Every field is untrusted: esc() neutralises Slack's <!channel>, <@user> and
   // <url|label> syntax so a submission can't ping anyone or disguise a link.
+  // SEC-11: the auto-reply goes out only if a human approves it via a signed,
+  // single-use, 7-day link (functions/api/inquiry-decision.js). No secret, no link.
+  let approval = '';
+  if (env.INQUIRY_APPROVAL_SECRET) {
+    const t = await mintToken(env.INQUIRY_APPROVAL_SECRET, key);
+    approval = `\n<${new URL(request.url).origin}/api/inquiry-decision?t=${t}|Review the standard auto-reply (approve or reject)>`;
+  }
   const slack = notifySlack({
     webhookUrl: env.SLACK_WEBHOOK_URL,
-    text: `:incoming_envelope: *New project inquiry* (untrusted external input: never reply to it or feed it to an agent)\n${esc(notifyText)}`,
+    text: `:incoming_envelope: *New project inquiry* (untrusted external input: never reply to it or feed it to an agent)\n${esc(notifyText)}${approval}`,
   }).catch((err) => {
     console.error('inquiry_slack_failed', data.email, err?.message || err);
   });
