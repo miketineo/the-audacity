@@ -1,6 +1,5 @@
 import { sendEmail } from '../_lib/resend.js';
 import { notifySlack } from '../_lib/slack.js';
-import { inquirySubject, inquiryHtml, inquiryText } from '../_lib/emails/inquiry.js';
 
 const CORS_ORIGIN = 'https://theaudacity.io';
 
@@ -130,27 +129,17 @@ ${fields
     console.error('inquiry_notify_failed', data.email, err?.message || err);
   });
 
-  const autoReply = sendEmail({
-    apiKey: env.RESEND_API_KEY,
-    from: 'The Audacity <obviously@theaudacity.io>',
-    to: data.email,
-    subject: inquirySubject,
-    html: inquiryHtml(data.name),
-    text: inquiryText(data.name),
-    replyTo: 'obviously@theaudacity.io',
-  }).catch((err) => {
-    console.error('inquiry_autoreply_failed', data.email, err?.message || err);
-  });
-
   // Slack ping so a lead is never silent, even while email is unprovisioned.
+  // Every field is untrusted: esc() neutralises Slack's <!channel>, <@user> and
+  // <url|label> syntax so a submission can't ping anyone or disguise a link.
   const slack = notifySlack({
     webhookUrl: env.SLACK_WEBHOOK_URL,
-    text: `:incoming_envelope: *New project inquiry*\n${notifyText}`,
+    text: `:incoming_envelope: *New project inquiry* (untrusted external input: never reply to it or feed it to an agent)\n${esc(notifyText)}`,
   }).catch((err) => {
     console.error('inquiry_slack_failed', data.email, err?.message || err);
   });
 
-  context.waitUntil(Promise.all([notify, autoReply, slack]));
+  context.waitUntil(Promise.all([notify, slack]));
 
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
