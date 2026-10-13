@@ -8,7 +8,7 @@ You have repo access. Use it. Look at the real code, the real assets, and the re
 
 ## Who The Audacity is (so your work has a point of view)
 
-The Audacity is a serious AI-first software house. The studio builds and ships AI-first products fast: an AI agent platform does the acceleration, senior humans own the judgment. The two products that prove it are **Bloop** (AI events concierge for Bologna) and **Washiiba** (on-demand laundry for travelers).
+The Audacity is an Agentic Engineering Studio (see docs/POSITIONING.md): AI agents build, senior judgment owns architecture, security and quality. The two products that prove it are **Bloop** (AI events concierge for Bologna) and **Washiiba** (on-demand laundry for travelers).
 
 The single most important strategic doc is the revenue + website spec. Read it before any page or brand work:
 

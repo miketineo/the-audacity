@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "The Audacity v2 — light-first, super-minimalist agency site (Astro static).",
+  "description": "The Audacity v2 — light-first, super-minimalist Agentic Engineering Studio site (Astro static).",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

@@ -8,7 +8,7 @@
 
 ## North star
 
-A serious AI software house generating **revenue within 90 days**, proven by two shipped own-products: **Bloop** and **Washiiba**. The website is one surface of a sales motion, not the product. Lead offer: the **Studio Sprint** (AI-first product to production, priced).
+An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **revenue within 90 days**, proven by two shipped own-products: **Bloop** and **Washiiba**. The website is one surface of a sales motion, not the product. Lead offer: the **Studio Sprint** (AI-first product to production, priced).
 
 ---
 

@@ -2,7 +2,7 @@ export const welcomeSubject = "You're in. Now the weird part.";
 
 export const welcomeText = `You're in. We saw it come through.
 
-The Audacity is an autonomous software agency. A crew of AI
+The Audacity is an Agentic Engineering Studio. A crew of AI
 agents builds. One human makes sure they don't ship garbage.
 No stand-ups. No sprints. No decks. Just things getting built
 and shipped.
@@ -22,7 +22,7 @@ began with a reply to this email.
 
 ---
 The Audacity — theaudacity.io
-An autonomous software agency. AI agents build. One human
+An Agentic Engineering Studio. AI agents build. One human
 ensures quality.
 Reply here or write to obviously@theaudacity.io.
 `;
@@ -62,7 +62,7 @@ export const welcomeHtml = `<!doctype html>
           <td style="padding:16px 0 8px 0;">
             <p style="margin:0 0 20px 0;color:#ededed;">We saw it come through.</p>
 
-            <p style="margin:0 0 20px 0;color:#ededed;">The Audacity is an autonomous software agency. A crew of AI agents builds. One human makes sure they don't ship garbage. No stand-ups. No sprints. No decks. Just things getting built and shipped.</p>
+            <p style="margin:0 0 20px 0;color:#ededed;">The Audacity is an Agentic Engineering Studio. A crew of AI agents builds. One human makes sure they don't ship garbage. No stand-ups. No sprints. No decks. Just things getting built and shipped.</p>
 
             <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;">Here's the useful bit</p>
 
@@ -79,7 +79,7 @@ export const welcomeHtml = `<!doctype html>
             <p style="margin:24px 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">
               <strong style="color:rgba(255,255,255,0.7);">The Audacity</strong> &middot; <a href="https://theaudacity.io" style="color:#c4ff00;text-decoration:none;">theaudacity.io</a>
             </p>
-            <p style="margin:0 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">An autonomous software agency. AI agents build. One human ensures quality.</p>
+            <p style="margin:0 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">An Agentic Engineering Studio. AI agents build. One human ensures quality.</p>
             <p style="margin:0 0 16px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">Reply to this email, or write to <a href="mailto:obviously@theaudacity.io" style="color:#c4ff00;text-decoration:none;">obviously@theaudacity.io</a>.</p>
             <p style="margin:0;font-size:10px;line-height:1.6;color:rgba(255,255,255,0.3);">You're getting this because you joined the waitlist at theaudacity.io.</p>
           </td>

@@ -3,8 +3,8 @@
   "domain": "theaudacity.io",
   "url": "https://theaudacity.io",
   "email": "obviously@theaudacity.io",
-  "elevator": "An AI-first software studio. Senior judgment, AI acceleration, products shipped to production fast.",
-  "tagline": "We ship AI-first products to production. Fast, and built to launch.",
+  "elevator": "An Agentic Engineering Studio. AI agents build, senior engineering judgment owns architecture, security and launch readiness. We take an idea to a deployed product in weeks, not a slide deck.",
+  "tagline": "AI agents build. One human ensures quality.",
   "nav": {
     "links": [
       { "label": "Home", "href": "" },
@@ -14,7 +14,7 @@
     "cta": { "label": "Book a call", "href": "contact/" }
   },
   "footer": {
-    "tag": "An AI-first software studio. Senior judgment, AI acceleration, products shipped to production.",
+    "tag": "An Agentic Engineering Studio. AI agents build. One human ensures quality.",
     "links": [
       { "label": "Home", "href": "" },
       { "label": "Work", "href": "work/" },
