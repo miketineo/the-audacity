@@ -1,11 +1,11 @@
 {
   "home": {
     "seo": {
-      "title": "The Audacity · AI-first products shipped fast",
-      "description": "An AI-first software studio. We take an idea to a deployed product in weeks, with senior judgment on architecture and AI doing the acceleration. Book a call."
+      "title": "The Audacity · Agentic Engineering Studio",
+      "description": "An Agentic Engineering Studio: a software house where AI agents do the engineering and senior judgment owns architecture, security and quality. Idea to deployed product in weeks. Book a call."
     },
     "hero": {
-      "eyebrow": "AI-first software studio",
+      "eyebrow": "Agentic Engineering Studio",
       "headline": "Your idea, shipped to production. Fast.",
       "lede": "Fixed price and fixed deadline, agreed before we write a line of code, published on this page. We take an idea to a deployed product in weeks: auth, data, payments, analytics, deployment, the parts that make it real. From €6k.",
       "ctaPrimary": { "label": "Book a call", "href": "contact/" },
@@ -51,7 +51,7 @@
   "contact": {
     "seo": {
       "title": "Book a call · The Audacity",
-      "description": "Book a diagnostic call, send a project brief, or join the waitlist. An AI-first software studio that ships products to production fast."
+      "description": "Book a diagnostic call, send a project brief, or join the waitlist. An Agentic Engineering Studio that ships products to production in weeks."
     },
     "hero": {
       "eyebrow": "Contact",

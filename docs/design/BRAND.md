@@ -2,6 +2,8 @@
 
 The canonical visual reference for v2. Read alongside `README.md`. This is the system every proposal derives from. If you propose to evolve it, say so explicitly and show before/after.
 
+Positioning (category, mission, definitions, approved and banned phrasings): `docs/POSITIONING.md` is the single source of truth.
+
 Direction: **light-first, super-minimalist, confident.** Seriousness comes from whitespace, typographic hierarchy, and restraint. Attitude lives in the words and one accent, not in a heavy canvas.
 
 ---

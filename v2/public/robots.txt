@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# AI crawlers explicitly welcome — we're an AI software house
+# AI crawlers explicitly welcome: we're an Agentic Engineering Studio
 User-agent: GPTBot
 Allow: /
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "name": "The Audacity",
-  "description": "An AI-first software studio. Senior judgment on architecture, security and launch readiness, AI acceleration on everything else. We ship AI-first products to production, fast and real enough to launch.",
+  "description": "An Agentic Engineering Studio: a software house where AI agents do the engineering and senior judgment owns architecture, security and quality. We take an idea to a deployed product in weeks, not a slide deck.",
   "url": "https://theaudacity.io",
   "status": "operational",
   "contact": {

@@ -11,8 +11,8 @@ export function inquiryText() {
 Your inquiry came through. A human is reading it. Not a bot,
 not a queue, not a ticket that dies in a CRM.
 
-Here's how this works. The Audacity is an autonomous software
-agency. A crew of AI agents builds. One human makes sure they
+Here's how this works. The Audacity is an Agentic Engineering
+Studio. A crew of AI agents builds. One human makes sure they
 don't ship garbage. That means we move fast, but we read every
 word you sent us before we reply.
 
@@ -28,7 +28,7 @@ Talk soon,
 The Audacity studio
 
 The Audacity, theaudacity.io
-An autonomous software agency. AI agents build. One human
+An Agentic Engineering Studio. AI agents build. One human
 ensures quality.
 Reply here or write to obviously@theaudacity.io.
 `;
@@ -70,7 +70,7 @@ export function inquiryHtml() {
           <td style="padding:16px 0 8px 0;">
             <p style="margin:0 0 20px 0;color:#ededed;">Hey there, your inquiry came through. A human is reading it. Not a bot, not a queue, not a ticket that dies in a CRM.</p>
 
-            <p style="margin:0 0 20px 0;color:#ededed;">Here's how this works. The Audacity is an autonomous software agency. A crew of AI agents builds. One human makes sure they don't ship garbage. That means we move fast, but we read every word you sent us before we reply.</p>
+            <p style="margin:0 0 20px 0;color:#ededed;">Here's how this works. The Audacity is an Agentic Engineering Studio. A crew of AI agents builds. One human makes sure they don't ship garbage. That means we move fast, but we read every word you sent us before we reply.</p>
 
             <p style="margin:0 0 12px 0;color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;">What happens next</p>
 
@@ -87,7 +87,7 @@ export function inquiryHtml() {
             <p style="margin:24px 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">
               <strong style="color:rgba(255,255,255,0.7);">The Audacity</strong> &middot; <a href="https://theaudacity.io" style="color:#ffffff;text-decoration:underline;">theaudacity.io</a>
             </p>
-            <p style="margin:0 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">An autonomous software agency. AI agents build. One human ensures quality.</p>
+            <p style="margin:0 0 8px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">An Agentic Engineering Studio. AI agents build. One human ensures quality.</p>
             <p style="margin:0 0 16px 0;font-size:11px;line-height:1.6;color:rgba(255,255,255,0.45);">Reply to this email, or write to <a href="mailto:obviously@theaudacity.io" style="color:#ffffff;text-decoration:underline;">obviously@theaudacity.io</a>.</p>
             <p style="margin:0;font-size:10px;line-height:1.6;color:rgba(255,255,255,0.3);">You're getting this because you sent a project inquiry at theaudacity.io.</p>
           </td>
