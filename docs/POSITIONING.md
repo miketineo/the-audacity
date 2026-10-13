@@ -54,6 +54,7 @@ Banned (retired self-descriptions):
 - "autonomous software agency"
 - "AI software house" / "AI-first software house"
 - "agency" as a self-description (it reads as staff augmentation)
+- "Senior judgment, AI acceleration" / AI as 'acceleration' (agents do the engineering, they do not merely accelerate it)
 
 ## Writing rules
 

@@ -4,7 +4,7 @@ Design the new logo. Light-first, super-minimalist, confident. Read `../README.m
 
 ## The job
 
-A mark + wordmark that signals a serious AI-first software house with audacity. Minimal and decisive, not busy. It has to survive everywhere: a 16px favicon, a hero, a dark footer, a monochrome stamp on an invoice.
+A mark + wordmark that signals a serious Agentic Engineering Studio with audacity. Minimal and decisive, not busy. It has to survive everywhere: a 16px favicon, a hero, a dark footer, a monochrome stamp on an invoice.
 
 ## Concept territory (explore, do not copy)
 

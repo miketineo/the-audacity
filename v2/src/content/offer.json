@@ -3,8 +3,8 @@
   "title": "The Studio Sprint",
   "lede": "One fixed price and one deadline, agreed before we write code. You get the whole product in production: auth, a managed backend, payments where needed, analytics, web or app-store deployment, and continuous delivery. The deadline is in the agreement and payment is tied to accepted milestones, so the risk of a slipped build sits with us, not you.",
   "differentiator": {
-    "title": "Senior judgment, AI acceleration",
-    "body": "The best builds pair experienced engineering with the speed AI now makes possible. We bring senior judgment to the decisions that matter, architecture, security and launch readiness, and let AI accelerate everything else. Fast, with structure underneath."
+    "title": "Agentic engineering, senior judgment",
+    "body": "Agentic engineering means orchestrated AI agents design, write, test and ship the software, inside architecture, code review and security gates a senior engineer owns. That senior judgment decides what to build, how it is architected and secured, and what is ready to ship. You get agent speed with studio quality: a real, running product, not hours billed."
   },
   "pattern": {
     "title": "One proven approach, repeated",

@@ -2,7 +2,7 @@
   "home": {
     "seo": {
       "title": "The Audacity · Agentic Engineering Studio",
-      "description": "An Agentic Engineering Studio: a software house where AI agents do the engineering and senior judgment owns architecture, security and quality. Idea to deployed product in weeks. Book a call."
+      "description": "An Agentic Engineering Studio: AI agents build, senior judgment owns architecture, security and quality. Idea to deployed product in weeks. Book a call."
     },
     "hero": {
       "eyebrow": "Agentic Engineering Studio",
@@ -22,7 +22,7 @@
       "title": "Scoped, built, shipped",
       "steps": [
         { "n": "01", "title": "Scope", "body": "We pin the offer to one clear outcome and a fixed milestone. You know the price and the deadline before we write code." },
-        { "n": "02", "title": "Build", "body": "Senior judgment on architecture and security, AI acceleration on delivery. You see working software early and often." },
+        { "n": "02", "title": "Build", "body": "AI agents build inside the architecture, review and security gates we own. You see working software early and often." },
         { "n": "03", "title": "Ship", "body": "Deployed to production with the auth, data, analytics and continuous delivery a live product needs. In users' hands, not a demo." }
       ]
     },
