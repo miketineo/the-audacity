@@ -2,9 +2,8 @@
 /**
  * Privacy (/v2/privacy/): plain-language privacy policy in the firm's voice.
  *
- * Covers exactly what the site actually does: the project-brief form, the
- * waitlist email, consent-gated product analytics, and UTM/referrer
- * attribution. Providers are named generically (a transactional email
+ * Covers exactly what the site actually does: the project-brief form,
+ * consent-gated product analytics, and UTM/referrer attribution. Providers are named generically (a transactional email
  * provider, an analytics provider) per house rules: no vendor names in
  * public copy. Monochrome, minimal, matches the shared section rhythm.
  *
@@ -17,7 +16,7 @@ import Logo from '../../components/Logo.astro';
 import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
 import site from '../../content/site.json';
 
-const updated = 'July 2026';
+const updated = 'October 2026';
 
 const sections = [
   {
@@ -32,7 +31,6 @@ const sections = [
     title: 'What we collect, and when',
     body: [
       'If you send a project brief, we receive what you type into the form: your name, email, company or project name, what you want to build, rough budget, rough timeline, and anything else you add.',
-      'If you join the waitlist, we receive your email address.',
       'If you accept analytics, we collect product analytics about how the site is used: pages viewed, buttons clicked, and similar usage events. Nothing analytics-related loads until you say yes, and declining changes nothing about how the site works.',
       'We also record basic attribution when it is present: campaign parameters in the link you arrived from and the page that referred you. It tells us which of our own efforts brought you here.',
     ],
@@ -41,7 +39,7 @@ const sections = [
     id: 'use',
     title: 'What we use it for',
     body: [
-      'To reply to you. A brief exists so we can answer it; a waitlist email exists so we can write when there is something worth saying.',
+      'To reply to you. A brief exists so we can answer it.',
       'To run the studio: knowing which pages and campaigns actually work, and keeping the forms free of spam.',
       'We do not sell your data. We do not run ad trackers. We do not send marketing you did not ask for.',
     ],
@@ -59,7 +57,7 @@ const sections = [
     title: 'How long we keep it',
     body: [
       'Briefs and the correspondence they start: for the life of the conversation and up to two years after the last exchange, so a returning project does not start from zero.',
-      'Waitlist emails: until you unsubscribe or ask us to remove you.',
+      'Emails from our former updates list: until you unsubscribe or ask us to remove you.',
       'Analytics events: per the analytics provider’s standard retention, and your consent choice is stored in your own browser, where you can change it anytime from the footer.',
     ],
   },
@@ -85,9 +83,9 @@ const sections = [
     <p class="eyebrow">Privacy</p>
     <h1 class="hero__title">Short, because we collect little.</h1>
     <p class="hero__lede text-dim">
-      This site does four things with data: it takes project briefs, it keeps a
-      waitlist, it runs analytics only if you opt in, and it notes which link
-      brought you here. This page covers all four. Last updated {updated}.
+      This site does three things with data: it takes project briefs, it runs
+      analytics only if you opt in, and it notes which link brought you here.
+      This page covers all three. Last updated {updated}.
     </p>
   </header>
 
