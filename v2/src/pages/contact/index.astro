@@ -75,8 +75,8 @@ const contactLd = {
     <h1>{c.hero.headline}</h1>
     <p class="hero__lede text-dim">{c.hero.lede}</p>
     <nav class="hero__jump" aria-label="On this page">
-      <a href={`${base}contact/#book`}>Book a call</a>
-      <a href="#brief">Send a brief</a>
+      <Button href={`${base}contact/#book`} variant="primary" size="lg" data-cta="contact-jump-book">Book a call</Button>
+      <Button href="#brief" variant="secondary" size="lg" data-cta="contact-jump-brief">Send a brief</Button>
     </nav>
   </section>
 
@@ -404,18 +404,10 @@ const contactLd = {
   .hero__jump {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
     margin-top: var(--space-2xs);
   }
-  .hero__jump a {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    text-decoration-color: var(--border-strong);
-  }
-  .hero__jump a:hover { color: var(--text); text-decoration-color: var(--accent); }
+  .hero__jump :global(.btn) { min-height: 44px; }
 
   /* ---- What happens next (compact strip, echoes home process steps) ---- */
   .next {
