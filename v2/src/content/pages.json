@@ -85,8 +85,16 @@
           "message": "Anything else we should know?"
         },
         "submit": "Send brief",
-        "success": "Got it. We reply within one business day.",
-        "error": "Something went wrong. Email us directly at obviously@theaudacity.io."
+        "success": "Thanks, your brief is in. We'll reply within 1 business day.",
+        "error": "Your brief didn't send. Check your connection and try again, or email obviously@theaudacity.io. What you typed is still here.",
+        "spam": "We couldn't confirm the form was sent by a person. Try again, or email obviously@theaudacity.io.",
+        "summary": "Check the {n} fields marked above.",
+        "messages": {
+          "name": "Enter your name.",
+          "email": "Enter your email address.",
+          "emailFormat": "Enter an email address like name@example.com.",
+          "project_idea": "Tell us what you want to build, even in one sentence."
+        }
       }
     }
   }
