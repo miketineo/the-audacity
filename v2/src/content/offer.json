@@ -104,16 +104,19 @@
     "eyebrow": "Start small",
     "name": "AI-Readiness & Build Audit",
     "scope": "A fixed-scope audit of your idea, codebase or AI ambition, delivered as a report you can act on.",
-    "summary": "The low-commitment way in. We assess what you have, what it would take to ship, and where AI actually earns its place. Most audits turn into a Sprint, but the report stands on its own.",
-    "timeline": "~1 week",
+    "summary": "Not sure what to build yet? In about a week we review what you have, what it would take to ship, and where AI is worth using. You keep the written report whether or not you build with us.",
+    "timeline": "about 1 week",
     "priceFrom": "from €1.5k",
     "priceRange": "€1.5k to €3k",
-    "model": "Fixed scope, written report",
-    "funnel": "A first step toward a Sprint, not the main event. If you already know you want to build, skip it and book a call.",
+    "model": "written report",
     "crosslink": {
       "lead": "Raising a round?",
       "label": "Pre-fundraising technical due diligence, led by our founder",
       "href": "https://miketineo.com/tech-due-diligence.html"
+    },
+    "cta": {
+      "label": "Book a call about the audit",
+      "href": "contact/?interest=audit#book"
     }
   },
   "notFor": {

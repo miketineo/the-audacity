@@ -23,7 +23,6 @@ import Button from '../components/Button.astro';
 import OrganizationLD from '../components/jsonld/Organization.astro';
 import ServiceLD from '../components/jsonld/Service.astro';
 
-import site from '../content/site.json';
 import offer from '../content/offer.json';
 import proof from '../content/proof.json';
 import pages from '../content/pages.json';
@@ -142,7 +141,6 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
           <p class="eyebrow audit__eyebrow">{audit.eyebrow}</p>
           <h3 class="audit__name">{audit.name}</h3>
           <p class="text-dim">{audit.summary}</p>
-          <p class="audit__funnel text-dim">{audit.funnel}</p>
           {audit.crosslink && (
             <p class="audit__funnel text-dim">
               {audit.crosslink.lead}{' '}
@@ -153,8 +151,8 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
         <div class="audit__aside">
           <p class="audit__price">{audit.priceFrom}</p>
           <p class="pkg__meta">{audit.timeline} · {audit.model}</p>
-          <Button href={href('contact/?interest=audit')} variant="ghost" size="sm" data-cta="offer-start-audit">
-            {site.cta.startAudit} &rarr;
+          <Button href={href(audit.cta.href)} variant="ghost" size="sm" data-cta="offer-start-audit">
+            {audit.cta.label}
           </Button>
         </div>
       </div>
