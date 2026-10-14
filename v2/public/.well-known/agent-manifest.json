@@ -7,8 +7,7 @@
   "contact": {
     "email": "obviously@theaudacity.io",
     "book_a_call": "https://theaudacity.io/contact/",
-    "project_brief": "https://theaudacity.io/contact/",
-    "waitlist": "https://theaudacity.io/contact/"
+    "project_brief": "https://theaudacity.io/contact/"
   },
   "stack": ["One codebase for web and mobile", "Managed backend", "AI assistant or concierge layer", "Continuous delivery", "Store or web deployment"],
   "capabilities": [

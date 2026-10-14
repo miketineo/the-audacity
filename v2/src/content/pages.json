@@ -52,7 +52,7 @@
   "contact": {
     "seo": {
       "title": "Book a call · The Audacity",
-      "description": "Book a diagnostic call, send a project brief, or join the waitlist. An Agentic Engineering Studio that ships products to production in weeks."
+      "description": "Book a diagnostic call or send a project brief. An Agentic Engineering Studio that ships products to production in weeks."
     },
     "hero": {
       "eyebrow": "Contact",
@@ -87,13 +87,6 @@
         "submit": "Send brief",
         "success": "Got it. We reply within one business day.",
         "error": "Something went wrong. Email us directly at obviously@theaudacity.io."
-      },
-      "waitlist": {
-        "title": "Join the waitlist",
-        "body": "Not a project, just curious where this goes? Leave your email and we will keep you posted.",
-        "submit": "Join",
-        "success": "You are on the list.",
-        "error": "Something went wrong. Try again in a moment."
       }
     }
   }

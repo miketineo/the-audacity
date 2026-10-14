@@ -1,11 +1,9 @@
 ---
 /**
- * /v2/contact/ : the conversion page. Three surfaces, one job each.
+ * /v2/contact/ : the conversion page. Two surfaces, one job each.
  *   1. Book a call             -> BookingEmbed (swap-ready, see component).
  *   2. Send a brief            -> inquiry form, POST /api/inquiry (+ UTM,
  *      + optional ?interest= intent carried in a hidden field).
- *   3. Join the waitlist       -> waitlist form, POST /api/waitlist (contract
- *      preserved: { email, project }).
  * Booking leads (every "Book a call" link targets #book); the brief follows
  * for people who would rather write. A "what happens next" strip renders
  * when content provides it.
@@ -79,7 +77,6 @@ const contactLd = {
     <nav class="hero__jump" aria-label="On this page">
       <a href={`${base}contact/#book`}>Book a call</a>
       <a href="#brief">Send a brief</a>
-      <a href="#waitlist">Join the waitlist</a>
     </nav>
   </section>
 
@@ -207,55 +204,6 @@ const contactLd = {
     </form>
   </section>
 
-  {/* -------------------------------------------------------- 3. Waitlist */}
-  <section id="waitlist" class="container surface surface--waitlist" aria-labelledby="waitlist-title">
-    <header class="surface__head">
-      <p class="surface__index eyebrow">03</p>
-      <div>
-        <h2 id="waitlist-title">{s.waitlist.title}</h2>
-        <p class="surface__body text-dim">{s.waitlist.body}</p>
-      </div>
-    </header>
-
-    <form
-      class="form form--inline"
-      id="waitlist-form"
-      novalidate
-      data-endpoint="/api/waitlist"
-      data-kind="waitlist"
-      aria-describedby="waitlist-status"
-    >
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITEKEY} data-appearance="interaction-only"></div>
-      <div class="hp" aria-hidden="true">
-        <label for="wl-company-url">Company website</label>
-        <input id="wl-company-url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
-      </div>
-
-      <div class="form__inline-row">
-        <div class="field field--grow">
-          <label class="visually-hidden" for="wl-email">{s.inquiry.fields.email}</label>
-          <input id="wl-email" name="email" type="email" required autocomplete="email"
-                 inputmode="email" placeholder="you@example.com" aria-describedby="wl-email-err" />
-          <p class="field__err" id="wl-email-err" hidden></p>
-        </div>
-        <Button type="submit" variant="primary" size="md" class="form__submit">
-          {s.waitlist.submit}
-        </Button>
-      </div>
-      <p
-        class="form__status"
-        id="waitlist-status"
-        role="status"
-        aria-live="polite"
-        data-success={s.waitlist.success}
-        data-error={s.waitlist.error}
-      ></p>
-      <p class="form__note text-dim">
-        We only use this to reply to you. <a href={`${base}privacy/`}>Privacy policy</a>.
-      </p>
-    </form>
-  </section>
-
   {/* ----- Shared, dependency-free form + attribution + tracking logic ----- */}
   <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
@@ -343,10 +291,6 @@ const contactLd = {
       }
 
       function payloadFor(form, kind, data) {
-        if (kind === 'waitlist') {
-          // Contract preserved exactly: waitlist endpoint reads { email, project }.
-          return { email: data.email, project: data.project || '', turnstile: data['cf-turnstile-response'] || '' };
-        }
         // inquiry: full brief + attribution
         return {
           name: data.name,
@@ -428,7 +372,7 @@ const contactLd = {
             try { const j = await res.json(); if (j && typeof j.ok === 'boolean') ok = j.ok; } catch (e2) {}
             if (!ok) throw new Error('bad_response');
 
-            track(kind === 'waitlist' ? 'waitlist_joined' : 'inquiry_submitted', {
+            track('inquiry_submitted', {
               source: location.pathname,
             });
             succeed();
@@ -443,7 +387,6 @@ const contactLd = {
       }
 
       wire(document.getElementById('inquiry-form'));
-      wire(document.getElementById('waitlist-form'));
     })();
   </script>
 </Base>
@@ -527,7 +470,6 @@ const contactLd = {
   }
   .field { display: grid; gap: var(--space-2xs); }
   .field--full { grid-column: 1 / -1; }
-  .field--grow { flex: 1 1 auto; min-width: 0; }
 
   .field label {
     font-size: var(--text-sm);
@@ -595,19 +537,8 @@ const contactLd = {
   }
 
   /* Once submitted, collapse the inputs and lead with the confirmation. */
-  .form.is-done .form__grid,
-  .form.is-done .form__inline-row { display: none; }
+  .form.is-done .form__grid { display: none; }
   .form.is-done .form__status { font-size: var(--text-md); }
-
-  /* ---- Waitlist (compact inline) ---- */
-  .surface--waitlist { padding-bottom: var(--space-2xl); }
-  .form--inline { gap: var(--space-sm); max-width: 38rem; }
-  .form__inline-row {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: start;
-  }
-  .form--inline .form__submit { flex: 0 0 auto; }
 
   /* ---- Honeypot: visually + AT hidden, still fillable by bots ---- */
   .hp {
@@ -623,7 +554,5 @@ const contactLd = {
     .surface__head { grid-template-columns: 1fr; gap: var(--space-2xs); }
     .surface__index { padding-top: 0; }
     .form__grid { grid-template-columns: 1fr; }
-    .form__inline-row { flex-direction: column; align-items: stretch; }
-    .form--inline .form__submit { width: 100%; }
   }
 </style>
