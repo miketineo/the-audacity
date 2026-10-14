@@ -1,10 +1,10 @@
 ---
 /**
- * Footer.astro — legal, contact, llms.txt link, cookie settings.
+ * Footer.astro — legal, contact, cookie settings.
  *
  * "Cookie settings" re-opens ConsentBanner via the 'audacity:open-consent'
  * event (ConsentBanner listens). llms.txt + agent-manifest are produced by the
- * SEO agent at site root; linked here with absolute base. No props.
+ * SEO agent at site root and stay served there, but are not linked. No props.
  */
 const base = import.meta.env.BASE_URL;
 const year = new Date().getFullYear();
@@ -32,7 +32,6 @@ const links = [
     <div class="site-footer__meta">
       <a href="mailto:obviously@theaudacity.io">obviously@theaudacity.io</a>
       <a href={`${base}privacy/`}>Privacy</a>
-      <a href={`${base}llms.txt`}>llms.txt</a>
       <button type="button" class="site-footer__cookies" id="open-cookie-settings">
         Cookie settings
       </button>
