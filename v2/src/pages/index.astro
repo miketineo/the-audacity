@@ -2,9 +2,9 @@
 /**
  * Home (/v2/): the studio's thin, confident sales surface.
  *
- * One scroll: hero -> the stack we build on -> the Studio Sprint offer (with
- * prices) -> straight answers (FAQ, when content provides it) -> how it works
- * -> the two proofs (teasers) -> who it's not for -> a closing book-a-call band.
+ * One scroll (N2): hero -> the stack we build on -> the two proofs (teasers)
+ * -> how it works -> the offer (with prices) -> who it's for and not for ->
+ * straight answers (FAQ, when content provides it) -> a closing book-a-call band.
  *
  * Consumes shared content: site.json, offer.json, proof.json, pages.json,
  * and faq.json when present (optional, loaded via glob so its absence never
@@ -97,6 +97,56 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     </div>
   </section>
 
+  {/* ===================== PROOF TEASER ===================== */}
+  <section class="section proof" aria-labelledby="proof-h">
+    <div class="container">
+      <header class="section__head">
+        <p class="eyebrow eyebrow--mark" data-reveal>{home.proofTeaser.eyebrow}</p>
+        <h2 id="proof-h" data-reveal>{home.proofTeaser.title}</h2>
+        <p class="section__lede text-dim" data-reveal>{home.proofTeaser.body}</p>
+      </header>
+
+      <ul class="proofs" role="list">
+        {proof.items.map((it) => (
+          <li class="proof-card" data-reveal>
+            <p class="proof-card__kind eyebrow">{it.kind}</p>
+            <h3 class="proof-card__name">{it.name}</h3>
+            <p class="proof-card__one">{it.oneLiner}</p>
+            <p class="proof-card__summary text-dim">{it.summary}</p>
+            <ul class="chips" role="list" aria-label="Stack">
+              {it.stack.map((s) => <li class="chip">{s}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ul>
+
+      <div class="proof__more" data-reveal>
+        <Button href={href(home.proofTeaser.cta.href)} variant="secondary" size="md" data-cta="proof-see-work">
+          {home.proofTeaser.cta.label} &rarr;
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  {/* ===================== PROCESS ===================== */}
+  <section class="section process" id="how-it-works" aria-labelledby="process-h">
+    <div class="container">
+      <header class="section__head">
+        <p class="eyebrow eyebrow--mark" data-reveal>{home.process.eyebrow}</p>
+        <h2 id="process-h" data-reveal>{home.process.title}</h2>
+      </header>
+      <ol class="steps" role="list">
+        {home.process.steps.map((s) => (
+          <li class="step" data-reveal>
+            <span class="step__n" aria-hidden="true">{s.n}</span>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="text-dim">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
   {/* ===================== OFFER ===================== */}
   <section class="section offer" id="offer" aria-labelledby="offer-h">
     <div class="container">
@@ -171,79 +221,6 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     </div>
   </section>
 
-  {/* ===================== FAQ (renders only when faq.json exists) ===================== */}
-  {faqItems.length > 0 && (
-    <section class="section faq" id="faq" aria-labelledby="faq-h">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow eyebrow--mark" data-reveal>{faqEyebrow}</p>
-          <h2 id="faq-h" data-reveal>{faqTitle}</h2>
-        </header>
-        <div class="faq__list">
-          {faqItems.map((item) => (
-            <details class="faq__item" data-reveal>
-              <summary class="faq__q">
-                <span>{item.q}</span>
-                <span class="faq__marker" aria-hidden="true"></span>
-              </summary>
-              <p class="faq__a text-dim">{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  {/* ===================== PROCESS ===================== */}
-  <section class="section process" id="how-it-works" aria-labelledby="process-h">
-    <div class="container">
-      <header class="section__head">
-        <p class="eyebrow eyebrow--mark" data-reveal>{home.process.eyebrow}</p>
-        <h2 id="process-h" data-reveal>{home.process.title}</h2>
-      </header>
-      <ol class="steps" role="list">
-        {home.process.steps.map((s) => (
-          <li class="step" data-reveal>
-            <span class="step__n" aria-hidden="true">{s.n}</span>
-            <h3 class="step__title">{s.title}</h3>
-            <p class="text-dim">{s.body}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  {/* ===================== PROOF TEASER ===================== */}
-  <section class="section proof" aria-labelledby="proof-h">
-    <div class="container">
-      <header class="section__head">
-        <p class="eyebrow eyebrow--mark" data-reveal>{home.proofTeaser.eyebrow}</p>
-        <h2 id="proof-h" data-reveal>{home.proofTeaser.title}</h2>
-        <p class="section__lede text-dim" data-reveal>{home.proofTeaser.body}</p>
-      </header>
-
-      <ul class="proofs" role="list">
-        {proof.items.map((it) => (
-          <li class="proof-card" data-reveal>
-            <p class="proof-card__kind eyebrow">{it.kind}</p>
-            <h3 class="proof-card__name">{it.name}</h3>
-            <p class="proof-card__one">{it.oneLiner}</p>
-            <p class="proof-card__summary text-dim">{it.summary}</p>
-            <ul class="chips" role="list" aria-label="Stack">
-              {it.stack.map((s) => <li class="chip">{s}</li>)}
-            </ul>
-          </li>
-        ))}
-      </ul>
-
-      <div class="proof__more" data-reveal>
-        <Button href={href(home.proofTeaser.cta.href)} variant="secondary" size="md" data-cta="proof-see-work">
-          {home.proofTeaser.cta.label} &rarr;
-        </Button>
-      </div>
-    </div>
-  </section>
-
   {/* ===================== WHO IT'S NOT FOR ===================== */}
   <section class="section notfor" aria-labelledby="notfor-h">
     <div class="container notfor__inner">
@@ -266,6 +243,29 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
       </div>
     </div>
   </section>
+
+  {/* ===================== FAQ (renders only when faq.json exists) ===================== */}
+  {faqItems.length > 0 && (
+    <section class="section faq" id="faq" aria-labelledby="faq-h">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow eyebrow--mark" data-reveal>{faqEyebrow}</p>
+          <h2 id="faq-h" data-reveal>{faqTitle}</h2>
+        </header>
+        <div class="faq__list">
+          {faqItems.map((item) => (
+            <details class="faq__item" data-reveal>
+              <summary class="faq__q">
+                <span>{item.q}</span>
+                <span class="faq__marker" aria-hidden="true"></span>
+              </summary>
+              <p class="faq__a text-dim">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   {/* ===================== CLOSING CTA BAND ===================== */}
   <section class="cta-band" aria-labelledby="ctaband-h">
