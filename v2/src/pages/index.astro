@@ -49,7 +49,8 @@ const faqItems: FaqItem[] = faqList
 const faqEyebrow = (!Array.isArray(faqRaw) && faqRaw?.eyebrow) || 'FAQ';
 const faqTitle = (!Array.isArray(faqRaw) && faqRaw?.title) || 'Straight answers';
 
-const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Continuous delivery', 'Production deployment'];
+const stackLabel = 'Every build includes';
+const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic releases (continuous delivery)'];
 ---
 <Base
   title={home.seo.title}
@@ -85,11 +86,14 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
       </div>
     </div>
 
-    {/* The repeatable stack, doubling as a quiet proof line. */}
+    {/* What every package includes (COPY-02), labelled. */}
     <div class="container">
-      <ul class="stack" role="list" aria-label="The stack under every build" data-reveal>
-        {stack.map((s) => <li class="stack__item">{s}</li>)}
-      </ul>
+      <div class="stack" data-reveal>
+        <p class="stack__label" id="stack-label">{stackLabel}</p>
+        <ul class="stack__list" role="list" aria-labelledby="stack-label">
+          {stack.map((s) => <li class="stack__item">{s}</li>)}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -295,20 +299,26 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
   .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-2xs); }
 
   .stack {
-    display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-md);
+    display: grid; gap: var(--space-xs);
     margin-top: var(--space-2xl);
     padding-top: var(--space-md);
     border-top: 1px solid var(--border);
   }
+  .stack__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--text);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .stack__list { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-lg); }
   .stack__item {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     letter-spacing: 0.04em;
     color: var(--text-dim);
     text-transform: uppercase;
-  }
-  .stack__item + .stack__item::before {
-    content: '·'; margin-right: var(--space-md); color: var(--border-strong);
   }
 
   /* ---------- offer ---------- */
