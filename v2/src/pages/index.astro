@@ -49,6 +49,14 @@ const faqItems: FaqItem[] = faqList
 const faqEyebrow = (!Array.isArray(faqRaw) && faqRaw?.eyebrow) || 'FAQ';
 const faqTitle = (!Array.isArray(faqRaw) && faqRaw?.title) || 'Straight answers';
 
+// V2: one existing screenshot per proof card, alt text = the /work/ caption.
+const proofShots: Record<string, { src: string; w: number; h: number; alt: string }> = {
+  bloop: { src: 'work/bloop/feed.png', w: 1206, h: 2622,
+    alt: "Bloop's mobile feed of live events across the city." },
+  washiiba: { src: 'work/washiiba/02-home.png', w: 1284, h: 2778,
+    alt: 'The Washiiba home screen on mobile with services to book and a list of active orders.' },
+};
+
 const stackLabel = 'Every build includes';
 const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic releases (continuous delivery)'];
 ---
@@ -121,6 +129,18 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
       <ul class="proofs" role="list">
         {proof.items.map((it) => (
           <li class="proof-card" data-reveal>
+            {proofShots[it.id] && (
+              <figure class="proof-card__shot">
+                <img
+                  src={href(proofShots[it.id].src)}
+                  width={proofShots[it.id].w}
+                  height={proofShots[it.id].h}
+                  alt={proofShots[it.id].alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            )}
             <p class="proof-card__kind eyebrow">{it.kind}</p>
             {/* N4: the whole card is one link (stretched over the card) to its /work/ section. */}
             <h3 class="proof-card__name">
@@ -576,6 +596,19 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   .proof-card__link:focus-visible { outline: none; }
   .proof-card__link:focus-visible::after { outline: 2px solid var(--focus); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { .proof-card { transition: none; } }
+  /* V2: phone-framed screenshot; on top below 36rem, right column above */
+  .proof-card__shot {
+    margin: 0; width: 7rem; padding: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .proof-card__shot img { display: block; width: 100%; height: auto; border-radius: calc(var(--radius-md) - 3px); }
+  @media (min-width: 36rem) {
+    .proof-card:has(.proof-card__shot) { grid-template-columns: minmax(0, 1fr) 8rem; column-gap: var(--space-lg); }
+    .proof-card > :not(.proof-card__shot) { grid-column: 1; }
+    .proof-card__shot { grid-column: 2; grid-row: 1 / span 5; align-self: start; width: 100%; }
+  }
   .proof-card__kind { color: var(--text-dim); }
   .proof-card__name { font-size: var(--text-xl); }
   .proof-card__one { font-size: var(--text-md); font-weight: 600; }
