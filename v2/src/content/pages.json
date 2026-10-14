@@ -84,6 +84,7 @@
           "timeline": "Rough timeline",
           "message": "Anything else we should know?"
         },
+        "moreDetails": "Add more details (optional)",
         "submit": "Send brief",
         "success": "Thanks, your brief is in. We'll reply within 1 business day.",
         "error": "Your brief didn't send. Check your connection and try again, or email obviously@theaudacity.io. What you typed is still here.",
