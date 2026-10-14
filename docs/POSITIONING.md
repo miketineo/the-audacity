@@ -60,8 +60,8 @@ Banned (retired self-descriptions):
 
 - No em-dashes or `--` as phrase separators. Use a comma, colon, parentheses or a new sentence.
 - Never use the word "land" or any of its conjugations.
-- No overclaiming a team: The Audacity is one founder plus AI agents. Never invent headcount, clients or numbers.
-- No person names on public surfaces; the firm speaks as "we" or "the studio".
+- No overclaiming a team: The Audacity is run by two founders working with AI agents. Never invent headcount, clients or numbers.
+- The firm speaks as "we" or "the studio" in running copy. Founder names may appear on team and about surfaces (team cards, the About page, the FAQ answer to "Who does the work?", structured data) only once real inputs exist: real names, roles, photos and links supplied by the founders. Never invent a name, role, bio or photo.
 
 ## Scope
 
