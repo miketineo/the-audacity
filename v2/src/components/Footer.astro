@@ -76,11 +76,15 @@ const links = [
   .site-footer__meta {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2xs);
+    gap: 0;
   }
   .site-footer__nav a,
   .site-footer__meta a,
   .site-footer__cookies {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px; /* tap target (A1) */
+    min-width: 44px;
     font-size: var(--text-sm);
     color: var(--text-dim);
     text-decoration: none;
