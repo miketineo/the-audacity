@@ -105,8 +105,8 @@ const ordered = proof.items; // [bloop, washiiba]
                 <p class="proves__text">{item.proves}</p>
               </div>
 
-              <ul class="stack" role="list" aria-label={`${item.name} stack`}>
-                {item.stack.map((s) => <li class="chip">{s}</li>)}
+              <ul class="stack" role="list" aria-label={`${item.name} highlights`}>
+                {item.tags.map((s) => <li class="chip">{s}</li>)}
               </ul>
             </div>
 
