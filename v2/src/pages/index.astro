@@ -391,6 +391,16 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   .pkg__row dd { margin: 0; color: var(--text); }
   .pkg__cta { margin-top: var(--space-sm); }
 
+  /* O1: on desktop the three cards share row tracks (subgrid), so name,
+     price, timeline, list and button line up across cards. */
+  @media (min-width: 60.0625rem) {
+    @supports (grid-template-rows: subgrid) {
+      .packages { row-gap: var(--space-xs); align-items: stretch; }
+      .pkg { grid-row: span 5; grid-template-rows: subgrid; height: auto; }
+      .pkg__rows, .pkg__includes { align-content: start; }
+    }
+  }
+
   /* audit funnel-in */
   .audit {
     display: grid; grid-template-columns: 1fr auto; gap: var(--space-lg);
