@@ -67,9 +67,6 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
 >
   <Logo slot="logo" direction="c" />
 
-  {/* Opt into scroll-reveal only when JS is present: no-JS keeps content visible. */}
-  <script slot="head" is:inline>document.documentElement.classList.add('js');</script>
-
   {/* Structured data: Organization + the Studio Sprint Service (one source of
       truth in src/components/jsonld/, fed from content JSON). */}
   <OrganizationLD slot="jsonld" />
@@ -667,20 +664,19 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   }
 
   /* ===================== motion: scroll reveal =====================
-     Default (no-JS / reduced-motion): everything visible.
-     With JS (html.js), pre-reveal state hides, observer adds .is-visible. */
-  :global(html.js) [data-reveal] {
+     Default (no-JS / reduced-motion): everything visible. The reveal script
+     adds .is-armed (hidden state) only to elements below the fold, then
+     .is-visible on scroll. Opacity only, 200ms, no movement. */
+  [data-reveal].is-armed {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
-    will-change: opacity, transform;
+    transition: opacity 200ms var(--ease);
   }
-  :global(html.js) [data-reveal].is-visible {
+  [data-reveal].is-armed.is-visible {
     opacity: 1;
-    transform: none;
   }
   @media (prefers-reduced-motion: reduce) {
-    :global(html.js) [data-reveal] { opacity: 1; transform: none; transition: none; }
+    /* !important beats the global 0.001ms reduced-motion rule: no fade at all. */
+    [data-reveal] { opacity: 1; transition-duration: 0s !important; }
   }
 </style>
 
@@ -697,15 +693,16 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
 </script>
 
 <script>
-  // Purposeful reveal: stagger elements into view once, then stop observing.
-  // Reduced-motion users get the static (already-visible) state from CSS.
+  // Purposeful reveal: fade elements into view once, then stop observing.
+  // Content is visible by default; the hidden state (.is-armed) is added here,
+  // only to elements below the fold, so no-JS and reduced-motion users never
+  // see it.
   (function () {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-    const els = Array.from(document.querySelectorAll('[data-reveal]'));
-    if (reduce.matches || !('IntersectionObserver' in window)) {
-      els.forEach((el) => el.classList.add('is-visible'));
-      return;
-    }
+    if (reduce.matches || !('IntersectionObserver' in window)) return;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'))
+      .filter((el) => el.getBoundingClientRect().top >= window.innerHeight);
+    els.forEach((el) => el.classList.add('is-armed'));
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {

@@ -522,15 +522,14 @@ const ordered = proof.items; // [bloop, washiiba]
   @media (prefers-reduced-motion: no-preference) {
     [data-animate].is-ready {
       opacity: 0;
-      transform: translateY(14px);
-      transition:
-        opacity var(--dur) var(--ease),
-        transform var(--dur) var(--ease);
+      transition: opacity 200ms var(--ease);
     }
     [data-animate].is-ready.is-visible {
       opacity: 1;
-      transform: none;
     }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-animate] { transition-duration: 0s !important; }
   }
 </style>
 
