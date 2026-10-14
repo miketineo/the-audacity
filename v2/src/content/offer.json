@@ -2,6 +2,7 @@
   "eyebrow": "The offer",
   "title": "The Studio Sprint",
   "lede": "One fixed price and one deadline, both in the contract. You pay per finished milestone, so if we run late, you haven't paid for the late part.",
+  "includesLabel": "See what's included",
   "pattern": {
     "title": "One proven approach, repeated",
     "body": "Every build runs on the same spine: web and mobile from one codebase, a managed backend, an AI assistant layer, continuous delivery, and production deployment. Proven on our own products, Bloop and Washiiba, both shipped on this exact spine, not a one-off experiment. Standardized scope protects your timeline and keeps senior attention where it counts. The same spine ships founder MVPs, internal tools, customer portals and ops automation."
