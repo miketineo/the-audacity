@@ -119,9 +119,17 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
             <p class="pkg__price">{p.priceFrom}</p>
             <p class="pkg__meta">{p.timeline} · {p.model}</p>
             <p class="pkg__summary">{p.summary}</p>
-            <ul class="pkg__includes" role="list">
-              {p.includes.map((inc) => <li>{inc}</li>)}
-            </ul>
+            {p.rows ? (
+              <dl class="pkg__rows">
+                {p.rows.map((r) => (
+                  <div class="pkg__row"><dt>{r.label}</dt><dd>{r.value}</dd></div>
+                ))}
+              </dl>
+            ) : (
+              <ul class="pkg__includes" role="list">
+                {p.includes?.map((inc) => <li>{inc}</li>)}
+              </ul>
+            )}
             <div class="pkg__cta">
               <Button
                 href={href('contact/#book')}
@@ -373,6 +381,15 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
     content: ''; position: absolute; left: 0; top: 0.62em;
     width: 0.7em; height: 2px; background: var(--border-strong); border-radius: 2px;
   }
+  .pkg__rows { display: grid; margin-top: var(--space-2xs); }
+  .pkg__row {
+    display: grid; grid-template-columns: minmax(0, 7.5rem) 1fr; gap: var(--space-xs);
+    padding-block: var(--space-2xs);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-sm);
+  }
+  .pkg__row dt { color: var(--text-dim); }
+  .pkg__row dd { margin: 0; color: var(--text); }
   .pkg__cta { margin-top: var(--space-sm); }
 
   /* audit funnel-in */

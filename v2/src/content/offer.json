@@ -20,13 +20,35 @@
       "priceFrom": "from €6k",
       "priceRange": "€6k to €10k",
       "model": "Fixed milestone",
-      "includes": [
-        "One core user flow, built end to end",
-        "One platform (mobile or web)",
-        "Persistent data, auth and a managed API",
-        "Deployed to production with continuous delivery",
-        "Analytics: Not included",
-        "Payments: Not included"
+      "rows": [
+        {
+          "label": "User flows",
+          "value": "1, built end to end"
+        },
+        {
+          "label": "Platforms",
+          "value": "Web or mobile"
+        },
+        {
+          "label": "Login and data",
+          "value": "Included"
+        },
+        {
+          "label": "AI assistant",
+          "value": "Not included"
+        },
+        {
+          "label": "Analytics",
+          "value": "Not included"
+        },
+        {
+          "label": "Payments",
+          "value": "Not included"
+        },
+        {
+          "label": "Launch",
+          "value": "Live in production, with automatic releases"
+        }
       ]
     },
     {
@@ -38,11 +60,35 @@
       "priceFrom": "from €15k",
       "priceRange": "€15k to €30k",
       "model": "Fixed milestone",
-      "includes": [
-        "Multiple flows across mobile and web from one codebase",
-        "Auth, persistent data, a managed API and an AI assistant layer",
-        "Analytics and consent wired in",
-        "Web or app-store deployment plus continuous delivery"
+      "rows": [
+        {
+          "label": "User flows",
+          "value": "Several, across the product"
+        },
+        {
+          "label": "Platforms",
+          "value": "Web and mobile from one codebase"
+        },
+        {
+          "label": "Login and data",
+          "value": "Included"
+        },
+        {
+          "label": "AI assistant",
+          "value": "Included"
+        },
+        {
+          "label": "Analytics",
+          "value": "Included, with cookie consent"
+        },
+        {
+          "label": "Payments",
+          "value": "When needed"
+        },
+        {
+          "label": "Launch",
+          "value": "Web or app stores, with automatic releases"
+        }
       ]
     },
     {
