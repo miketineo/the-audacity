@@ -24,7 +24,9 @@
         "One core user flow, built end to end",
         "One platform (mobile or web)",
         "Persistent data, auth and a managed API",
-        "Deployed to production with continuous delivery"
+        "Deployed to production with continuous delivery",
+        "Analytics: Not included",
+        "Payments: Not included"
       ]
     },
     {
