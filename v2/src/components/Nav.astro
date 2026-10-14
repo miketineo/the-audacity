@@ -89,8 +89,7 @@ const hasLogo = Astro.slots.has('logo');
     position: sticky;
     top: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: saturate(1.1) blur(10px);
+    background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
   .site-header__inner {
