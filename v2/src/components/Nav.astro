@@ -6,7 +6,7 @@
  *   logo — the brand lockup (a page passes the chosen <Logo/> or an <img>).
  *          Falls back to a plain wordmark link if nothing is provided.
  * Links: Home / Work / Contact (base-aware). ThemeToggle + primary CTA
- * "Book a call" -> /v2/contact/. Mobile: accessible disclosure menu.
+ * "Book a call" -> /contact/#book. Mobile: accessible disclosure menu.
  * No props.
  */
 import Button from './Button.astro';
@@ -18,7 +18,7 @@ const links = [
   { label: 'Work', href: `${base}work/` },
   { label: 'Contact', href: `${base}contact/` },
 ];
-const contact = `${base}contact/`;
+const contact = `${base}contact/#book`;
 const current = Astro.url.pathname.replace(/\/+$/, '/') || '/';
 const isCurrent = (href: string) => current === href.replace(/\/+$/, '/');
 const hasLogo = Astro.slots.has('logo');
