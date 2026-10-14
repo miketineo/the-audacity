@@ -243,11 +243,19 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
         <p class="eyebrow eyebrow--mark" data-reveal>Honest fit</p>
         <h2 id="notfor-h" data-reveal>{notFor.title}</h2>
       </div>
-      <ul class="notfor__list" role="list">
-        {notFor.items.map((item) => (
-          <li class="notfor__item" data-reveal>{item}</li>
-        ))}
-      </ul>
+      <div class="notfor__lists">
+        <ul class="notfor__list" role="list" aria-labelledby="notfor-h">
+          {notFor.items.map((item) => (
+            <li class="notfor__item" data-reveal>{item}</li>
+          ))}
+        </ul>
+        <h3 id="notfor-not-h" class="notfor__subhead" data-reveal>{notFor.notTitle}</h3>
+        <ul class="notfor__list" role="list" aria-labelledby="notfor-not-h">
+          {notFor.notItems.map((item) => (
+            <li class="notfor__item" data-reveal>{item}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -492,6 +500,8 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   /* ---------- who it's not for ---------- */
   .notfor__inner { display: grid; grid-template-columns: minmax(0, 22rem) 1fr; gap: var(--space-xl); align-items: start; }
   .notfor__head { display: grid; gap: var(--space-sm); }
+  .notfor__lists { display: grid; gap: 0; }
+  .notfor__subhead { font-size: var(--text-lg); margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
   .notfor__list { display: grid; gap: 0; }
   .notfor__item {
     max-width: none;
