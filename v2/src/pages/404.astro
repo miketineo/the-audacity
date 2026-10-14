@@ -1,0 +1,58 @@
+---
+/**
+ * 404 (any missing URL): says plainly what happened and offers a way on.
+ * Copy is COPY-16 from the UX audit. Astro emits dist/404.html, which sits at
+ * the root of the Pages bundle, so Cloudflare Pages serves it with status 404
+ * for any path that has no file.
+ */
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import Button from '../components/Button.astro';
+
+const base = import.meta.env.BASE_URL;
+const links = [
+  { label: 'Home', href: base },
+  { label: 'Our work', href: `${base}work/` },
+  { label: 'Prices', href: `${base}#pricing` },
+  { label: 'Contact', href: `${base}contact/` },
+];
+---
+<Base
+  title="Page not found · The Audacity"
+  description="The link may be old or mistyped."
+  path="/404.html"
+>
+  <Logo slot="logo" direction="c" />
+
+  <section class="container notfound">
+    <h1 class="notfound__title">This page doesn't exist</h1>
+    <p class="notfound__lede text-dim">The link may be old or mistyped. Try one of these:</p>
+    <ul class="notfound__links" role="list">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <Button href={`${base}contact/#book`} variant="primary" size="lg">Book a call</Button>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: var(--space-2xl) var(--space-3xl);
+    display: grid;
+    gap: var(--space-md);
+    justify-items: start;
+  }
+  .notfound__title { font-size: var(--text-2xl); max-width: 18ch; }
+  .notfound__lede { font-size: var(--text-md); max-width: 56ch; }
+  .notfound__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-lg);
+    padding: 0;
+    margin: 0;
+  }
+  .notfound__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>
