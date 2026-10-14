@@ -11,7 +11,7 @@
       { "label": "Work", "href": "work/" },
       { "label": "Contact", "href": "contact/" }
     ],
-    "cta": { "label": "Book a call", "href": "contact/" }
+    "cta": { "label": "Book a call", "href": "contact/#book" }
   },
   "footer": {
     "tag": "An Agentic Engineering Studio. AI agents build. One human ensures quality.",

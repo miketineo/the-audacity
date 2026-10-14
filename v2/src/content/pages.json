@@ -30,7 +30,7 @@
     "ctaBand": {
       "title": "Have an idea that should already be in production?",
       "body": "Book a diagnostic call. We will tell you what it takes to ship it and whether we are the right studio to do it.",
-      "cta": { "label": "Book a call", "href": "contact/" }
+      "cta": { "label": "Book a call", "href": "contact/#book" }
     }
   },
   "work": {
@@ -57,24 +57,24 @@
     "hero": {
       "eyebrow": "Contact",
       "headline": "Book a call. Tell us what you want to ship.",
-      "lede": "Three ways in. Book a diagnostic call, send a project brief, or join the waitlist. Every message about a real project gets a human reply within one business day."
+      "lede": "Pick a time for a free 25-minute call, or send a brief if you'd rather write. Every message about a real project gets a reply from a person within 1 business day."
     },
     "nextSteps": {
       "eyebrow": "What happens next",
       "steps": [
         "A free 25-minute call.",
-        "A written fixed-price proposal within two business days.",
-        "Deposit, kickoff date, and the build starts."
+        "A written fixed-price proposal within 2 business days.",
+        "A deposit, a start date, and the build begins."
       ]
     },
     "surfaces": {
       "booking": {
-        "title": "Book a diagnostic call",
-        "body": "Pick a time. We will talk through what you want to build, what it takes to ship it, and whether the Studio Sprint fits."
+        "title": "Book a call",
+        "body": "Pick a time. We'll talk through what you want to build, what it takes to ship, and which package fits."
       },
       "inquiry": {
-        "title": "Send a project brief",
-        "body": "Not ready for a call? Tell us about the project and your rough budget and timeline. We will come back with a straight answer.",
+        "title": "Send a brief",
+        "body": "Not ready for a call? Tell us about the project and we'll reply with a straight answer within 1 business day.",
         "fields": {
           "name": "Your name",
           "email": "Email",

@@ -1,13 +1,14 @@
 ---
 /**
  * /v2/contact/ : the conversion page. Three surfaces, one job each.
- *   1. Send a project brief    -> inquiry form, POST /api/inquiry (+ UTM,
+ *   1. Book a call             -> BookingEmbed (swap-ready, see component).
+ *   2. Send a brief            -> inquiry form, POST /api/inquiry (+ UTM,
  *      + optional ?interest= intent carried in a hidden field).
- *   2. Book a diagnostic call  -> BookingEmbed (swap-ready, see component).
  *   3. Join the waitlist       -> waitlist form, POST /api/waitlist (contract
  *      preserved: { email, project }).
- * The brief leads: it never dead-ends, while booking depends on a configured
- * scheduler. A "what happens next" strip renders when content provides it.
+ * Booking leads (every "Book a call" link targets #book); the brief follows
+ * for people who would rather write. A "what happens next" strip renders
+ * when content provides it.
  *
  * All copy comes from src/content/{pages,site}.json. Forms are progressively
  * enhanced: server-validating endpoints back them up, but the client adds
@@ -76,8 +77,8 @@ const contactLd = {
     <h1>{c.hero.headline}</h1>
     <p class="hero__lede text-dim">{c.hero.lede}</p>
     <nav class="hero__jump" aria-label="On this page">
+      <a href={`${base}contact/#book`}>Book a call</a>
       <a href="#brief">Send a brief</a>
-      <a href="#book">Book a call</a>
       <a href="#waitlist">Join the waitlist</a>
     </nav>
   </section>
@@ -97,10 +98,22 @@ const contactLd = {
     </section>
   )}
 
-  {/* ----------------------------------------------------------- 1. Brief */}
-  <section id="brief" class="container surface" aria-labelledby="brief-title">
+  {/* ------------------------------------------------------------ 1. Book */}
+  <section id="book" class="container surface" aria-labelledby="book-title">
     <header class="surface__head">
       <p class="surface__index eyebrow">01</p>
+      <div>
+        <h2 id="book-title">{s.booking.title}</h2>
+        <p class="surface__body text-dim">{s.booking.body}</p>
+      </div>
+    </header>
+    <BookingEmbed title={s.booking.title} email={site.email} />
+  </section>
+
+  {/* ----------------------------------------------------------- 2. Brief */}
+  <section id="brief" class="container surface" aria-labelledby="brief-title">
+    <header class="surface__head">
+      <p class="surface__index eyebrow">02</p>
       <div>
         <h2 id="brief-title">{s.inquiry.title}</h2>
         <p class="surface__body text-dim">{s.inquiry.body}</p>
@@ -192,18 +205,6 @@ const contactLd = {
         We only use this to reply to you. <a href={`${base}privacy/`}>Privacy policy</a>.
       </p>
     </form>
-  </section>
-
-  {/* ------------------------------------------------------------ 2. Book */}
-  <section id="book" class="container surface" aria-labelledby="book-title">
-    <header class="surface__head">
-      <p class="surface__index eyebrow">02</p>
-      <div>
-        <h2 id="book-title">{s.booking.title}</h2>
-        <p class="surface__body text-dim">{s.booking.body}</p>
-      </div>
-    </header>
-    <BookingEmbed title={s.booking.title} email={site.email} />
   </section>
 
   {/* -------------------------------------------------------- 3. Waitlist */}
