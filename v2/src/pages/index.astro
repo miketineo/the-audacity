@@ -109,8 +109,8 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
       <ul class="packages" role="list">
         {packages.map((p) => (
           <li class={`pkg${p.id === 'launch' ? ' pkg--flagship' : ''}`} data-reveal>
-            {p.id === 'launch' && <span class="pkg__flag">Flagship</span>}
             <div class="pkg__top">
+              {p.id === 'launch' && <span class="pkg__flag">Flagship</span>}
               <h3 class="pkg__name">{p.name}</h3>
               <p class="pkg__scope text-dim">{p.scope}</p>
             </div>
@@ -360,13 +360,19 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     background: var(--accent);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
+  /* O3: small pill above the Launch title, not beside it */
   .pkg__flag {
-    position: absolute; top: var(--space-md); right: var(--space-md);
+    justify-self: start;
+    margin-bottom: var(--space-2xs);
+    padding: 0.25em 0.75em;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
     font-family: var(--font-mono); font-size: var(--text-xs);
     letter-spacing: var(--tracking-label); text-transform: uppercase;
+    line-height: 1.4;
     color: var(--text-dim);
   }
-  .pkg__top { display: grid; gap: var(--space-3xs); }
+  .pkg__top { display: grid; gap: var(--space-3xs); align-content: start; }
   .pkg__name { font-size: var(--text-md); font-family: var(--font-body); font-weight: 650; letter-spacing: 0; }
   .pkg__scope { font-size: var(--text-sm); }
   .pkg__price {
