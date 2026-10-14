@@ -6,11 +6,11 @@
     },
     "hero": {
       "eyebrow": "Agentic Engineering Studio",
-      "headline": "Your idea, shipped to production. Fast.",
+      "headline": "Your product live in weeks, at a fixed price",
       "lede": "We build the whole product: sign-up and login, database, and launch on the web or app stores, with payments and analytics when you need them. The price and deadline go in the contract before any code, and you pay per finished milestone.",
       "priceLine": "From €6k. Prices are listed below.",
-      "ctaPrimary": { "label": "Book a call", "href": "contact/" },
-      "ctaSecondary": { "label": "See the work", "href": "work/" }
+      "ctaPrimary": { "label": "Book a call", "href": "contact/#book" },
+      "ctaSecondary": { "label": "See our work", "href": "work/" }
     },
     "proofTeaser": {
       "eyebrow": "Proof",
