@@ -2,10 +2,6 @@
   "eyebrow": "The offer",
   "title": "The Studio Sprint",
   "lede": "One fixed price and one deadline, both in the contract. You pay per finished milestone, so if we run late, you haven't paid for the late part.",
-  "differentiator": {
-    "title": "Agentic engineering, senior judgment",
-    "body": "Agentic engineering means orchestrated AI agents design, write, test and ship the software, inside architecture, code review and security gates a senior engineer owns. That senior judgment decides what to build, how it is architected and secured, and what is ready to ship. You get agent speed with studio quality: a real, running product, not hours billed."
-  },
   "pattern": {
     "title": "One proven approach, repeated",
     "body": "Every build runs on the same spine: web and mobile from one codebase, a managed backend, an AI assistant layer, continuous delivery, and production deployment. Proven on our own products, Bloop and Washiiba, both shipped on this exact spine, not a one-off experiment. Standardized scope protects your timeline and keeps senior attention where it counts. The same spine ships founder MVPs, internal tools, customer portals and ops automation."
@@ -104,10 +100,6 @@
       ]
     }
   ],
-  "changeOrder": {
-    "title": "What is in, what is a change order",
-    "body": "Each package states exactly what is included. Anything outside that scope is a clear, priced change order agreed in writing before we build it, so the timeline you signed off on holds. You pay per accepted milestone: a deposit books the slot, the balance is due when the milestone ships and you sign it off."
-  },
   "audit": {
     "eyebrow": "Start small",
     "name": "AI-Readiness & Build Audit",

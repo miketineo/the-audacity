@@ -40,13 +40,13 @@
     },
     "hero": {
       "eyebrow": "Work",
-      "headline": "Built on our own products first.",
-      "lede": "Instead of a wall of client logos, we point to the work itself: two products we designed, built and shipped ourselves. Here is what each one proves."
+      "headline": "Built on our own products first",
+      "lede": "Two products we designed, built and run ourselves, with the scope, the timeline and what each one shows."
     },
     "cta": {
-      "title": "Want yours in this list?",
+      "title": "Want your product here next?",
       "body": "Book a call and tell us what you want to ship.",
-      "button": { "label": "Book a call", "href": "contact/" }
+      "button": { "label": "Book a call", "href": "contact/#book" }
     }
   },
   "contact": {

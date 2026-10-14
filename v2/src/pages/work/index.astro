@@ -36,11 +36,11 @@ const galleries: Record<string, {
   bloop: {
     shots: [
       { src: 'work/bloop/concierge.png', w: 1206, h: 2622, frame: 'phone',
-        alt: 'Bloop answering a plain-language question with a grounded reply over a live catalogue of what is on in the city.' },
+        alt: "Bloop's home screen, where you ask what you feel like doing." },
       { src: 'work/bloop/feed.png', w: 1206, h: 2622, frame: 'phone',
         alt: "Bloop's mobile feed of live events across the city." },
       { src: 'work/bloop/admin.png', w: 1514, h: 985, frame: 'web',
-        alt: "Bloop's web admin surface for curating the live events catalogue." },
+        alt: "Bloop's web admin for curating the events catalogue." },
     ],
   },
   washiiba: {
@@ -80,11 +80,6 @@ const ordered = proof.items; // [bloop, washiiba]
     <p class="hero__lede text-dim">{work.hero.lede}</p>
   </header>
 
-  {/* ---------- Proof claim line ---------- */}
-  <section class="container claim" aria-label="What the work proves" data-animate>
-    <p class="claim__text">{proof.lede}</p>
-  </section>
-
   {/* ---------- Projects ---------- */}
   <div class="projects">
     {ordered.map((item, i) => {
@@ -99,11 +94,14 @@ const ordered = proof.items; // [bloop, washiiba]
                 <h2 class="project__name">{item.name}</h2>
                 <p class="project__kind eyebrow">{item.kind}</p>
               </div>
-              <p class="project__one">{item.oneLiner}</p>
-              <p class="project__summary text-dim">{item.summary}</p>
+              <p class="project__one">{item.tagline}</p>
+              <div class="built">
+                <p class="built__label eyebrow">What we built</p>
+                <p class="project__summary text-dim">{item.built}</p>
+              </div>
 
               <div class="proves">
-                <p class="proves__label eyebrow">What it demonstrates</p>
+                <p class="proves__label eyebrow">What it shows</p>
                 <p class="proves__text">{item.proves}</p>
               </div>
 
@@ -128,7 +126,7 @@ const ordered = proof.items; // [bloop, washiiba]
                     class={`thumb frame frame--${thumb.frame}`}
                     href={`${base}${thumb.src}`}
                     data-lightbox-open={lbId}
-                    aria-label={`${item.name}: view all ${g.shots.length} screens`}
+                    aria-label={`See ${more} more ${item.name} screenshots`}
                   >
                     {thumb.frame === 'web' && (
                       <span class="frame__chrome" aria-hidden="true">
@@ -236,18 +234,6 @@ const ordered = proof.items; // [bloop, washiiba]
     max-width: 52ch;
   }
 
-  /* ===== Proof claim ===== */
-  .claim {
-    padding-block: var(--space-sm) var(--space-xl);
-  }
-  .claim__text {
-    font-size: var(--text-lg);
-    max-width: 30ch;
-    line-height: var(--leading-snug);
-    border-left: 3px solid var(--accent);
-    padding-left: var(--space-md);
-  }
-
   /* ===== Projects ===== */
   .projects {
     display: grid;
@@ -289,6 +275,9 @@ const ordered = proof.items; // [bloop, washiiba]
     font-size: var(--text-base);
     max-width: 46ch;
   }
+
+  .built { display: grid; gap: var(--space-3xs); }
+  .built__label { color: var(--text-dim); }
 
   .proves {
     margin-top: var(--space-2xs);
