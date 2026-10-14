@@ -639,10 +639,12 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
 
   /* ---------- closing CTA band ---------- */
   .cta-band { padding-block: var(--space-2xl); border-top: 1px solid var(--border); }
+  /* V6: keep the container's full width (same left edge as other sections)
+     and cap only the text measure, so the band is left-aligned, not centred. */
   .cta-band__inner {
     display: grid; gap: var(--space-md); justify-items: start;
-    max-width: 46ch;
   }
+  .cta-band__title, .cta-band__body { max-width: 46ch; }
   .cta-band__title { font-size: var(--text-2xl); }
   .cta-band__body { font-size: var(--text-md); }
 
