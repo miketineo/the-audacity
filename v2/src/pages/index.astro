@@ -118,7 +118,6 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
             </div>
             <p class="pkg__price">{p.priceFrom}</p>
             <p class="pkg__meta">{p.timeline} · {p.model}</p>
-            <p class="pkg__summary">{p.summary}</p>
             {p.rows ? (
               <dl class="pkg__rows">
                 {p.rows.map((r) => (
@@ -195,7 +194,7 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
   )}
 
   {/* ===================== PROCESS ===================== */}
-  <section class="section process" aria-labelledby="process-h">
+  <section class="section process" id="how-it-works" aria-labelledby="process-h">
     <div class="container">
       <header class="section__head">
         <p class="eyebrow eyebrow--mark" data-reveal>{home.process.eyebrow}</p>
