@@ -110,7 +110,10 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
         {proof.items.map((it) => (
           <li class="proof-card" data-reveal>
             <p class="proof-card__kind eyebrow">{it.kind}</p>
-            <h3 class="proof-card__name">{it.name}</h3>
+            {/* N4: the whole card is one link (stretched over the card) to its /work/ section. */}
+            <h3 class="proof-card__name">
+              <a class="proof-card__link" href={href(`work/#${it.id}`)} data-cta={`proof-card-${it.id}`}>{it.name}</a>
+            </h3>
             <p class="proof-card__one">{it.oneLiner}</p>
             <p class="proof-card__summary text-dim">{it.summary}</p>
             <ul class="chips" role="list" aria-label="Stack">
@@ -530,6 +533,15 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
   }
+  /* N4: one stretched link per card, with visible hover and focus on the card */
+  .proof-card { position: relative; transition: border-color var(--dur-fast) var(--ease); }
+  .proof-card:hover { border-color: var(--border-strong); }
+  .proof-card__link { text-decoration: none; }
+  .proof-card__link::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); }
+  .proof-card:hover .proof-card__link { text-decoration: underline; text-decoration-color: var(--accent); }
+  .proof-card__link:focus-visible { outline: none; }
+  .proof-card__link:focus-visible::after { outline: 2px solid var(--focus); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .proof-card { transition: none; } }
   .proof-card__kind { color: var(--text-dim); }
   .proof-card__name { font-size: var(--text-xl); }
   .proof-card__one { font-size: var(--text-md); font-weight: 600; }
