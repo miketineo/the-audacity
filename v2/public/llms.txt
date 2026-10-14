@@ -32,7 +32,7 @@ We do not have a wall of client logos yet. We have two AI-first products we desi
 
 ## Who this is not for
 
-Teams who want a mockup instead of a product in production, warm bodies to staff-augment instead of a studio that owns delivery, or AI as a box to tick rather than a way to move faster on real engineering. We are not a fractional CTO practice, a staff-augmentation agency, a no-code shop or a strategy consultancy.
+Teams who want a mockup instead of a product in production, warm bodies to staff-augment instead of a studio that owns delivery, or AI as a box to tick rather than the agents doing real engineering. We are not a fractional CTO practice, a staff-augmentation agency, a no-code shop or a strategy consultancy.
 
 ## How to work with us
 
