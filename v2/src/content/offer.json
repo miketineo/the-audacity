@@ -120,13 +120,19 @@
     }
   },
   "notFor": {
-    "title": "When we are the right fit",
+    "title": "When we're the right fit",
     "items": [
-      "You want a product in production, not a mockup to look at.",
-      "You want a studio that owns delivery end to end, rather than extra hands to manage.",
-      "You value the right outcome and a predictable timeline over the lowest bid.",
-      "You see AI as a way to move faster on serious engineering, not a box to tick.",
-      "You want a partner with a point of view on scope and architecture, and the conversations that come with it."
+      "You want a working product in production, not a mockup.",
+      "You want one studio to own delivery, not extra hands to manage.",
+      "You care more about the right outcome and a predictable timeline than the lowest bid.",
+      "You see AI as a way to move faster on serious engineering.",
+      "You want a partner with opinions on scope and architecture."
+    ],
+    "notTitle": "When we're not",
+    "notItems": [
+      "You want the lowest bid.",
+      "Your scope is still open and you'd rather pay by the hour.",
+      "You need developers to add to your own team."
     ]
   }
 }
