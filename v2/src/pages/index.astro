@@ -75,6 +75,7 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
         {home.hero.headline}<span class="dot" aria-hidden="true"></span>
       </h1>
       <p class="hero__lede text-dim" data-reveal>{home.hero.lede}</p>
+      <p class="hero__price" data-reveal>{home.hero.priceLine}</p>
       <div class="hero__cta" data-reveal>
         <Button href={href(home.hero.ctaPrimary.href)} variant="primary" size="lg" data-cta="hero-book-call">
           {home.hero.ctaPrimary.label}
@@ -294,6 +295,7 @@ const stack = ['Web', 'Mobile', 'Managed backend', 'AI assistant layer', 'Contin
     vertical-align: baseline;
   }
   .hero__lede { font-size: var(--text-md); max-width: 56ch; }
+  .hero__price { font-size: var(--text-md); font-weight: 600; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-2xs); }
 
   .stack {

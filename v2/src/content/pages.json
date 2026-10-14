@@ -7,7 +7,8 @@
     "hero": {
       "eyebrow": "Agentic Engineering Studio",
       "headline": "Your idea, shipped to production. Fast.",
-      "lede": "Fixed price and fixed deadline, agreed before we write a line of code, published on this page. We take an idea to a deployed product in weeks: auth, data, payments, analytics, deployment, the parts that make it real. From €6k.",
+      "lede": "We build the whole product: sign-up and login, database, and launch on the web or app stores, with payments and analytics when you need them. The price and deadline go in the contract before any code, and you pay per finished milestone.",
+      "priceLine": "From €6k. Prices are listed below.",
       "ctaPrimary": { "label": "Book a call", "href": "contact/" },
       "ctaSecondary": { "label": "See the work", "href": "work/" }
     },
@@ -61,7 +62,7 @@
     "nextSteps": {
       "eyebrow": "What happens next",
       "steps": [
-        "A 30-minute diagnostic call, free.",
+        "A free 25-minute call.",
         "A written fixed-price proposal within two business days.",
         "Deposit, kickoff date, and the build starts."
       ]
