@@ -153,11 +153,6 @@ const contactLd = {
         </div>
 
         <div class="field field--full">
-          <label for="inq-company">{s.inquiry.fields.company}</label>
-          <input id="inq-company" name="company" type="text" autocomplete="organization" />
-        </div>
-
-        <div class="field field--full">
           <label for="inq-idea">{s.inquiry.fields.project_idea} <span class="req" aria-hidden="true">*</span></label>
           <textarea id="inq-idea" name="project_idea" rows="4" required
                     aria-describedby="inq-idea-err" data-msg-empty={s.inquiry.messages.project_idea}></textarea>
@@ -172,18 +167,30 @@ const contactLd = {
           </select>
         </div>
 
-        <div class="field">
-          <label for="inq-timeline">{s.inquiry.fields.timeline}</label>
-          <select id="inq-timeline" name="timeline">
-            <option value="">Select a timeline</option>
-            {timelineOptions.map((o) => <option value={o}>{o}</option>)}
-          </select>
-        </div>
+        {/* Optional fields sit in a disclosure (C3). They stay in the form, so
+            FormData still carries every field whether it is open or closed. */}
+        <details class="form__more field--full">
+          <summary class="form__more-summary">{s.inquiry.moreDetails}</summary>
+          <div class="form__grid form__more-grid">
+            <div class="field field--full">
+              <label for="inq-company">{s.inquiry.fields.company}</label>
+              <input id="inq-company" name="company" type="text" autocomplete="organization" />
+            </div>
 
-        <div class="field field--full">
-          <label for="inq-message">{s.inquiry.fields.message}</label>
-          <textarea id="inq-message" name="message" rows="3"></textarea>
-        </div>
+            <div class="field">
+              <label for="inq-timeline">{s.inquiry.fields.timeline}</label>
+              <select id="inq-timeline" name="timeline">
+                <option value="">Select a timeline</option>
+                {timelineOptions.map((o) => <option value={o}>{o}</option>)}
+              </select>
+            </div>
+
+            <div class="field field--full">
+              <label for="inq-message">{s.inquiry.fields.message}</label>
+              <textarea id="inq-message" name="message" rows="3"></textarea>
+            </div>
+          </div>
+        </details>
       </div>
 
       <div class="form__footer">
@@ -488,6 +495,21 @@ const contactLd = {
     gap: var(--space-md);
   }
   .field { display: grid; gap: var(--space-2xs); }
+
+  /* Optional fields disclosure (C3) */
+  .form__more { border-top: 1px solid var(--border); padding-top: var(--space-xs); }
+  .form__more-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: 44px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .form__more-summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--radius-md); }
+  .form__more-grid { margin-top: var(--space-sm); }
   .field--full { grid-column: 1 / -1; }
 
   .field label {
