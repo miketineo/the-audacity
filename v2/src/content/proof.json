@@ -10,8 +10,10 @@
       "oneLiner": "An AI events concierge for Bologna.",
       "stack": ["Conversational AI", "AI assistant layer", "Managed backend", "Web + mobile"],
       "summary": "A product we are building and launching right now. Bloop runs a live conversational concierge over a catalogue of what is on in the city. You ask in plain language and get a grounded answer over live data, not a list of search results.",
-      "proves": "A genuinely novel AI product surface, shipped: a conversational concierge over a live catalogue, on a managed backend, deployed.",
-      "tags": ["Conversational AI", "Live catalogue", "Mobile + web"]
+      "tagline": "An AI events concierge for Bologna.",
+      "built": "A chat concierge on top of a live catalogue of what's on in the city. You ask in plain language and get answers from live event data, not a list of search results.",
+      "proves": "We can take a new kind of AI product to production, on live data.",
+      "tags": ["Conversational AI", "AI assistant", "Live catalogue", "Web and mobile"]
     },
     {
       "id": "washiiba",
@@ -20,8 +22,10 @@
       "oneLiner": "A complete laundry marketplace, mobile and web from one codebase.",
       "stack": ["One codebase", "Web + mobile", "Managed backend"],
       "summary": "A complete, production-grade marketplace built end to end. Customer and provider flows, a managed backend, and mobile and web all from a single codebase.",
-      "proves": "Build capability across mobile and web from one codebase, with a managed backend, production-grade and store-ready.",
-      "tags": ["One codebase", "Mobile · Web", "Managed backend"]
+      "tagline": "A laundry marketplace on web and mobile from one codebase.",
+      "built": "Customer and provider apps with ordering, pickup windows and live order status, plus an admin backend, on web and mobile from a single codebase.",
+      "proves": "We can build a full two-sided marketplace across web and mobile, ready for the app stores.",
+      "tags": ["One codebase", "Web and mobile", "Admin backend"]
     }
   ]
 }

@@ -1,26 +1,26 @@
 {
   "eyebrow": "FAQ",
-  "title": "Straight answers",
+  "title": "Common questions",
   "items": [
     {
-      "q": "Who owns the code and IP?",
-      "a": "You do. Full IP transfers on final payment; we keep nothing but the right to say we built it."
+      "q": "Who owns the code?",
+      "a": "You do. Full ownership of the code and intellectual property transfers on final payment. We keep only the right to say we built it."
     },
     {
       "q": "How does payment work?",
-      "a": "A deposit books your slot, then you pay per accepted milestone. Each milestone has a defined scope; the balance for it is due when it ships and you sign it off. No timesheets, no open-ended invoices."
-    },
-    {
-      "q": "What happens after handoff?",
-      "a": "A structured handover: your code in your accounts, documentation, and a defined post-ship window for fixes at no charge. If you want us to keep building, the retainer picks up where the Sprint ends."
+      "a": "A deposit books your start date. After that, you pay per milestone once it ships and you sign it off. No timesheets, no open-ended invoices."
     },
     {
       "q": "What if the deadline slips?",
-      "a": "The deadline is written into the agreement and payment is tied to accepted milestones. If a build slips on our side, you have not paid for the milestone that slipped. The risk sits with us, not you."
+      "a": "The deadline is in the contract, and you pay per finished milestone. If we're late, you haven't paid for that milestone yet."
     },
     {
-      "q": "What is a change order?",
-      "a": "Each package states exactly what is included. Anything outside that scope is a clear, priced change order agreed in writing before we build it, so the timeline you signed off on holds."
+      "q": "What counts as a change?",
+      "a": "Anything outside the agreed scope. We price it in writing before we build it, so the deadline you signed off stays the same."
+    },
+    {
+      "q": "What happens after launch?",
+      "a": "Your code is in your own accounts, with documentation and a set period of free fixes. If you want us to keep building, the retainer picks up from there."
     },
     {
       "q": "Who does the work?",
