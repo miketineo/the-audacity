@@ -1,7 +1,7 @@
 {
   "eyebrow": "The offer",
   "title": "The Studio Sprint",
-  "lede": "One fixed price and one deadline, agreed before we write code. You get the whole product in production: auth, a managed backend, payments where needed, analytics, web or app-store deployment, and continuous delivery. The deadline is in the agreement and payment is tied to accepted milestones, so the risk of a slipped build sits with us, not you.",
+  "lede": "One fixed price and one deadline, both in the contract. You pay per finished milestone, so if we run late, you haven't paid for the late part.",
   "differentiator": {
     "title": "Agentic engineering, senior judgment",
     "body": "Agentic engineering means orchestrated AI agents design, write, test and ship the software, inside architecture, code review and security gates a senior engineer owns. That senior judgment decides what to build, how it is architected and secured, and what is ready to ship. You get agent speed with studio quality: a real, running product, not hours billed."
@@ -14,12 +14,11 @@
     {
       "id": "pilot",
       "name": "Studio Sprint: Pilot",
-      "scope": "One core flow, one platform, deployed to production.",
-      "summary": "Prove your idea works as production software in users' hands: deployed, usable, and live rather than a local demo.",
+      "scope": "Test one idea with real users.",
       "timeline": "2 to 3 weeks",
       "priceFrom": "from €6k",
       "priceRange": "€6k to €10k",
-      "model": "Fixed milestone",
+      "model": "fixed milestone",
       "rows": [
         {
           "label": "User flows",
@@ -54,12 +53,11 @@
     {
       "id": "launch",
       "name": "Studio Sprint: Launch",
-      "scope": "Investor-ready MVP. Auth, data, analytics and deployment, the whole spine of a production-grade product.",
-      "summary": "Everything you need to put a credible product in front of users or investors and start learning.",
+      "scope": "A product ready for users or investors.",
       "timeline": "4 to 6 weeks",
       "priceFrom": "from €15k",
       "priceRange": "€15k to €30k",
-      "model": "Fixed milestone",
+      "model": "fixed milestone",
       "rows": [
         {
           "label": "User flows",
@@ -94,16 +92,15 @@
     {
       "id": "retainer",
       "name": "Build Partner Retainer",
-      "scope": "Ongoing delivery against a roadmap.",
-      "summary": "A senior build partner without hiring a team. We keep shipping while you focus on the business.",
+      "scope": "Keep shipping after launch, without hiring a team.",
       "timeline": "Monthly",
-      "priceFrom": "from €4k/mo",
+      "priceFrom": "from €4k a month",
       "priceRange": "from €4k/mo",
-      "model": "Rolling engagement, cancel anytime",
+      "model": "cancel anytime",
       "includes": [
-        "Continuous delivery on your roadmap",
-        "Senior architecture and security oversight",
-        "Predictable monthly cadence"
+        "Ongoing work on your roadmap",
+        "Senior review of architecture and security",
+        "A fixed monthly rhythm"
       ]
     }
   ],
