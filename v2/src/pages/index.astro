@@ -116,17 +116,25 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
             </div>
             <p class="pkg__price">{p.priceFrom}</p>
             <p class="pkg__meta">{p.timeline} · {p.model}</p>
-            {p.rows ? (
-              <dl class="pkg__rows">
-                {p.rows.map((r) => (
-                  <div class="pkg__row"><dt>{r.label}</dt><dd>{r.value}</dd></div>
-                ))}
-              </dl>
-            ) : (
-              <ul class="pkg__includes" role="list">
-                {p.includes?.map((inc) => <li>{inc}</li>)}
-              </ul>
-            )}
+            {/* O5: below 600px the list collapses behind "See what's included"
+                (script closes it there); open, with no summary shown, above. */}
+            <details class="pkg__details" open>
+              <summary class="pkg__details-summary">
+                <span>{offer.includesLabel}</span>
+                <span class="faq__marker" aria-hidden="true"></span>
+              </summary>
+              {p.rows ? (
+                <dl class="pkg__rows">
+                  {p.rows.map((r) => (
+                    <div class="pkg__row"><dt>{r.label}</dt><dd>{r.value}</dd></div>
+                  ))}
+                </dl>
+              ) : (
+                <ul class="pkg__includes" role="list">
+                  {p.includes?.map((inc) => <li>{inc}</li>)}
+                </ul>
+              )}
+            </details>
             <div class="pkg__cta">
               <Button
                 href={href(p.cta.href)}
@@ -391,6 +399,28 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   .pkg__row dd { margin: 0; color: var(--text); }
   .pkg__cta { margin-top: var(--space-sm); }
 
+  /* O5: compact cards on mobile. The summary only shows below 600px. */
+  .pkg__details-summary { display: none; }
+  .pkg__details[open] .faq__marker::after { transform: scaleY(0); }
+  @media (max-width: 599px) {
+    .pkg__details { border-top: 1px solid var(--border); margin-top: var(--space-2xs); }
+    .pkg__details-summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-sm);
+      min-height: 44px;
+      font-size: var(--text-sm); font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      list-style: none;
+    }
+    .pkg__details-summary::-webkit-details-marker { display: none; }
+    .pkg__details-summary:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+  }
+
   /* O1: on desktop the three cards share row tracks (subgrid), so name,
      price, timeline, list and button line up across cards. */
   @media (min-width: 60.0625rem) {
@@ -563,6 +593,18 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     :global(html.js) [data-reveal] { opacity: 1; transform: none; transition: none; }
   }
 </style>
+
+<script>
+  // O5: pricing card lists start collapsed below 600px and stay open above.
+  (function () {
+    const mq = matchMedia('(max-width: 599px)');
+    const sync = () => document.querySelectorAll('.pkg__details').forEach((d) => {
+      (d as HTMLDetailsElement).open = !mq.matches;
+    });
+    sync();
+    mq.addEventListener('change', sync);
+  })();
+</script>
 
 <script>
   // Purposeful reveal: stagger elements into view once, then stop observing.
