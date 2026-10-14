@@ -140,14 +140,15 @@ const contactLd = {
         <div class="field">
           <label for="inq-name">{s.inquiry.fields.name} <span class="req" aria-hidden="true">*</span></label>
           <input id="inq-name" name="name" type="text" required autocomplete="name"
-                 aria-describedby="inq-name-err" />
+                 aria-describedby="inq-name-err" data-msg-empty={s.inquiry.messages.name} />
           <p class="field__err" id="inq-name-err" hidden></p>
         </div>
 
         <div class="field">
           <label for="inq-email">{s.inquiry.fields.email} <span class="req" aria-hidden="true">*</span></label>
           <input id="inq-email" name="email" type="email" required autocomplete="email"
-                 inputmode="email" aria-describedby="inq-email-err" />
+                 inputmode="email" aria-describedby="inq-email-err"
+                 data-msg-empty={s.inquiry.messages.email} data-msg-format={s.inquiry.messages.emailFormat} />
           <p class="field__err" id="inq-email-err" hidden></p>
         </div>
 
@@ -159,7 +160,7 @@ const contactLd = {
         <div class="field field--full">
           <label for="inq-idea">{s.inquiry.fields.project_idea} <span class="req" aria-hidden="true">*</span></label>
           <textarea id="inq-idea" name="project_idea" rows="4" required
-                    aria-describedby="inq-idea-err"></textarea>
+                    aria-describedby="inq-idea-err" data-msg-empty={s.inquiry.messages.project_idea}></textarea>
           <p class="field__err" id="inq-idea-err" hidden></p>
         </div>
 
@@ -196,6 +197,8 @@ const contactLd = {
           aria-live="polite"
           data-success={s.inquiry.success}
           data-error={s.inquiry.error}
+          data-spam={s.inquiry.spam}
+          data-summary={s.inquiry.summary}
         ></p>
       </div>
       <p class="form__note text-dim">
@@ -267,27 +270,33 @@ const contactLd = {
         return id ? form.querySelector('#' + id) : null;
       }
 
+      // Check one field; returns true when it passes. Messages come from
+      // content (data-msg-empty / data-msg-format on the field).
+      function checkField(form, el) {
+        const msgEl = errEl(form, el);
+        const value = (el.value || '').trim();
+        if (el.hasAttribute('required') && !value) {
+          setError(el, msgEl, el.getAttribute('data-msg-empty') || '');
+          return false;
+        }
+        if (el.type === 'email' && value && !EMAIL_RE.test(value)) {
+          setError(el, msgEl, el.getAttribute('data-msg-format') || '');
+          return false;
+        }
+        clearError(el, msgEl);
+        return true;
+      }
+
+      // Returns the number of fields that need attention; focuses the first.
       function validate(form) {
-        let ok = true;
+        let bad = 0;
         let firstBad = null;
         form.querySelectorAll('input, textarea, select').forEach((el) => {
-          if (el.name === 'company_url') return; // honeypot, never validated
-          const msgEl = errEl(form, el);
-          const value = (el.value || '').trim();
-          // required
-          if (el.hasAttribute('required') && !value) {
-            setError(el, msgEl, 'This field is required.');
-            ok = false; firstBad = firstBad || el; return;
-          }
-          // email shape
-          if (el.type === 'email' && value && !EMAIL_RE.test(value)) {
-            setError(el, msgEl, 'Enter a valid email address.');
-            ok = false; firstBad = firstBad || el; return;
-          }
-          clearError(el, msgEl);
+          if (el.name === 'company_url' || el.type === 'hidden') return; // honeypot and hidden fields, never validated
+          if (!checkField(form, el)) { bad++; firstBad = firstBad || el; }
         });
         if (firstBad) firstBad.focus();
-        return ok;
+        return bad;
       }
 
       function payloadFor(form, kind, data) {
@@ -313,9 +322,18 @@ const contactLd = {
         const statusEl = form.querySelector('.form__status');
         const submitBtn = form.querySelector('button[type="submit"], .form__submit');
 
-        // Clear a field's error as the user corrects it.
+        // Field errors show only after a submit attempt or once the field has
+        // been edited: re-check on input while a message is showing, and on
+        // blur after the user has changed the field. Never touch the value.
         form.querySelectorAll('input, textarea, select').forEach((el) => {
-          el.addEventListener('input', () => clearError(el, errEl(form, el)));
+          if (el.name === 'company_url' || el.type === 'hidden') return;
+          el.addEventListener('input', () => {
+            el.dataset.edited = 'true';
+            if (el.getAttribute('aria-invalid') === 'true') checkField(form, el);
+          });
+          el.addEventListener('blur', () => {
+            if (el.dataset.edited === 'true') checkField(form, el);
+          });
         });
 
         function setStatus(kindClass, message) {
@@ -351,8 +369,11 @@ const contactLd = {
           const hp = form.querySelector('input[name="company_url"]');
           if (hp && hp.value.trim() !== '') { succeed(); return; }
 
-          if (!validate(form)) {
-            setStatus('is-error', 'Please fix the highlighted fields.');
+          const bad = validate(form);
+          if (bad) {
+            // Summary only when two or more fields need attention.
+            const summary = statusEl ? statusEl.getAttribute('data-summary') || '' : '';
+            setStatus(bad > 1 ? 'is-error' : '', bad > 1 ? summary.replace('{n}', String(bad)) : '');
             return;
           }
 
@@ -369,8 +390,13 @@ const contactLd = {
               body: JSON.stringify(body),
             });
             let ok = res.ok;
-            try { const j = await res.json(); if (j && typeof j.ok === 'boolean') ok = j.ok; } catch (e2) {}
-            if (!ok) throw new Error('bad_response');
+            let reason = '';
+            try {
+              const j = await res.json();
+              if (j && typeof j.ok === 'boolean') ok = j.ok;
+              if (j && j.error) reason = String(j.error);
+            } catch (e2) {}
+            if (!ok) throw new Error(reason || 'bad_response');
 
             track('inquiry_submitted', {
               source: location.pathname,
@@ -381,7 +407,8 @@ const contactLd = {
             const widget = form.querySelector('.cf-turnstile');
             if (widget && window.turnstile) window.turnstile.reset(widget);
             busy(false);
-            setStatus('is-error', statusEl.getAttribute('data-error') || 'Something went wrong.');
+            const spam = err && err.message === 'bot_check_failed';
+            setStatus('is-error', statusEl.getAttribute(spam ? 'data-spam' : 'data-error') || '');
           }
         });
       }
