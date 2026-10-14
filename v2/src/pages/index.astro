@@ -129,11 +129,11 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
             )}
             <div class="pkg__cta">
               <Button
-                href={href('contact/#book')}
+                href={href(p.cta.href)}
                 variant={p.id === 'launch' ? 'primary' : 'secondary'}
-                size="sm"
+                size="md"
                 data-cta={`pkg-${p.id}-book-call`}
-              >Book a call</Button>
+              >{p.cta.label}</Button>
             </div>
           </li>
         ))}
@@ -155,7 +155,7 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
         <div class="audit__aside">
           <p class="audit__price">{audit.priceFrom}</p>
           <p class="pkg__meta">{audit.timeline} · {audit.model}</p>
-          <Button href={href(audit.cta.href)} variant="ghost" size="sm" data-cta="offer-start-audit">
+          <Button href={href(audit.cta.href)} variant="secondary" size="md" data-cta="offer-start-audit">
             {audit.cta.label}
           </Button>
         </div>

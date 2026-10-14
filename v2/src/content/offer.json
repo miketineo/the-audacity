@@ -44,7 +44,11 @@
           "label": "Launch",
           "value": "Live in production, with automatic releases"
         }
-      ]
+      ],
+      "cta": {
+        "label": "Book a call about Pilot",
+        "href": "contact/?interest=pilot#book"
+      }
     },
     {
       "id": "launch",
@@ -83,7 +87,11 @@
           "label": "Launch",
           "value": "Web or app stores, with automatic releases"
         }
-      ]
+      ],
+      "cta": {
+        "label": "Book a call about Launch",
+        "href": "contact/?interest=launch#book"
+      }
     },
     {
       "id": "retainer",
@@ -97,7 +105,11 @@
         "Ongoing work on your roadmap",
         "Senior review of architecture and security",
         "A fixed monthly rhythm"
-      ]
+      ],
+      "cta": {
+        "label": "Book a call about the retainer",
+        "href": "contact/?interest=retainer#book"
+      }
     }
   ],
   "audit": {
