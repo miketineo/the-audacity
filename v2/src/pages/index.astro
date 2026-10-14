@@ -574,6 +574,9 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     .proofs { grid-template-columns: 1fr; }
     .notfor__inner { grid-template-columns: 1fr; gap: var(--space-md); }
     .audit { grid-template-columns: 1fr; align-items: start; gap: var(--space-md); }
+    /* V4: single-column cards are capped at --measure (global li rule);
+       cap the audit block the same so their edges align. */
+    .audit { max-width: var(--measure); }
     .audit__aside { justify-items: start; }
   }
 
