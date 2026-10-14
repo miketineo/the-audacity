@@ -84,6 +84,18 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
           {home.hero.ctaSecondary.label}
         </Button>
       </div>
+      {/* V1: product visual on the right of the hero, 1024px and wider only.
+          Width and height are set so the frame reserves its space (no layout shift). */}
+      <figure class="hero__visual">
+        <img
+          src={href('work/washiiba/03-order.png')}
+          width="1284"
+          height="2778"
+          alt="A Washiiba order on mobile with a live status tracker, service line items, pickup window and total."
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
     </div>
 
     {/* What every package includes (COPY-02), labelled. */}
@@ -316,6 +328,28 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   .hero__lede { font-size: var(--text-md); max-width: 56ch; }
   .hero__price { font-size: var(--text-md); font-weight: 600; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-2xs); }
+
+  /* V1: phone-framed product shot, right column at 1024px and wider */
+  .hero__visual { display: none; margin: 0; }
+  @media (min-width: 64rem) {
+    .hero__inner { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-2xl); }
+    .hero__inner > :not(.hero__visual) { grid-column: 1; }
+    .hero__visual {
+      display: block;
+      grid-column: 2; grid-row: 1 / span 5;
+      align-self: center;
+      width: clamp(13rem, 20vw, 16.5rem);
+      padding: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .hero__visual img {
+      display: block; width: 100%; height: auto;
+      border-radius: calc(var(--radius-lg) - 5px);
+    }
+  }
 
   .stack {
     display: grid; gap: var(--space-xs);
