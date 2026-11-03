@@ -1,0 +1,14 @@
+# Security headers for every page Pages serves (v2, /v1/ archive, /api/).
+# CSP sources: PostHog via the z.miketineo.com proxy (assets fallback on
+# eu-assets.i.posthog.com), Cal.com booking embed, Turnstile on the forms,
+# Google Fonts, and the /v1/ archive's stats fetch from labs.miketineo.com. 'unsafe-inline' stays for scripts because Astro and the
+# consent/analytics loaders ship inline <script> blocks; every other source
+# is pinned. Adding a third party means adding its origin here.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://z.miketineo.com https://eu-assets.i.posthog.com https://app.cal.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://z.miketineo.com https://*.posthog.com https://app.cal.com https://cal.com https://labs.miketineo.com; frame-src https://app.cal.com https://cal.com https://challenges.cloudflare.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
