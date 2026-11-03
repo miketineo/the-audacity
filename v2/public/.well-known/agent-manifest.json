@@ -9,12 +9,12 @@
     "book_a_call": "https://theaudacity.io/contact/",
     "project_brief": "https://theaudacity.io/contact/"
   },
-  "stack": ["One codebase for web and mobile", "Managed backend", "AI assistant or concierge layer", "Continuous delivery", "Store or web deployment"],
+  "stack": ["One codebase for web and mobile", "Managed backend", "AI assistant layer", "Continuous delivery", "Store or web deployment"],
   "capabilities": [
     {
       "id": "studio_sprint_pilot",
       "name": "Studio Sprint: Pilot",
-      "description": "One core flow, one platform, deployed to production.",
+      "description": "Test one idea with real users. One user flow built end to end, on web or mobile, with login and data, live in production with automatic releases.",
       "timeline": "2 to 3 weeks",
       "price": "from EUR 6k to 10k",
       "model": "fixed milestone"
@@ -22,7 +22,7 @@
     {
       "id": "studio_sprint_launch",
       "name": "Studio Sprint: Launch",
-      "description": "Investor-ready MVP with auth, data, analytics and deployment.",
+      "description": "A product ready for users or investors. Several user flows, web and mobile from one codebase, login and data, an AI assistant, analytics with cookie consent, payments when needed, launch on the web or app stores with automatic releases.",
       "timeline": "4 to 6 weeks",
       "price": "from EUR 15k to 30k",
       "model": "fixed milestone"
@@ -30,15 +30,15 @@
     {
       "id": "build_partner_retainer",
       "name": "Build Partner Retainer",
-      "description": "Ongoing delivery against a roadmap, a senior build partner without hiring a team.",
+      "description": "Keep shipping after launch, with the studio building your roadmap. Senior review of architecture and security on a fixed monthly rhythm.",
       "timeline": "monthly",
       "price": "from EUR 4k a month",
-      "model": "monthly retainer"
+      "model": "monthly retainer, cancel anytime"
     },
     {
       "id": "ai_readiness_build_audit",
-      "name": "AI-Readiness and Build Audit",
-      "description": "A fixed-scope report you can act on, and the low-commitment first step toward a Sprint.",
+      "name": "AI-Readiness & Build Audit",
+      "description": "A fixed-scope audit of your idea, codebase or AI ambition, delivered as a written report you can act on.",
       "timeline": "about 1 week",
       "price": "from EUR 1.5k to 3k",
       "model": "fixed scope, written report"
@@ -49,16 +49,27 @@
       "id": "bloop",
       "name": "Bloop",
       "type": "own_product",
-      "stage": "in active MVP and launch",
-      "description": "An AI events concierge for Bologna. A live conversational concierge over a real catalogue of what is on in the city.",
-      "demonstrates": "Ships genuinely novel AI product surfaces to production on a real backend."
+      "stage": "in build, piloting in Bologna",
+      "description": "An AI events concierge for Bologna. You chat in plain language and it proposes real events from a live catalogue. Italian first, with English, and a web admin for curating the catalogue.",
+      "demonstrates": "We can build a conversational AI product that answers from live data."
     },
     {
       "id": "washiiba",
       "name": "Washiiba",
       "type": "own_product",
-      "description": "A complete, production-grade marketplace across mobile and web from a single codebase on a managed backend.",
-      "demonstrates": "Build capability across iOS, Android and web end to end, with a real backend, production-grade and store-ready."
+      "stage": "built end to end",
+      "description": "A laundry marketplace built end to end. Customer flows for ordering, pickup windows and live order status, an admin backend, and web and mobile from a single codebase.",
+      "demonstrates": "We can build a full marketplace across web and mobile, end to end."
+    },
+    {
+      "id": "kerf",
+      "name": "Kerf",
+      "type": "own_product",
+      "stage": "case study on public data, not yet validated in the field",
+      "url": "https://projectkerf.com",
+      "description": "Kerf turns free national LiDAR (IGN LiDAR HD in France) into a ranked list of overhead-line spans where vegetation is inside the clearance zone, measured in metres, then a work order for trimming crews. It is made for small electricity distributors and vegetation management contractors. A LiDAR processing pipeline, a web map viewer with the ranked span list and per-span measurements, work order export (CSV) and a printable report. The case-study run covers 345 spans on 28.4 km of overhead line: 829.5 million LiDAR points, scanned in June 2021, processed in 83 seconds on one server.",
+      "demonstrates": "We can take raw public data to a ranked, measured result and a work order.",
+      "data_attribution": "Map data: LiDAR HD and orthophotos © IGN, Licence Ouverte 2.0. Example data."
     }
   ],
   "agents": {

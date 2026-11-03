@@ -1,14 +1,19 @@
 ---
 /**
- * Work (/v2/work/)
- * Bloop + Washiiba as capability proof. Each block leads with the product,
- * then a "What it demonstrates" line that sells the studio's claim.
+ * Work (/work/)
+ * Bloop + Washiiba + Kerf as capability proof. Each block leads with the
+ * product, then a "What it demonstrates" line that sells the studio's claim.
  *
- * Honest framing (spec §3):
+ * Honest framing (spec §3, docs/gtm/copy-facts.md):
  *   - Bloop:    own product, in active MVP / launch. Emphasis on the live
  *               conversational concierge.
  *   - Washiiba: build-capability proof ONLY. No commercial state, roadmap,
  *               or exit/monetization intent appears here. It is a receipt.
+ *   - Kerf:     a case study on public data, not validated in the field. A
+ *               desktop web app, so its gallery uses the `overlap` frame (two
+ *               cropped wide tiles) instead of the phone frame. Its
+ *               screenshots always carry the data-licence caption from
+ *               proof.json, and it links out to its own site.
  *
  * Consumes: Base.astro, Logo, Button, content/proof.json, content/pages.json,
  * content/site.json. Screenshots live in public/work/<id>/ (served at
@@ -30,9 +35,18 @@ const { work } = pages;
 // `w`/`h` are intrinsic pixel dimensions (for CLS); the CSS sizes them down.
 // shots[0] is the single thumbnail shown by default; the click-to-expand
 // lightbox reveals the full set (including shots[0]) in source order.
-const galleries: Record<string, {
-  shots: { src: string; w: number; h: number; alt: string; frame: 'phone' | 'web' }[];
-}> = {
+//
+// Frames: 'phone' and 'web' show shots[0] alone. 'overlap' (Kerf) shows
+// shots[0] and shots[1] as two square-cropped tiles overlapping diagonally;
+// `pos` is the object-position of each crop, the lightbox always shows the
+// full uncropped image. Kerf's tiles share one crop origin (left edge, so the
+// viewer's control panel and the in-zone legend read as the same app).
+type Shot = {
+  src: string; w: number; h: number; alt: string;
+  frame: 'phone' | 'web' | 'overlap';
+  pos?: string;
+};
+const galleries: Record<string, { shots: Shot[] }> = {
   bloop: {
     shots: [
       { src: 'work/bloop/concierge.png', w: 1206, h: 2622, frame: 'phone',
@@ -53,13 +67,38 @@ const galleries: Record<string, {
         alt: 'Signing in to Washiiba on mobile.' },
     ],
   },
+  kerf: {
+    shots: [
+      { src: 'work/kerf/overview.jpg', w: 1040, h: 820, frame: 'overlap', pos: '0% 50%',
+        alt: "Kerf's map viewer showing overhead lines over aerial photography, each span coloured by how close the vegetation is to the clearance zone." },
+      { src: 'work/kerf/span.jpg', w: 1040, h: 820, frame: 'overlap', pos: '0% 50%',
+        alt: "Kerf's 3D view of one overhead-line span, with LiDAR points for the vegetation and a callout reading 5.7 m inside clearance." },
+    ],
+  },
 };
 
-const ordered = proof.items; // [bloop, washiiba]
+// Optional keys: Kerf adds `link` (its own site) and `caption` (screenshot
+// attribution). They render only when present, so Bloop and Washiiba are unchanged.
+type ProofItem = (typeof proof.items)[number] & {
+  link?: { label: string; href: string };
+  caption?: string;
+};
+const ordered = proof.items as ProofItem[]; // [bloop, washiiba, kerf]
+
+// JSON-LD picks items by id, never by position, so reordering proof.json is safe.
+const byId = (id: string): ProofItem => {
+  const it = ordered.find((i) => i.id === id);
+  if (!it) throw new Error(`proof.json has no item with id "${id}"`);
+  return it;
+};
+const bloop = byId('bloop');
+const washiiba = byId('washiiba');
+const kerf = byId('kerf');
 
 // Structured data lives in src/components/jsonld/ (one source of truth):
-//   Bloop    -> SoftwareApplication (a live app)
+//   Bloop    -> SoftwareApplication (no offers/price/status)
 //   Washiiba -> CreativeWork (capability receipt only: no offers/price/status)
+//   Kerf     -> CreativeWork, genre "Case study" (no offers/price/status)
 //   plus a BreadcrumbList. See the `jsonld` slot in the body below.
 ---
 <Base
@@ -70,8 +109,15 @@ const ordered = proof.items; // [bloop, washiiba]
   <Logo slot="logo" direction="c" />
 
   <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Work', path: '/work/' }]} />
-  <SoftwareApplicationLD slot="jsonld" name="Bloop" description={proof.items[0].summary} />
-  <CreativeWorkLD slot="jsonld" name="Washiiba" description={proof.items[1].summary} />
+  <SoftwareApplicationLD slot="jsonld" name={bloop.name} description={bloop.summary} />
+  <CreativeWorkLD slot="jsonld" name={washiiba.name} description={washiiba.summary} />
+  <CreativeWorkLD
+    slot="jsonld"
+    name={kerf.name}
+    description={kerf.summary}
+    genre="Case study"
+    url={kerf.link?.href}
+  />
 
   {/* ---------- Hero ---------- */}
   <header class="container hero" data-animate>
@@ -108,42 +154,79 @@ const ordered = proof.items; // [bloop, washiiba]
               <ul class="stack" role="list" aria-label={`${item.name} highlights`}>
                 {item.tags.map((s) => <li class="chip">{s}</li>)}
               </ul>
+
+              {item.link && (
+                <p class="project__link">
+                  <a href={item.link.href} rel="noopener">
+                    <span>{item.link.label}</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17L17 7M8 7h9v9" />
+                    </svg>
+                  </a>
+                </p>
+              )}
             </div>
 
             {(() => {
               const thumb = g.shots[0];
               const more = g.shots.length - 1;
               const lbId = `lb-${item.id}`;
+              const overlap = thumb.frame === 'overlap';
+              // overlap: both tiles are visible, so the hint says what a click does.
+              const hint = overlap ? 'View full size' : `+${more} more`;
+              const label = overlap
+                ? `View ${item.name} screenshots at full size`
+                : `See ${more} more ${item.name} screenshots`;
               return (
                 <div class={`gallery gallery--${thumb.frame}`} data-animate>
-                  {/* Single thumbnail. No-JS: the anchor resolves to the full image.
-                      JS: enhanced into a real dialog trigger (see script). */}
+                  {/* Single thumbnail (overlap: a pair of tiles). No-JS: the anchor
+                      resolves to the full image. JS: enhanced into a real dialog
+                      trigger (see script). */}
                   <a
-                    class={`thumb frame frame--${thumb.frame}`}
+                    class={overlap ? 'thumb thumb--overlap' : `thumb frame frame--${thumb.frame}`}
                     href={`${base}${thumb.src}`}
                     data-lightbox-open={lbId}
-                    aria-label={`See ${more} more ${item.name} screenshots`}
+                    aria-label={label}
                   >
                     {thumb.frame === 'web' && (
                       <span class="frame__chrome" aria-hidden="true">
                         <span class="frame__dot" /><span class="frame__dot" /><span class="frame__dot" />
                       </span>
                     )}
-                    <figure class="shot">
-                      <img
-                        src={`${base}${thumb.src}`}
-                        width={thumb.w}
-                        height={thumb.h}
-                        alt={thumb.alt}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </figure>
+                    {overlap ? (
+                      /* Two square crops of the full screenshots. The wrapper's
+                         aspect-ratio reserves the space (no layout shift). Tile a is
+                         pinned top-left, tile b bottom-right and above it. */
+                      g.shots.slice(0, 2).map((s, k) => (
+                        <figure class={`tile tile--${k === 0 ? 'a' : 'b'} frame`}>
+                          <img
+                            src={`${base}${s.src}`}
+                            width={s.w}
+                            height={s.h}
+                            alt={s.alt}
+                            style={`object-position:${s.pos ?? '50% 50%'}`}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </figure>
+                      ))
+                    ) : (
+                      <figure class="shot">
+                        <img
+                          src={`${base}${thumb.src}`}
+                          width={thumb.w}
+                          height={thumb.h}
+                          alt={thumb.alt}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </figure>
+                    )}
                     <span class="thumb__hint" aria-hidden="true">
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                       </svg>
-                      <span>{`+${more} more`}</span>
+                      <span>{hint}</span>
                     </span>
                   </a>
 
@@ -156,6 +239,9 @@ const ordered = proof.items; // [bloop, washiiba]
                     </ul>
                   </noscript>
 
+                  {/* Data-licence attribution, always visible under the screenshots. */}
+                  {item.caption && <p class="gallery__caption">{item.caption}</p>}
+
                   {/* Lightbox. Native <dialog> gives focus trap + Escape close. */}
                   <dialog class="lightbox" id={lbId} aria-label={`${item.name} screenshots`}>
                     <div class="lightbox__panel">
@@ -167,7 +253,7 @@ const ordered = proof.items; // [bloop, washiiba]
                           </svg>
                         </button>
                       </div>
-                      <div class="lightbox__grid">
+                      <div class={overlap ? 'lightbox__grid lightbox__grid--wide' : 'lightbox__grid'}>
                         {g.shots.map((s) => (
                           <figure class={`shot frame frame--${s.frame}`}>
                             {s.frame === 'web' && (
@@ -187,6 +273,7 @@ const ordered = proof.items; // [bloop, washiiba]
                           </figure>
                         ))}
                       </div>
+                      {item.caption && <p class="lightbox__credit">{item.caption}</p>}
                     </div>
                   </dialog>
                 </div>
@@ -316,6 +403,24 @@ const ordered = proof.items; // [bloop, washiiba]
     color: var(--text-dim);
   }
 
+  /* Secondary link out to the product's own site (Kerf). Plain text link,
+     ink on both themes, underlined so it never relies on colour alone. */
+  .project__link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding-block: 0.4em;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--text-dim);
+    text-underline-offset: 0.22em;
+  }
+  .project__link a:hover { text-decoration-color: var(--accent); }
+  .project__link svg { flex: none; color: var(--text-dim); }
+
   /* ===== Gallery (single thumbnail, click to expand) ===== */
   .gallery {
     display: grid;
@@ -390,6 +495,54 @@ const ordered = proof.items; // [bloop, washiiba]
     color: var(--accent-ink);
     background: var(--accent);
     border-radius: var(--radius-sm);
+  }
+
+  /* --- Overlap frame (Kerf, a desktop web app) ---
+     Two square crops of wide screenshots, stacked on a diagonal so the
+     pair reads as one tall composition next to the phone-framed blocks.
+     Everything is a percentage of the wrapper, whose aspect-ratio reserves
+     the space: tile width 74% leaves a 26% horizontal and a 46% vertical
+     offset (wrapper is 5:6), so the offset scales down with the viewport and
+     nothing can overflow or clip at 375px. Tile b (z-index 2) sits above a. */
+  .gallery--overlap {
+    grid-template-columns: minmax(0, 30rem);
+    justify-content: center;
+  }
+  .thumb--overlap {
+    max-width: none;
+    aspect-ratio: 5 / 6;
+  }
+  .tile {
+    position: absolute;
+    width: 74%;
+    aspect-ratio: 1;
+    padding: 4px;                       /* the mat, same idea as the phone frame */
+    border-radius: var(--radius-md);
+  }
+  .tile--a { top: 0; left: 0; z-index: 1; }
+  .tile--b { right: 0; bottom: 0; z-index: 2; }
+  .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: calc(var(--radius-md) - 3px);
+  }
+  .thumb--overlap .thumb__hint {
+    z-index: 3;
+    right: var(--space-xs);
+    bottom: var(--space-xs);
+  }
+  /* The wrapper's box has empty corners, so ring the tiles, not the box. */
+  .thumb--overlap:focus-visible { outline: none; }
+  .thumb--overlap:focus-visible .tile {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .gallery__caption {
+    margin-top: var(--space-sm);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+    color: var(--text-dim);
   }
 
   /* No-JS fallback links */
@@ -479,6 +632,24 @@ const ordered = proof.items; // [bloop, washiiba]
     width: 100%;
   }
   .lightbox__grid .frame--phone { max-width: 280px; }
+  /* Wide desktop shots: one per row at full panel width, uncropped.
+     max-content rows: the frames are overflow:hidden, so auto rows would
+     shrink to the panel height and clip the image; this way the grid scrolls. */
+  .lightbox__grid--wide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: max-content;
+    align-content: start;
+  }
+  .frame--overlap { border-radius: var(--radius-md); }
+  .frame--overlap figcaption { padding: 0 var(--space-xs) var(--space-xs); }
+  .lightbox__credit {
+    flex: 0 0 auto;
+    padding: var(--space-xs) var(--space-md);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-xs);
+    color: var(--text-dim);
+    max-width: none;
+  }
   .lightbox__grid figcaption {
     margin-top: var(--space-2xs);
     font-size: var(--text-xs);
@@ -515,6 +686,7 @@ const ordered = proof.items; // [bloop, washiiba]
     /* never flip on mobile: text always above image, source order wins */
     .project[data-flip='true'] .project__grid { direction: ltr; }
     .gallery { order: 2; justify-items: start; }
+    .gallery--overlap { justify-content: start; }
     .gallery--phone .thumb { max-width: 260px; }
   }
 

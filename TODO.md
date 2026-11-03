@@ -16,7 +16,7 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-fable-5` 2026-08-29 — Audit-block cross-link to miketineo.com/tech-due-diligence. Deployed to Pages production 2026-09-20 (preview verified first, cache purged, live check green) after the `tech-dd-page` flag rollout; deploy runs via `scripts/deploy-pages.sh` (new, the committed form of the promotion checklist's direct-upload procedure).
 
-*(nothing currently in flight)*
+- [~] `miguel` `cc+claude-opus-5-5` 2026-11-03 — Copy refresh under `docs/copy/REGISTER.md` (facts in local-only `docs/gtm/copy-facts.md`) and Kerf added as the third own product on / and /work/ (overlapping desktop gallery). Branch `copy/refresh-and-kerf-work`; preview first, then production via `scripts/deploy-pages.sh`.
 
 ---
 

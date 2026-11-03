@@ -1,14 +1,18 @@
 ---
 /**
- * CreativeWork JSON-LD. Used for Washiiba on the Work page.
+ * CreativeWork JSON-LD. Used for Washiiba and Kerf on the Work page.
  *
  * Deliberately a CreativeWork, not a SoftwareApplication with offers: Washiiba
- * is a build-capability receipt only. No commercial status, roadmap, price, or
- * intent is ever expressed here. creator is the studio, from content/site.json.
+ * is a build-capability receipt and Kerf is a case study on public data. No
+ * commercial status, roadmap, price, or intent is ever expressed here. creator
+ * is the studio, from content/site.json. `url` is optional: pass it only for a
+ * work that has its own public site (Kerf), never for a status or a listing.
  *
- * Usage (Work):
+ * Usage (Work), picking the item by id rather than by position:
  *   import CreativeWorkLD from '../../components/jsonld/CreativeWork.astro';
- *   <CreativeWorkLD slot="jsonld" name="Washiiba" description={proof.items[1].summary} />
+ *   <CreativeWorkLD slot="jsonld" name={washiiba.name} description={washiiba.summary} />
+ *   <CreativeWorkLD slot="jsonld" name={kerf.name} description={kerf.summary}
+ *     genre="Case study" url={kerf.link?.href} />
  */
 import site from '../../content/site.json';
 
@@ -16,9 +20,10 @@ interface Props {
   name: string;
   description: string;
   genre?: string;
+  url?: string;
 }
 
-const { name, description, genre = 'Software product' } = Astro.props;
+const { name, description, genre = 'Software product', url } = Astro.props;
 
 const data = {
   '@context': 'https://schema.org',
@@ -26,6 +31,7 @@ const data = {
   name,
   genre,
   description,
+  ...(url ? { url } : {}),
   creator: { '@type': 'Organization', name: site.brand, url: site.url },
 };
 ---

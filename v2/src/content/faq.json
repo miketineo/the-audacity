@@ -1,6 +1,6 @@
 {
   "eyebrow": "FAQ",
-  "title": "Common questions",
+  "title": "What founders ask before they book a call",
   "items": [
     {
       "q": "Who owns the code?",
@@ -8,7 +8,7 @@
     },
     {
       "q": "How does payment work?",
-      "a": "A deposit books your start date. After that, you pay per milestone once it ships and you sign it off. No timesheets, no open-ended invoices."
+      "a": "A deposit books your start date. After that, you pay per milestone once it ships and you sign it off. The fixed price is in the contract, so every invoice matches finished work."
     },
     {
       "q": "What if the deadline slips?",
@@ -20,15 +20,19 @@
     },
     {
       "q": "What happens after launch?",
-      "a": "Your code is in your own accounts, with documentation and a set period of free fixes. If you want us to keep building, the retainer picks up from there."
+      "a": "Your code is in your own accounts, with documentation and a set period of free fixes. To keep shipping, the Build Partner Retainer costs from €4k a month and you can cancel anytime."
     },
     {
       "q": "Who does the work?",
-      "a": "The studio: orchestrated AI agents do the engineering, inside human-owned architecture, code review and security gates. Senior judgment decides what to build, how it is architected and secured, and what is ready to ship."
+      "a": "The studio is two founders working with AI agents. The agents do the engineering, inside human-owned architecture, code review and security gates. Senior judgment decides what to build, how it is architected and secured, and what is ready to ship."
+    },
+    {
+      "q": "Where can I see your work?",
+      "a": "We show our own products first. Bloop, an AI events concierge, is in build and piloting in Bologna. Washiiba, a laundry marketplace on web and mobile from one codebase, is built end to end. Kerf is a case study on public LiDAR data from June 2021. One run covered 345 spans on 28.4 km of overhead line and 829.5 million LiDAR points in 83 seconds on one server. Kerf is not yet validated in the field and has no paying customer. It has its own site, projectkerf.com."
     },
     {
       "q": "What happens after I book a call?",
-      "a": "A free 25-minute call. Within 2 business days you get a written fixed-price proposal. If it fits, you pay the deposit, we agree a start date, and the build begins."
+      "a": "First, a free 25-minute call. Within 2 business days you get a written fixed-price proposal. If it fits, you pay the deposit, we agree a start date, and the build begins."
     }
   ]
 }

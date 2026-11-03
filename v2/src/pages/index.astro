@@ -2,7 +2,7 @@
 /**
  * Home (/v2/): the studio's thin, confident sales surface.
  *
- * One scroll (N2): hero -> the stack we build on -> the two proofs (teasers)
+ * One scroll (N2): hero -> the stack we build on -> the three proofs (teasers)
  * -> how it works -> the offer (with prices) -> who it's for and not for ->
  * straight answers (FAQ, when content provides it) -> a closing book-a-call band.
  *
@@ -49,13 +49,33 @@ const faqItems: FaqItem[] = faqList
 const faqEyebrow = (!Array.isArray(faqRaw) && faqRaw?.eyebrow) || 'FAQ';
 const faqTitle = (!Array.isArray(faqRaw) && faqRaw?.title) || 'Straight answers';
 
-// V2: one existing screenshot per proof card, alt text = the /work/ caption.
-const proofShots: Record<string, { src: string; w: number; h: number; alt: string }> = {
-  bloop: { src: 'work/bloop/feed.png', w: 1206, h: 2622,
-    alt: "Bloop's mobile feed of live events across the city." },
-  washiiba: { src: 'work/washiiba/02-home.png', w: 1284, h: 2778,
-    alt: 'The Washiiba home screen on mobile with services to book and a list of active orders.' },
+// V2: product screenshots per proof card, alt text = the /work/ caption.
+// layout 'phone': one portrait shot in the card's right column.
+// layout 'overlap': a wide desktop app (Kerf). Two square crops overlap on a
+// diagonal and the card spans the full grid width. `pos` is each crop's
+// object-position (same values as /work/); the /work/ lightbox has the full images.
+type Shot = { src: string; w: number; h: number; alt: string; pos?: string };
+const proofShots: Record<string, { layout: 'phone' | 'overlap'; shots: Shot[] }> = {
+  bloop: { layout: 'phone', shots: [
+    { src: 'work/bloop/feed.png', w: 1206, h: 2622,
+      alt: "Bloop's mobile feed of live events across the city." },
+  ] },
+  washiiba: { layout: 'phone', shots: [
+    { src: 'work/washiiba/02-home.png', w: 1284, h: 2778,
+      alt: 'The Washiiba home screen on mobile with services to book and a list of active orders.' },
+  ] },
+  kerf: { layout: 'overlap', shots: [
+    { src: 'work/kerf/overview.jpg', w: 1040, h: 820, pos: '0% 50%',
+      alt: "Kerf's map viewer showing overhead lines over aerial photography, each span coloured by how close the vegetation is to the clearance zone." },
+    { src: 'work/kerf/span.jpg', w: 1040, h: 820, pos: '0% 50%',
+      alt: "Kerf's 3D view of one overhead-line span, with LiDAR points for the vegetation and a callout reading 5.7 m inside clearance." },
+  ] },
 };
+
+// proof.json items share their keys; Kerf adds an optional screenshot `caption`
+// (data-licence attribution), shown wherever its screenshots appear.
+type ProofItem = (typeof proof.items)[number] & { caption?: string };
+const proofItems = proof.items as ProofItem[];
 
 const stackLabel = 'Every build includes';
 const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic releases (continuous delivery)'];
@@ -124,32 +144,56 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
       </header>
 
       <ul class="proofs" role="list">
-        {proof.items.map((it) => (
-          <li class="proof-card" data-reveal>
-            {proofShots[it.id] && (
-              <figure class="proof-card__shot">
-                <img
-                  src={href(proofShots[it.id].src)}
-                  width={proofShots[it.id].w}
-                  height={proofShots[it.id].h}
-                  alt={proofShots[it.id].alt}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </figure>
-            )}
-            <p class="proof-card__kind eyebrow">{it.kind}</p>
-            {/* N4: the whole card is one link (stretched over the card) to its /work/ section. */}
-            <h3 class="proof-card__name">
-              <a class="proof-card__link" href={href(`work/#${it.id}`)} data-cta={`proof-card-${it.id}`}>{it.name}</a>
-            </h3>
-            <p class="proof-card__one">{it.oneLiner}</p>
-            <p class="proof-card__summary text-dim">{it.summary}</p>
-            <ul class="chips" role="list" aria-label="Stack">
-              {it.stack.map((s) => <li class="chip">{s}</li>)}
-            </ul>
-          </li>
-        ))}
+        {proofItems.map((it) => {
+          const set = proofShots[it.id];
+          return (
+            <li class={set?.layout === 'overlap' ? 'proof-card proof-card--feature' : 'proof-card'} data-reveal>
+              {set?.layout === 'phone' && (
+                <figure class="proof-card__shot">
+                  <img
+                    src={href(set.shots[0].src)}
+                    width={set.shots[0].w}
+                    height={set.shots[0].h}
+                    alt={set.shots[0].alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              )}
+              {set?.layout === 'overlap' && (
+                <figure class="proof-card__pair">
+                  <div class="pair">
+                    {set.shots.slice(0, 2).map((s, k) => (
+                      <img
+                        class={`pair__tile pair__tile--${k === 0 ? 'a' : 'b'}`}
+                        src={href(s.src)}
+                        width={s.w}
+                        height={s.h}
+                        alt={s.alt}
+                        style={`object-position:${s.pos ?? '50% 50%'}`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ))}
+                  </div>
+                  {it.caption && <figcaption class="proof-card__credit">{it.caption}</figcaption>}
+                </figure>
+              )}
+              <div class="proof-card__text">
+                <p class="proof-card__kind eyebrow">{it.kind}</p>
+                {/* N4: the whole card is one link (stretched over the card) to its /work/ section. */}
+                <h3 class="proof-card__name">
+                  <a class="proof-card__link" href={href(`work/#${it.id}`)} data-cta={`proof-card-${it.id}`}>{it.name}</a>
+                </h3>
+                <p class="proof-card__one">{it.oneLiner}</p>
+                <p class="proof-card__summary text-dim">{it.summary}</p>
+                <ul class="chips" role="list" aria-label="Stack">
+                  {it.stack.map((s) => <li class="chip">{s}</li>)}
+                </ul>
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       <div class="proof__more" data-reveal>
@@ -257,7 +301,7 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
   <section class="section notfor" aria-labelledby="notfor-h">
     <div class="container notfor__inner">
       <div class="notfor__head">
-        <p class="eyebrow eyebrow--mark" data-reveal>Honest fit</p>
+        <p class="eyebrow eyebrow--mark" data-reveal>Fit</p>
         <h2 id="notfor-h" data-reveal>{notFor.title}</h2>
       </div>
       <div class="notfor__lists">
@@ -605,6 +649,51 @@ const stack = ['Login and accounts', 'Database', 'Live launch', 'Automatic relea
     .proof-card:has(.proof-card__shot) { grid-template-columns: minmax(0, 1fr) 8rem; column-gap: var(--space-lg); }
     .proof-card > :not(.proof-card__shot) { grid-column: 1; }
     .proof-card__shot { grid-column: 2; grid-row: 1 / span 5; align-self: start; width: 100%; }
+    .proof-card:not(.proof-card--feature) > .proof-card__text > * { grid-column: 1; }
+  }
+  /* The card's text lives in one wrapper, so the Kerf card can place it beside
+     its pair. Phone cards (Bloop, Washiiba) drop the wrapper's box so their five
+     text items stay rows of the card grid, exactly as before the wrapper. */
+  .proof-card__text { display: grid; gap: var(--space-sm); align-content: start; }
+  .proof-card:not(.proof-card--feature) > .proof-card__text { display: contents; }
+
+  /* Kerf: a wide desktop app, so it does not fit the 8rem phone column.
+     Its card spans the grid (60rem and up) with the text beside a pair of square
+     crops that overlap on a diagonal. Below 48rem the pair sits on top, like the
+     phone shots do. Tile sizes are percentages of .pair, whose aspect-ratio
+     reserves the space (no layout shift). */
+  .proof-card__pair {
+    margin: 0;
+    width: min(100%, 15rem);
+    display: grid; gap: var(--space-xs);
+  }
+  .pair { position: relative; aspect-ratio: 5 / 6; }
+  .pair__tile {
+    position: absolute;
+    width: 74%; height: auto; aspect-ratio: 1;
+    object-fit: cover;
+    padding: 3px;                        /* the mat, as on the phone shots */
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+  }
+  .pair__tile--a { top: 0; left: 0; z-index: 1; }
+  .pair__tile--b { right: 0; bottom: 0; z-index: 2; }
+  .proof-card--feature { gap: var(--space-md); }
+  .proof-card__credit { max-width: none; font-size: var(--text-xs); line-height: 1.5; color: var(--text-dim); }
+  @media (min-width: 48rem) {
+    .proof-card--feature {
+      grid-template-columns: minmax(0, 1fr) clamp(13rem, 28%, 19rem);
+      column-gap: var(--space-xl);
+      align-items: center;
+    }
+    .proof-card--feature > .proof-card__text { grid-column: 1; grid-row: 1; }
+    .proof-card--feature > .proof-card__pair { grid-column: 2; grid-row: 1; width: 100%; }
+  }
+  @media (min-width: 60rem) {
+    /* max-width: the global li rule would otherwise cap the card at --measure. */
+    .proof-card--feature { grid-column: 1 / -1; max-width: none; }
   }
   .proof-card__kind { color: var(--text-dim); }
   .proof-card__name { font-size: var(--text-xl); }
