@@ -1,6 +1,6 @@
 # The Audacity
 
-An Agentic Engineering Studio: a software house where AI agents do the engineering and senior judgment owns architecture, security and quality. We take an idea to a real, deployed product in weeks, not a slide deck or a design mockup.
+An Agentic Engineering Studio: a software house where AI agents do the engineering and senior judgment owns architecture, security and quality. We take an idea to a deployed product in weeks, not a slide deck.
 
 Our mission: ship production software at studio quality and agent speed, so founders and teams get real, running products instead of prototypes, decks or hours billed.
 
@@ -10,36 +10,39 @@ Tagline: AI agents build. One human ensures quality.
 
 Agentic engineering: software designed, written, tested and shipped by orchestrated AI agents, inside human-owned architecture, code review and security gates. We sell delivered, running software (product builds, agent systems built into a business, build-and-run retainers), not hours, staff augmentation or advice.
 
-We ship AI-first products to production. Fast, and real enough to launch. The headline offer is the Studio Sprint: a fixed-scope, milestone-priced build that puts a real product in users' hands, with the things that make it real (auth, database, payments where needed, analytics, store or web deployment, CI/CD).
+The headline offer is the Studio Sprint: a fixed-scope, milestone-priced build that puts a running product into production. Every build includes sign-up and login, a database, launch on the web or app stores, and automatic releases (continuous delivery), with payments and analytics when you need them. The price and deadline go in the contract before any code, and you pay per finished milestone.
 
-Every build runs on one repeatable stack: one codebase for web and mobile, a managed backend, an AI assistant layer, continuous delivery, and store or web deployment. We sell the pattern, not bespoke chaos.
+Every build runs on one repeatable spine: web and mobile from one codebase, a managed backend, an AI assistant layer, continuous delivery and production deployment. It is proven on our own products.
 
 ## The offer (confirmed pricing)
 
-- Studio Sprint: Pilot. One core flow, one platform, deployed to production. 2 to 3 weeks. From EUR 6k to 10k. Fixed milestone.
-- Studio Sprint: Launch. Investor-ready MVP with auth, data, analytics and deployment. 4 to 6 weeks. From EUR 15k to 30k. Fixed milestone.
-- Build Partner Retainer. Ongoing delivery against a roadmap. From EUR 4k a month. Monthly retainer.
-- AI-Readiness and Build Audit. A fixed-scope report you can act on, and the low-commitment first step toward a Sprint. About 1 week. From EUR 1.5k to 3k.
+- Studio Sprint: Pilot. Test one idea with real users. One user flow built end to end, on web or mobile, with login and data, live in production with automatic releases. 2 to 3 weeks. From EUR 6k to 10k. Fixed milestone.
+- Studio Sprint: Launch. A product ready for users or investors. Several user flows, web and mobile from one codebase, login and data, an AI assistant, analytics with cookie consent, payments when needed, launch on the web or app stores with automatic releases. 4 to 6 weeks. From EUR 15k to 30k. Fixed milestone.
+- Build Partner Retainer. Keep shipping after launch, with the studio building your roadmap. Senior review of architecture and security on a fixed monthly rhythm. From EUR 4k a month. Monthly, cancel anytime.
+- AI-Readiness & Build Audit. A fixed-scope audit of your idea, codebase or AI ambition, delivered as a written report you can act on. About 1 week. From EUR 1.5k to 3k.
 
-Each package states exactly what is included. Anything outside that scope is a clear, priced change order before we build it.
+Each package states what is included. Anything outside that scope is priced in writing before we build it, so the deadline stays the same. You own the code and intellectual property on final payment.
 
 ## Proof
 
-We do not have a wall of client logos yet. We have two AI-first products we designed, built and shipped in-house, which is the harder thing to fake.
+Proof starts with three products of our own. Client work follows as it ships.
 
-- Bloop. An AI events concierge for Bologna, built on the studio's standard spine: one codebase, a managed backend and a conversational AI layer. A product we are building and launching right now. It runs a live conversational concierge over a real catalogue of what is on in the city: you ask in plain language and get a real answer over real data. It proves we ship genuinely novel AI product surfaces to production.
-- Washiiba. A complete, production-grade marketplace across mobile and web from a single codebase on a managed backend. It is a build-capability receipt: proof we deliver real software across iOS, Android and web end to end.
+- Bloop. Own product, in build and piloting in Bologna. An AI events concierge: you chat in plain language and it proposes real events from a live catalogue. Italian first, with English, and a web admin for curating the catalogue. It shows we can build a conversational AI product that answers from live data.
+- Washiiba. Own product, built end to end. A laundry marketplace: customer flows for ordering, pickup windows and live order status, an admin backend, and web and mobile from one codebase. It shows we can build a full marketplace across web and mobile, end to end.
+- Kerf. Own product, a case study on public data. Kerf turns free national LiDAR (IGN LiDAR HD in France) into a ranked list of overhead-line spans where vegetation is inside the clearance zone, measured in metres, then a work order for trimming crews. It is made for small electricity distributors and vegetation management contractors. We built a LiDAR processing pipeline, a web map viewer with the ranked span list and per-span measurements, work order export (CSV) and a printable report. The case-study run covers 345 spans on 28.4 km of overhead line: 829.5 million LiDAR points, scanned in June 2021, processed in 83 seconds on one server. Kerf is not yet validated in the field and has no paying customer. Its own site: https://projectkerf.com
 
 ## Who this is not for
 
-Teams who want a mockup instead of a product in production, warm bodies to staff-augment instead of a studio that owns delivery, or AI as a box to tick rather than the agents doing real engineering. We are not a fractional CTO practice, a staff-augmentation agency, a no-code shop or a strategy consultancy.
+The studio fits when you want a working product in production, one studio to own delivery, and a partner with opinions on scope and architecture. It is not the right fit when you want the lowest bid, when your scope is still open and you would rather pay by the hour, or when you need developers to add to your own team. We are not a fractional CTO practice, a staff-augmentation or body-shop agency, a no-code shop or a strategy consultancy.
 
 ## How to work with us
 
-- Book a diagnostic call: https://theaudacity.io/contact/
+- Book a call (free, 25 minutes): https://theaudacity.io/contact/
 - Send a project brief: https://theaudacity.io/contact/ (the brief form)
 - See the work: https://theaudacity.io/work/
 - Email: obviously@theaudacity.io
+
+A written fixed-price proposal follows within 2 business days of the call. Every message about a real project gets a reply from a person within 1 business day.
 
 ## For AI agents and systems
 

@@ -1,6 +1,6 @@
 ---
 /**
- * SoftwareApplication JSON-LD. Used for Bloop (a live app) on the Work page.
+ * SoftwareApplication JSON-LD. Used for Bloop on the Work page.
  *
  * Prop-driven so any live product can reuse it. creator is the studio, pulled
  * from content/site.json. No offers/price/commercial fields: the proofs are
@@ -8,7 +8,7 @@
  *
  * Usage (Work):
  *   import SoftwareApplicationLD from '../../components/jsonld/SoftwareApplication.astro';
- *   <SoftwareApplicationLD slot="jsonld" name="Bloop" description={proof.items[0].summary} />
+ *   <SoftwareApplicationLD slot="jsonld" name={bloop.name} description={bloop.summary} />
  */
 import site from '../../content/site.json';
 

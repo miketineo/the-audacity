@@ -1,31 +1,45 @@
 {
   "eyebrow": "Proof",
-  "title": "Built on our own products first",
-  "lede": "Two products we designed, built and shipped in-house. Not client logos, not slideware: working products we build and run ourselves. They make one clear point: we ship AI-first products to production, fast, and built to launch.",
+  "title": "Proof starts with three products of our own",
+  "lede": "Bloop is in build and piloting in Bologna. Washiiba is built end to end. Kerf is a case study on public data. Every build runs on one repeatable spine, proven on our own products. Client work follows as it ships.",
   "items": [
     {
       "id": "bloop",
       "name": "Bloop",
-      "kind": "Own product · in build and launch",
+      "kind": "Own product · in build, piloting in Bologna",
       "oneLiner": "An AI events concierge for Bologna.",
       "stack": ["Conversational AI", "AI assistant layer", "Managed backend", "Web + mobile"],
-      "summary": "A product we are building and launching right now. Bloop runs a live conversational concierge over a catalogue of what is on in the city. You ask in plain language and get a grounded answer over live data, not a list of search results.",
+      "summary": "We are building Bloop and piloting it in Bologna. You chat in plain language and it proposes real events from a live catalogue.",
       "tagline": "An AI events concierge for Bologna.",
-      "built": "A chat concierge on top of a live catalogue of what's on in the city. You ask in plain language and get answers from live event data, not a list of search results.",
-      "proves": "We can take a new kind of AI product to production, on live data.",
+      "built": "A chat concierge over a live catalogue of events. You ask in plain language and it proposes real events from that catalogue. Italian first, with English, and a web admin for curating the catalogue.",
+      "proves": "We can build a conversational AI product that answers from live data.",
       "tags": ["Conversational AI", "AI assistant", "Live catalogue", "Web and mobile"]
     },
     {
       "id": "washiiba",
       "name": "Washiiba",
-      "kind": "Own product · build-capability proof",
+      "kind": "Own product · built end to end",
       "oneLiner": "A complete laundry marketplace, mobile and web from one codebase.",
       "stack": ["One codebase", "Web + mobile", "Managed backend"],
-      "summary": "A complete, production-grade marketplace built end to end. Customer and provider flows, a managed backend, and mobile and web all from a single codebase.",
+      "summary": "A laundry marketplace built end to end. Customer flows for ordering, pickup windows and live order status, an admin backend, and web and mobile from a single codebase.",
       "tagline": "A laundry marketplace on web and mobile from one codebase.",
-      "built": "Customer and provider apps with ordering, pickup windows and live order status, plus an admin backend, on web and mobile from a single codebase.",
-      "proves": "We can build a full two-sided marketplace across web and mobile, ready for the app stores.",
+      "built": "Customer flows with ordering, pickup windows and live order status, plus an admin backend, on web and mobile from a single codebase.",
+      "proves": "We can build a full marketplace across web and mobile, end to end.",
       "tags": ["One codebase", "Web and mobile", "Admin backend"]
+    },
+    {
+      "id": "kerf",
+      "name": "Kerf",
+      "kind": "Own product · case study on public data",
+      "oneLiner": "Overhead-line vegetation clearance, ranked from free national LiDAR.",
+      "stack": ["LiDAR pipeline", "Web map viewer", "CSV work orders", "Printable report"],
+      "summary": "Kerf turns free national LiDAR (IGN LiDAR HD in France) into a ranked list of overhead-line spans where vegetation is inside the clearance zone, measured in metres, then a work order for trimming crews. It is made for small electricity distributors and vegetation management contractors.",
+      "tagline": "From free national LiDAR to a work order for trimming crews.",
+      "built": "A LiDAR processing pipeline, a web map viewer with the ranked span list and per-span measurements, work order export (CSV) and a printable report. The case-study run covers 345 spans on 28.4 km of overhead line: 829.5 million LiDAR points, scanned in June 2021, processed in 83 seconds on one server.",
+      "proves": "We can take raw public data to a ranked, measured result and a work order. Kerf is a case study on public data and is not yet validated in the field.",
+      "tags": ["LiDAR", "Public data", "Ranked spans", "Work orders"],
+      "link": { "label": "Visit projectkerf.com", "href": "https://projectkerf.com" },
+      "caption": "Map data: LiDAR HD and orthophotos © IGN, Licence Ouverte 2.0. Example data."
     }
   ]
 }

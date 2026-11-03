@@ -10,49 +10,49 @@
       "lede": "We build the whole product: sign-up and login, database, and launch on the web or app stores, with payments and analytics when you need them. The price and deadline go in the contract before any code, and you pay per finished milestone.",
       "priceLine": "From €6k. Prices are listed below.",
       "ctaPrimary": { "label": "Book a call", "href": "contact/#book" },
-      "ctaSecondary": { "label": "See our work", "href": "work/" }
+      "ctaSecondary": { "label": "See the work", "href": "work/" }
     },
     "proofTeaser": {
       "eyebrow": "Proof",
-      "title": "Two products. Both ours. Both real.",
-      "body": "Instead of a wall of client logos, we point to two AI-first products we designed, built and shipped ourselves. The clearest proof we can offer is the work itself.",
+      "title": "Proof starts with three products of our own",
+      "body": "Bloop is in build and piloting in Bologna. Washiiba is a laundry marketplace built end to end. Kerf is a case study on public data. Client work follows as it ships.",
       "cta": { "label": "See the work", "href": "work/" }
     },
     "process": {
       "eyebrow": "How it works",
-      "title": "How a sprint works",
+      "title": "Three steps take your idea from agreed scope to production",
       "steps": [
         { "n": "01", "title": "Scope", "body": "We agree one outcome, a price and a deadline before any code is written." },
-        { "n": "02", "title": "Build", "body": "You see working software early and often. AI agents do the build; we make the decisions on architecture and security." },
-        { "n": "03", "title": "Ship", "body": "Your product goes live in production, ready for real users." }
+        { "n": "02", "title": "Build", "body": "You see working software early and often. AI agents do the build. Senior judgment owns architecture, security and code review." },
+        { "n": "03", "title": "Ship", "body": "Your product goes live in production with automatic releases, ready for real users." }
       ]
     },
     "ctaBand": {
-      "title": "Have an idea that should already be in production?",
-      "body": "Book a diagnostic call. We will tell you what it takes to ship it and whether we are the right studio to do it.",
+      "title": "Tell us the idea that should already be live",
+      "body": "Book a free 25-minute call. We tell you what it takes to ship it and whether we are the right studio. A fixed-price proposal follows within 2 business days.",
       "cta": { "label": "Book a call", "href": "contact/#book" }
     }
   },
   "work": {
     "seo": {
-      "title": "Work · Bloop and Washiiba · The Audacity",
-      "description": "Two AI-first products designed, built and shipped in-house. Bloop, a conversational events concierge. Washiiba, a complete marketplace across mobile and web from one codebase."
+      "title": "Work · Bloop, Washiiba and Kerf · The Audacity",
+      "description": "Three products of our own: Bloop (an AI events concierge), Washiiba (a laundry marketplace) and Kerf (a case study on public LiDAR data)."
     },
     "hero": {
       "eyebrow": "Work",
-      "headline": "Built on our own products first",
-      "lede": "Two products we designed, built and run ourselves, with the scope, the timeline and what each one shows."
+      "headline": "Three products of our own show how we build",
+      "lede": "Bloop, Washiiba and Kerf are products we build ourselves. Kerf is a case study on public data. Each section lists what we built, its status and what it shows."
     },
     "cta": {
-      "title": "Want your product here next?",
-      "body": "Book a call and tell us what you want to ship.",
+      "title": "Bring the product you want live in weeks",
+      "body": "Book a free 25-minute call. A written fixed-price proposal follows within 2 business days.",
       "button": { "label": "Book a call", "href": "contact/#book" }
     }
   },
   "contact": {
     "seo": {
       "title": "Book a call · The Audacity",
-      "description": "Book a diagnostic call or send a project brief. An Agentic Engineering Studio that ships products to production in weeks."
+      "description": "Book a free 25-minute call or send a project brief to The Audacity, an Agentic Engineering Studio. Fixed-price proposal within 2 business days."
     },
     "hero": {
       "eyebrow": "Contact",
@@ -74,7 +74,7 @@
       },
       "inquiry": {
         "title": "Send a brief",
-        "body": "Not ready for a call? Tell us about the project and we'll reply with a straight answer within 1 business day.",
+        "body": "Tell us about the project in writing and we reply within 1 business day.",
         "fields": {
           "name": "Your name",
           "email": "Email",
