@@ -1,96 +1,87 @@
 ---
-import { getCollection } from 'astro:content';
+/**
+ * Blog index (/blog/): every essay in src/blog/, newest first.
+ */
+import type { MarkdownInstance } from 'astro';
 import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+import site from '../../content/site.json';
 
-const posts = (await getCollection('blog'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+type Post = MarkdownInstance<{ title: string; description: string; date: string }>;
+
+const posts = Object.entries(import.meta.glob<Post>('../../blog/*.md', { eager: true }))
+  .map(([file, post]) => ({
+    slug: file.split('/').pop()!.replace(/\.md$/, ''),
+    title: post.frontmatter.title,
+    description: post.frontmatter.description,
+    date: new Date(post.frontmatter.date),
+  }))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
 const base = import.meta.env.BASE_URL;
+// Frontmatter dates parse as UTC midnight; format in UTC so the day never shifts.
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 
 <Base
-  title="Blog — The Audacity"
-  description="Thinking on AI engineering, agentic systems, and building software that works."
+  title={`Blog · ${site.brand}`}
+  description="Essays from The Audacity on agentic engineering, evaluation and running AI agents in production."
   path="/blog/"
 >
-  <section class="blog container">
-    <header class="blog__header">
-      <span class="eyebrow">Blog</span>
-      <h1>Thinking</h1>
-      <p class="blog__lead text-dim">On AI engineering, agentic systems, and building software that works.</p>
-    </header>
+  <Logo slot="logo" direction="c" />
+  <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }]} />
 
-    <ul class="blog__list" role="list">
-      {posts.map((post) => {
-        const formatted = post.data.date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        return (
-          <li class="blog__item">
-            <a class="blog__link" href={`${base}blog/${post.slug}/`}>
-              <time class="blog__date eyebrow" datetime={post.data.date.toISOString().split('T')[0]}>
-                {formatted}
-              </time>
-              <h2 class="blog__title">{post.data.title}</h2>
-              <p class="blog__desc text-dim">{post.data.description}</p>
-            </a>
-          </li>
-        );
-      })}
+  <header class="container hero">
+    <p class="eyebrow">Blog</p>
+    <h1 class="hero__title">Notes on putting AI agents into production</h1>
+    <p class="hero__lede text-dim">
+      Essays from the studio on agentic engineering, evaluation and running agents in production.
+    </p>
+  </header>
+
+  <div class="container posts">
+    <ul class="posts__list" role="list">
+      {posts.map((post) => (
+        <li class="posts__item">
+          <a class="posts__link" href={`${base}blog/${post.slug}/`}>
+            <time class="eyebrow" datetime={post.date.toISOString().split('T')[0]}>
+              {fmt(post.date)}
+            </time>
+            <h2 class="posts__title">{post.title}</h2>
+            <p class="text-dim">{post.description}</p>
+          </a>
+        </li>
+      ))}
     </ul>
-  </section>
+  </div>
 </Base>
 
 <style>
-  .blog {
-    padding-block: var(--space-2xl) var(--space-3xl);
+  .hero {
+    padding-block: var(--space-2xl) var(--space-lg);
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
   }
-  .blog__header {
-    margin-bottom: var(--space-xl);
+  .hero__title { font-size: var(--text-2xl); max-width: 18ch; }
+  .hero__lede { font-size: var(--text-md); max-width: 56ch; }
+
+  .posts { padding-block: var(--space-lg) var(--space-3xl); }
+  .posts__item {
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--border);
   }
-  .blog__header .eyebrow {
-    display: block;
-    margin-bottom: var(--space-sm);
-  }
-  .blog__header h1 {
-    margin-bottom: var(--space-xs);
-  }
-  .blog__lead {
-    font-size: var(--text-md);
-    max-width: var(--measure);
-  }
-  .blog__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-  }
-  .blog__item {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: var(--space-md);
-  }
-  .blog__item:last-child {
-    border-bottom: none;
-  }
-  .blog__link {
-    display: block;
+  .posts__link {
+    display: grid;
+    gap: var(--space-2xs);
     text-decoration: none;
   }
-  .blog__link:hover .blog__title {
-    text-decoration-line: underline;
+  .posts__title { font-size: var(--text-lg); }
+  .posts__link:hover .posts__title {
+    text-decoration: underline;
     text-decoration-color: var(--accent);
     text-underline-offset: 0.12em;
-  }
-  .blog__date {
-    display: block;
-    margin-bottom: var(--space-2xs);
-  }
-  .blog__title {
-    font-size: var(--text-lg);
-    margin-bottom: var(--space-2xs);
-  }
-  .blog__desc {
-    font-size: var(--text-base);
   }
 </style>
