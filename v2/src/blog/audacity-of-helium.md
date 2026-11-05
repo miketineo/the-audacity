@@ -4,7 +4,7 @@ description: "In 1908 a Leiden laboratory turned 25 balloons of helium into a te
 date: 2026-11-05
 ---
 
-In 1908 the purified helium in Heike Kamerlingh Onnes's laboratory in Leiden would have filled about 25 party balloons. No company sold helium. The element had been seen in the spectrum of the Sun in 1868 and found on Earth in 1895, and thirteen years later it was still the one gas nobody had turned into a liquid.
+In 1908 the purified helium in Heike Kamerlingh Onnes's laboratory in Leiden would have filled about 25 party balloons. It was reportedly about 80 percent of the world's usable supply. No company sold helium. The element had been seen in the spectrum of the Sun in 1868 and found on Earth in 1895, and thirteen years later it was still the one gas nobody had turned into a liquid.
 
 Onnes made his own supply. He extracted the gas from monazite sand, a mineral in which helium collects as uranium and thorium decay, and purified it in his own laboratory. On 10 July 1908 his team cooled that gas with liquid air, then with liquid hydrogen, and then expanded it through a valve until it condensed. The yield was about 60 milliliters of liquid helium, roughly a teacup.
 
