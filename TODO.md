@@ -18,6 +18,8 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-opus-5-5` 2026-11-03 — Copy refresh under `docs/copy/REGISTER.md` (facts in local-only `docs/gtm/copy-facts.md`) and Kerf added as the third own product on / and /work/ (overlapping desktop gallery). PR #43 merged, deployed to Pages production 2026-11-03, cache purged, live check green. Same release: security headers (`v2/public/_headers`: HSTS, pinned CSP, frame deny), form API refused on the bare pages.dev alias (`functions/api/_middleware.js`), and zone settings min TLS 1.2, SSL Full (strict), Always Use HTTPS, Free Managed WAF ruleset deployed explicitly.
 
+- [~] `miguel` `cc+claude-opus-5-5` 2026-11-05: Waitlist and inquiry emails moved to the monochrome brand (no lime, no Impact, copy unchanged); `docs/design/BRAND.md` gains the "Generated output" tokens every agent generator reads.
+
 ---
 
 ## Status Summary
