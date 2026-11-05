@@ -15,7 +15,7 @@ The brand idea is **autonomous + audacious + engineering precision**. The name i
 - **Mark + wordmark**, plus a standalone mark that reads at favicon size.
 - Works on **light and dark**, and in **pure monochrome** (one color, no gradients required to read).
 - Vector first: deliver **SVG**. Prefer a single `currentColor` SVG so it themes automatically, plus explicit light/dark variants if needed.
-- The one accent is lime `#C4FF00`, used sparingly. The logo must also be legible with zero accent (all ink).
+- The brand is monochrome. The logo is all ink, with no color accent.
 - Clean at 16px. Test it tiny, not just big.
 
 ## Deliverables
