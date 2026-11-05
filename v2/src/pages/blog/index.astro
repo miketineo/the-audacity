@@ -1,0 +1,87 @@
+---
+/**
+ * Blog index (/blog/): every essay in src/blog/, newest first.
+ */
+import type { MarkdownInstance } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import BreadcrumbLD from '../../components/jsonld/BreadcrumbList.astro';
+import site from '../../content/site.json';
+
+type Post = MarkdownInstance<{ title: string; description: string; date: string }>;
+
+const posts = Object.entries(import.meta.glob<Post>('../../blog/*.md', { eager: true }))
+  .map(([file, post]) => ({
+    slug: file.split('/').pop()!.replace(/\.md$/, ''),
+    title: post.frontmatter.title,
+    description: post.frontmatter.description,
+    date: new Date(post.frontmatter.date),
+  }))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+const base = import.meta.env.BASE_URL;
+// Frontmatter dates parse as UTC midnight; format in UTC so the day never shifts.
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+
+<Base
+  title={`Blog · ${site.brand}`}
+  description="Essays from The Audacity on agentic engineering, evaluation and running AI agents in production."
+  path="/blog/"
+>
+  <Logo slot="logo" direction="c" />
+  <BreadcrumbLD slot="jsonld" items={[{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog/' }]} />
+
+  <header class="container hero">
+    <p class="eyebrow">Blog</p>
+    <h1 class="hero__title">Notes on putting AI agents into production</h1>
+    <p class="hero__lede text-dim">
+      Essays from the studio on agentic engineering, evaluation and running agents in production.
+    </p>
+  </header>
+
+  <div class="container posts">
+    <ul class="posts__list" role="list">
+      {posts.map((post) => (
+        <li class="posts__item">
+          <a class="posts__link" href={`${base}blog/${post.slug}/`}>
+            <time class="eyebrow" datetime={post.date.toISOString().split('T')[0]}>
+              {fmt(post.date)}
+            </time>
+            <h2 class="posts__title">{post.title}</h2>
+            <p class="text-dim">{post.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl) var(--space-lg);
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+  .hero__title { font-size: var(--text-2xl); max-width: 18ch; }
+  .hero__lede { font-size: var(--text-md); max-width: 56ch; }
+
+  .posts { padding-block: var(--space-lg) var(--space-3xl); }
+  .posts__item {
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--border);
+  }
+  .posts__link {
+    display: grid;
+    gap: var(--space-2xs);
+    text-decoration: none;
+  }
+  .posts__title { font-size: var(--text-lg); }
+  .posts__link:hover .posts__title {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.12em;
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+/**
+ * BlogPost.astro: shell for one essay under /blog/.
+ *
+ * The studio is the author (REGISTER.md: no person names on public surfaces),
+ * so there is no byline and the Article JSON-LD names the organization.
+ */
+import Base from './Base.astro';
+import Logo from '../components/Logo.astro';
+import BreadcrumbLD from '../components/jsonld/BreadcrumbList.astro';
+import site from '../content/site.json';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  slug: string;
+}
+
+const { title, description, date, slug } = Astro.props;
+const path = `/blog/${slug}/`;
+const isoDate = date.toISOString().split('T')[0];
+// Frontmatter dates parse as UTC midnight; format in UTC so the day never shifts.
+const formatted = date.toLocaleDateString('en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+const publisher = { '@type': 'Organization', name: site.brand, url: site.url };
+---
+
+<Base title={`${title} · ${site.brand}`} description={description} path={path} ogType="article">
+  <Logo slot="logo" direction="c" />
+  <BreadcrumbLD
+    slot="jsonld"
+    items={[
+      { name: 'Home', path: '/' },
+      { name: 'Blog', path: '/blog/' },
+      { name: title, path },
+    ]}
+  />
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      datePublished: isoDate,
+      author: publisher,
+      publisher,
+      mainEntityOfPage: new URL(path, site.url).href,
+    })}
+  />
+
+  <article class="container post">
+    <header class="post__header">
+      <a class="post__back eyebrow" href={`${import.meta.env.BASE_URL}blog/`}>&larr; Blog</a>
+      <h1 class="post__title">{title}</h1>
+      <p class="post__meta text-dim"><time datetime={isoDate}>{formatted}</time></p>
+    </header>
+    <div class="post__body">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post {
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+  .post__header {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+    margin-bottom: var(--space-xl);
+  }
+  .post__back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px; /* tap target */
+    text-decoration: none;
+  }
+  .post__back:hover { color: var(--text); }
+  .post__title { max-width: 18ch; }
+  .post__meta { font-size: var(--text-sm); }
+
+  .post__body { max-width: var(--measure); }
+  .post__body :global(h2) {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+  }
+  .post__body :global(p) { margin-bottom: var(--space-md); }
+  .post__body :global(ul) {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-md);
+  }
+  .post__body :global(li) { margin-bottom: var(--space-2xs); }
+</style>
