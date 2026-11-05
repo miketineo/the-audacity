@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base
+  title="Blog — The Audacity"
+  description="Thinking on AI engineering, agentic systems, and building software that works."
+  path="/blog/"
+>
+  <section class="blog container">
+    <header class="blog__header">
+      <span class="eyebrow">Blog</span>
+      <h1>Thinking</h1>
+      <p class="blog__lead text-dim">On AI engineering, agentic systems, and building software that works.</p>
+    </header>
+
+    <ul class="blog__list" role="list">
+      {posts.map((post) => {
+        const formatted = post.data.date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        return (
+          <li class="blog__item">
+            <a class="blog__link" href={`${base}blog/${post.slug}/`}>
+              <time class="blog__date eyebrow" datetime={post.data.date.toISOString().split('T')[0]}>
+                {formatted}
+              </time>
+              <h2 class="blog__title">{post.data.title}</h2>
+              <p class="blog__desc text-dim">{post.data.description}</p>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .blog {
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+  .blog__header {
+    margin-bottom: var(--space-xl);
+  }
+  .blog__header .eyebrow {
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+  .blog__header h1 {
+    margin-bottom: var(--space-xs);
+  }
+  .blog__lead {
+    font-size: var(--text-md);
+    max-width: var(--measure);
+  }
+  .blog__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .blog__item {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-md);
+  }
+  .blog__item:last-child {
+    border-bottom: none;
+  }
+  .blog__link {
+    display: block;
+    text-decoration: none;
+  }
+  .blog__link:hover .blog__title {
+    text-decoration-line: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.12em;
+  }
+  .blog__date {
+    display: block;
+    margin-bottom: var(--space-2xs);
+  }
+  .blog__title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2xs);
+  }
+  .blog__desc {
+    font-size: var(--text-base);
+  }
+</style>

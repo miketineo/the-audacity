@@ -1,0 +1,111 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  author: string;
+  slug: string;
+}
+
+const { title, description, date, author, slug } = Astro.props;
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Base title={`${title} — The Audacity`} description={description} path={`/blog/${slug}/`} ogType="article">
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      author: { '@type': 'Person', name: author },
+      publisher: { '@type': 'Organization', name: 'The Audacity' },
+      datePublished: date.toISOString().split('T')[0],
+    })} />
+  </Fragment>
+
+  <article class="post container">
+    <header class="post__header">
+      <a class="post__back eyebrow" href={`${import.meta.env.BASE_URL}blog/`}>&larr; Blog</a>
+      <h1>{title}</h1>
+      <p class="post__meta text-dim">{author} &middot; {formatted}</p>
+    </header>
+    <div class="post__body prose">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post {
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+  .post__header {
+    margin-bottom: var(--space-xl);
+  }
+  .post__back {
+    display: inline-block;
+    margin-bottom: var(--space-md);
+    text-decoration: none;
+  }
+  .post__back:hover {
+    color: var(--text);
+  }
+  .post__header h1 {
+    margin-bottom: var(--space-sm);
+  }
+  .post__meta {
+    font-size: var(--text-sm);
+  }
+
+  /* Prose styles for rendered markdown */
+  .prose :global(h2) {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+  }
+  .prose :global(h3) {
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+  }
+  .prose :global(p) {
+    margin-bottom: var(--space-md);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-md);
+  }
+  .prose :global(li) {
+    margin-bottom: var(--space-2xs);
+  }
+  .prose :global(strong) {
+    font-weight: 650;
+  }
+  .prose :global(em) {
+    font-style: italic;
+  }
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--border-strong);
+    padding-left: var(--space-md);
+    margin-block: var(--space-md);
+    color: var(--text-dim);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--surface-2);
+    padding: 0.15em 0.35em;
+    border-radius: var(--radius-sm);
+  }
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-block: var(--space-xl);
+  }
+</style>
