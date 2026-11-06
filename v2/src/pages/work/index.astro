@@ -14,6 +14,8 @@
  *               cropped wide tiles) instead of the phone frame. Its
  *               screenshots always carry the data-licence caption from
  *               proof.json, and it links out to its own site.
+ *   - Recovery Room: a pilot at a gym in Cagliari. The club's name and logo
+ *               stay out of the copy and screenshots, and the app is not linked.
  *
  * Consumes: Base.astro, Logo, Button, content/proof.json, content/pages.json,
  * content/site.json. Screenshots live in public/work/<id>/ (served at
@@ -75,6 +77,14 @@ const galleries: Record<string, { shots: Shot[] }> = {
         alt: "Kerf's 3D view of one overhead-line span, with LiDAR points for the vegetation and a callout reading 5.7 m inside clearance." },
     ],
   },
+  'recovery-room': {
+    shots: [
+      { src: 'work/recovery-room/member.jpg', w: 1040, h: 820, frame: 'overlap', pos: '50% 50%',
+        alt: "Recovery Room's booking page, where a member chooses a massage chair or pressotherapy." },
+      { src: 'work/recovery-room/staff.jpg', w: 1040, h: 820, frame: 'overlap', pos: '0% 0%',
+        alt: "Recovery Room's staff page with the day's bookings for each seat, shown with example data." },
+    ],
+  },
 };
 
 // Optional keys: Kerf adds `link` (its own site) and `caption` (screenshot
@@ -83,7 +93,7 @@ type ProofItem = (typeof proof.items)[number] & {
   link?: { label: string; href: string };
   caption?: string;
 };
-const ordered = proof.items as ProofItem[]; // [bloop, washiiba, kerf]
+const ordered = proof.items as ProofItem[]; // [bloop, washiiba, kerf, recovery-room]
 
 // JSON-LD picks items by id, never by position, so reordering proof.json is safe.
 const byId = (id: string): ProofItem => {
@@ -94,11 +104,13 @@ const byId = (id: string): ProofItem => {
 const bloop = byId('bloop');
 const washiiba = byId('washiiba');
 const kerf = byId('kerf');
+const recoveryRoom = byId('recovery-room');
 
 // Structured data lives in src/components/jsonld/ (one source of truth):
 //   Bloop    -> SoftwareApplication (no offers/price/status)
 //   Washiiba -> CreativeWork (capability receipt only: no offers/price/status)
 //   Kerf     -> CreativeWork, genre "Case study" (no offers/price/status)
+//   Recovery Room -> CreativeWork (no offers/price/status)
 //   plus a BreadcrumbList. See the `jsonld` slot in the body below.
 ---
 <Base
@@ -118,6 +130,7 @@ const kerf = byId('kerf');
     genre="Case study"
     url={kerf.link?.href}
   />
+  <CreativeWorkLD slot="jsonld" name={recoveryRoom.name} description={recoveryRoom.summary} />
 
   {/* ---------- Hero ---------- */}
   <header class="container hero" data-animate>

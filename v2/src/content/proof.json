@@ -1,7 +1,7 @@
 {
   "eyebrow": "Proof",
   "title": "Proof starts with three products of our own",
-  "lede": "Bloop is in build and piloting in Bologna. Washiiba is built end to end. Kerf is a case study on public data. Every build runs on one repeatable spine, proven on our own products. Client work follows as it ships.",
+  "lede": "Bloop is in build and piloting in Bologna. Washiiba is built end to end. Kerf is a case study on public data. Recovery Room is a pilot, live at a gym in Cagliari. Every build runs on one repeatable spine, proven on our own products. Client work follows as it ships.",
   "items": [
     {
       "id": "bloop",
@@ -40,6 +40,19 @@
       "tags": ["LiDAR", "Public data", "Ranked spans", "Work orders"],
       "link": { "label": "Visit projectkerf.com", "href": "https://projectkerf.com" },
       "caption": "Map data: LiDAR HD and orthophotos © IGN, Licence Ouverte 2.0. Example data."
+    },
+    {
+      "id": "recovery-room",
+      "name": "Recovery Room",
+      "kind": "Pilot · live at a gym in Cagliari",
+      "oneLiner": "Booking for a gym's massage chairs and pressotherapy.",
+      "stack": ["Phone-first web app", "Staff page", "Google Calendar", "Italian + English"],
+      "summary": "A gym in Cagliari needed a way for members to book its massage chairs and pressotherapy. We had a first version running the day we started. It now runs as a pilot on the gym's member list.",
+      "tagline": "Booking for a gym's massage chairs and pressotherapy.",
+      "built": "A booking page for phones, Italian first with English: pick a seat and a time, with no app and no password. A staff page with the day's schedule, no-show counts and the member list. Confirmation emails come from the gym's own address and bookings sync to its Google Calendar.",
+      "proves": "We can get a small business a working tool in days, on its real member list.",
+      "tags": ["Bookings", "Staff page", "Google Calendar", "Italian and English"],
+      "caption": "Screenshots use example data."
     }
   ]
 }
