@@ -70,6 +70,14 @@
       "description": "Kerf turns free national LiDAR (IGN LiDAR HD in France) into a ranked list of overhead-line spans where vegetation is inside the clearance zone, measured in metres, then a work order for trimming crews. It is made for small electricity distributors and vegetation management contractors. A LiDAR processing pipeline, a web map viewer with the ranked span list and per-span measurements, work order export (CSV) and a printable report. The case-study run covers 345 spans on 28.4 km of overhead line: 829.5 million LiDAR points, scanned in June 2021, processed in 83 seconds on one server.",
       "demonstrates": "We can take raw public data to a ranked, measured result and a work order.",
       "data_attribution": "Map data: LiDAR HD and orthophotos © IGN, Licence Ouverte 2.0. Example data."
+    },
+    {
+      "id": "recovery-room",
+      "name": "Recovery Room",
+      "type": "pilot",
+      "stage": "pilot, live at a gym in Cagliari",
+      "description": "A booking app for a gym's massage chairs and pressotherapy. A booking page for phones, Italian first with English: pick a seat and a time, with no app and no password. A staff page with the day's schedule, no-show counts and the member list. Confirmation emails come from the gym's own address and bookings sync to its Google Calendar.",
+      "demonstrates": "We can get a small business a working tool in days, on its real member list."
     }
   ],
   "agents": {

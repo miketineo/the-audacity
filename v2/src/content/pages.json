@@ -15,7 +15,7 @@
     "proofTeaser": {
       "eyebrow": "Proof",
       "title": "Proof starts with three products of our own",
-      "body": "Bloop is in build and piloting in Bologna. Washiiba is a laundry marketplace built end to end. Kerf is a case study on public data. Client work follows as it ships.",
+      "body": "Bloop is in build and piloting in Bologna. Washiiba is a laundry marketplace built end to end. Kerf is a case study on public data. Recovery Room is a pilot, live at a gym in Cagliari. Client work follows as it ships.",
       "cta": { "label": "See the work", "href": "work/" }
     },
     "process": {
@@ -35,13 +35,13 @@
   },
   "work": {
     "seo": {
-      "title": "Work · Bloop, Washiiba and Kerf · The Audacity",
-      "description": "Three products of our own: Bloop (an AI events concierge), Washiiba (a laundry marketplace) and Kerf (a case study on public LiDAR data)."
+      "title": "Work · Bloop, Washiiba, Kerf and Recovery Room · The Audacity",
+      "description": "Three products of our own: Bloop (an AI events concierge), Washiiba (a laundry marketplace) and Kerf (a case study on public LiDAR data), plus Recovery Room, a booking pilot at a gym in Cagliari."
     },
     "hero": {
       "eyebrow": "Work",
       "headline": "Three products of our own show how we build",
-      "lede": "Bloop, Washiiba and Kerf are products we build ourselves. Kerf is a case study on public data. Each section lists what we built, its status and what it shows."
+      "lede": "Bloop, Washiiba and Kerf are products we build ourselves. Kerf is a case study on public data. Recovery Room is a pilot, live at a gym in Cagliari. Each section lists what we built, its status and what it shows."
     },
     "cta": {
       "title": "Bring the product you want live in weeks",

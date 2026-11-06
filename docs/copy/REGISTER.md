@@ -38,7 +38,7 @@ POSITIONING.md wins.
 - Category: Agentic Engineering Studio (verbatim, title case).
 - Tagline: "AI agents build. One human ensures quality."
 - The studio sells delivered, running software at a fixed price and deadline.
-- Proof is our own products first: Bloop, Washiiba, Kerf. Client work follows as it ships.
+- Proof is our own products first: Bloop, Washiiba, Kerf. Recovery Room is a pilot at a gym. Client work follows as it ships.
 - Every build runs on one repeatable spine, proven on our own products.
 
 ## Anti-slop
@@ -61,6 +61,12 @@ POSITIONING.md wins.
 - Never name the case-study distributor or network. Screenshots carry the data licence
   attribution in a caption.
 - Kerf has its own public site, projectkerf.com. Link there.
+
+## Recovery Room on this site
+- Say "a gym in Cagliari". Never name the club or show its logo.
+- It is a pilot. Do not call it client work or a customer.
+- Do not link the app.
+- Screenshots come from the demo seed only, never from the live database.
 
 ## Before handing back, confirm
 - Every claim traces to copy-facts.md or is a placeholder.

@@ -22,6 +22,8 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-fable-5-1` 2026-11-05: Blog section at /blog/ with the first essay, "The Audacity of Helium". Essays are Markdown files in `v2/src/blog/`, loaded with plain imports (Astro content collections reject the loose JSON files in `src/content/`). The studio is the author, no byline, per `docs/copy/REGISTER.md`. Blog link added to nav, footer and `llms.txt`. PR #46 merged, deployed to Pages production 2026-11-05 from atlas (preview first, bundle diffed against live: only the blog pages, the Blog links, `llms.txt` and the sitemap changed), live check green. Cache purged for every page, by hand for all but the home page: `scripts/deploy-pages.sh` still purges the home page only. On atlas the script ran with `node` and `npx` wrappers around a `node:22-bookworm-slim` container and Vault reads through the host proxy socket. LinkedIn post for the essay is in local-only `docs/gtm/linkedin-audacity-of-helium.md`, not posted.
 
+- [~] `miguel` `cc+claude-opus-5-5` 2026-11-06: Recovery Room added to / and /work/ as a pilot at a gym in Cagliari, plus `llms.txt`, the agent manifest and the FAQ. No club name or logo, app not linked, screenshots from the demo seed. Merged; production deploy waits on a Vault login (`scripts/deploy-pages.sh`).
+
 ---
 
 ## Status Summary
