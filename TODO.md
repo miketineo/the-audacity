@@ -1,7 +1,7 @@
 # The Audacity — TODO
 
 > **Last updated:** 2026-07-07
-> **Overall health:** GREEN — v2 LIVE at theaudacity.io root; v1 archived at /v1/
+> **Overall health:** GREEN — v2 LIVE at theaudacity.io root; v1 retired 2026-11-11 (/v1/ redirects to /)
 > **Active branch:** main
 
 ---
@@ -24,6 +24,8 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [~] `miguel` `cc+claude-opus-5-5` 2026-11-06: Recovery Room added to / and /work/ as a pilot at a gym in Cagliari, plus `llms.txt`, the agent manifest and the FAQ. No club name or logo, app not linked, screenshots from the demo seed. Merged; production deploy waits on a Vault login (`scripts/deploy-pages.sh`).
 
+- [x] `miguel` `cc+claude-opus-5-5` 2026-11-11: Retire the v1 archive (the original black and lime site at /v1/): files removed, /v1/ 301 to /, CSP drops the v1-only labs.miketineo.com origin. PR #50 merged, deployed to Pages production 2026-11-11, cache purged, /v1/* 301 to / confirmed live.
+
 ---
 
 ## Status Summary
@@ -31,7 +33,7 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 | Area | Status |
 |------|--------|
 | v2 site | ✅ LIVE at theaudacity.io root (promoted 2026-07-07, marketing test 8/10) |
-| v1 | ✅ Archived at /v1/ (and in repo `v1/`) |
+| v1 | Retired 2026-11-11: removed from the site and the repo, /v1/ redirects to / (history in git) |
 | v2 revamp spec | ✅ SHIPPED |
 | Claude Design context pack | ✅ Written (`docs/design/`) |
 | Analytics | ✅ PostHog live (consent-gated, via z.miketineo.com proxy) |
