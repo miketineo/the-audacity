@@ -2,3 +2,6 @@
 /v2/* /:splat 301
 /sitemap.xml /sitemap-index.xml 301
 /logs/* / 301
+# v1 archive retired 2026-11-11 (PR #50); this rule shipped then but was only committed 2026-11-16.
+/v1/* / 301
+/v1 / 301

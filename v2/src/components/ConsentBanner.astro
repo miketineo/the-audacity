@@ -1,11 +1,12 @@
 ---
 /**
- * ConsentBanner.astro — opt-in consent gate for analytics.
+ * ConsentBanner.astro — opt-in consent for analytics cookies.
  *
- * Nothing analytics-related loads until the visitor accepts. Choice persists to
- * localStorage 'audacity-consent' ('granted' | 'denied'). On grant it dispatches
- * 'audacity:consent-granted' so the (future) PostHog loader can boot; on a stored
- * grant at load it re-dispatches once. Re-openable from the Footer's
+ * Analytics.astro counts every visit cookieless (nothing stored on the device)
+ * and only switches to cookie-based analytics after the visitor accepts here.
+ * Choice persists to localStorage 'audacity-consent' ('granted' | 'denied').
+ * On grant it dispatches 'audacity:consent-granted' (on a stored grant at load
+ * it re-dispatches once); on decline 'audacity:consent-denied'. Re-openable from the Footer's
  * "Cookie settings" via the 'audacity:open-consent' event.
  *
  * Non-blocking (no modal trap): a dismissible region pinned bottom-left.
@@ -21,11 +22,11 @@ const base = import.meta.env.BASE_URL; // '/v2/'
   hidden
 >
   <div class="consent__body">
-    <p class="consent__title">We keep analytics quiet until you say yes.</p>
+    <p class="consent__title">We count visits without cookies.</p>
     <p class="consent__copy text-dim">
-      Optional product analytics help us understand what is useful. No ad
-      trackers, ever. You can change this anytime from the footer. Details in
-      the <a href={`${base}privacy/`}>privacy policy</a>.
+      Accept to allow analytics cookies, which show us how people use the site
+      across visits. No ad trackers, ever. You can change this anytime from the
+      footer. Details in the <a href={`${base}privacy/`}>privacy policy</a>.
     </p>
   </div>
   <div class="consent__actions">

@@ -7,8 +7,13 @@
  *
  *   1. Defines the canonical tracker `window.audacityTrack(event, props)` that
  *      the rest of the site already calls (forms, BookingEmbed, ThemeToggle).
- *   2. Loads PostHog (EU cloud) ONLY after consent — nothing is fetched or sent
- *      before `audacity:consent-granted` (or a stored 'granted' choice).
+ *   2. Loads PostHog (EU cloud) on every page in cookieless mode: until the
+ *      visitor accepts, nothing is stored on the device and PostHog counts the
+ *      visit from a server-side hash that rotates daily. Accepting
+ *      (`audacity:consent-granted` or a stored 'granted') upgrades to normal
+ *      cookie-based analytics; declining keeps it cookieless. Before
+ *      2026-11-16 nothing loaded pre-consent, and the project saw almost no
+ *      visitors because most never click either button.
  *   3. Captures UTM / gclid attribution on every load (via scripts/attribution)
  *      and registers it as PostHog super properties so every event carries its
  *      source. The same localStorage bag rides on inquiry / waitlist payloads.
@@ -48,6 +53,9 @@
     const consentGranted = () => {
       try { return localStorage.getItem(CONSENT_KEY) === 'granted'; } catch (e) { return false; }
     };
+    const consentDenied = () => {
+      try { return localStorage.getItem(CONSENT_KEY) === 'denied'; } catch (e) { return false; }
+    };
 
     // Capture attribution on every page load (safe pre-consent: data only).
     captureAttribution();
@@ -61,10 +69,10 @@
       return Object.assign({}, getFlatUtm(), props || {});
     }
 
-    // ---- Canonical tracker the whole site calls. Events raised before consent
-    // are buffered in-memory and flushed once consent is granted AND PostHog has
-    // loaded; nothing leaves the browser pre-consent and the queue dies with the
-    // page. This is the only tracker: reporters call window.audacityTrack
+    // ---- Canonical tracker the whole site calls. Events raised before PostHog
+    // has loaded are buffered in-memory and flushed by the loaded callback. They
+    // go out cookieless or cookie-based according to the consent state at that
+    // moment. This is the only tracker: reporters call window.audacityTrack
     // directly, and Analytics.astro's script runs before any of them can fire.
     function track(event, props) {
       const payload = flat(props);
@@ -72,8 +80,6 @@
         window.posthog.capture(event, payload);
       } else {
         queue.push([event, payload]);
-        // A granted consent that has not booted yet means we just turned on:
-        if (consentGranted()) grant();
       }
     }
     window.audacityTrack = track;
@@ -91,8 +97,8 @@
       window.posthog.capture('page_view', flat({ path: location.pathname }));
     }
 
-    // ---- PostHog EU loader (official array snippet). Fetches nothing until
-    // boot() runs, which only happens on consent.
+    // ---- PostHog EU loader (official array snippet). boot() runs on every
+    // page load; the consent state decides cookieless vs cookie-based.
     function boot() {
       if (booted) return;
       booted = true;
@@ -144,7 +150,19 @@
         capture_pageview: true,
         capture_pageleave: true,
         persistence: 'localStorage+cookie',
+        // Cookieless until the visitor accepts: pending and declined visitors
+        // are counted from a daily-rotating server-side hash, with nothing
+        // written to their device. Needs "cookieless server hash mode" on in the
+        // PostHog project (enabled 2026-11-16).
+        cookieless_mode: 'on_reject',
+        opt_out_capturing_by_default: true,
         loaded: function (ph) {
+          // Bring PostHog's own consent state in line with the banner's choice.
+          try {
+            const status = ph.get_explicit_consent_status();
+            if (consentGranted() && status !== 'granted') ph.opt_in_capturing({ captureEventName: false });
+            if (consentDenied() && status !== 'denied') ph.opt_out_capturing();
+          } catch (e) {}
           ready = true;
           // Portfolio convention (PostHog option B): one project, every property
           // registers `product` as a super property so per-product dashboards can
@@ -156,31 +174,29 @@
       });
     }
 
-    // ---- Consent wiring. Self-check the stored choice (covers ConsentBanner
-    // dispatching 'granted' before this script attached) AND listen for changes.
-    // Consent can be re-granted after a decline within one page load (the footer
-    // reopens the banner). boot() is one-shot, so re-granting has to opt back in
-    // and resume the already-loaded library rather than re-injecting the snippet.
-    function grant() {
-      if (!booted) return boot();
-      try { window.posthog && window.posthog.opt_in_capturing && window.posthog.opt_in_capturing(); } catch (e) {}
-      if (window.posthog && window.posthog.__loaded) {
-        ready = true;
-        flush();
-      }
+    // ---- Consent wiring. boot() always runs; the loaded callback reconciles
+    // the stored choice. A choice made after load (banner click, or the footer
+    // reopening it) switches the running library between modes. Before load,
+    // the loaded callback picks the choice up from localStorage.
+    function setMode(granted) {
+      const ph = window.posthog;
+      if (!ph || !ph.__loaded) return;
+      try {
+        if (granted) {
+          if (ph.get_explicit_consent_status() !== 'granted') ph.opt_in_capturing({ captureEventName: false });
+        } else {
+          ph.opt_out_capturing();
+        }
+      } catch (e) {}
     }
 
-    if (consentGranted()) grant();
-    window.addEventListener('audacity:consent-granted', grant);
-    window.addEventListener('audacity:consent-denied', function () {
-      ready = false;
-      queue.length = 0;
-      try { window.posthog && window.posthog.opt_out_capturing && window.posthog.opt_out_capturing(); } catch (e) {}
-    });
+    boot();
+    window.addEventListener('audacity:consent-granted', function () { setMode(true); });
+    window.addEventListener('audacity:consent-denied', function () { setMode(false); });
 
     // ---- Event taxonomy that this layer owns directly (the rest is reported by
     // the components via window.audacityTrack): cta_clicked + outbound_click,
-    // through one delegated click listener. Gating happens inside track().
+    // through one delegated click listener. Buffering happens inside track().
     document.addEventListener('click', function (e) {
       const cta = e.target.closest && e.target.closest('[data-cta]');
       if (cta) track('cta_clicked', { location: cta.getAttribute('data-cta') });
