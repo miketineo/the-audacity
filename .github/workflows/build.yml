@@ -1,0 +1,34 @@
+name: Build site
+
+# Dependabot PRs used to show green with only the gitleaks scan, even when the
+# bump broke the Astro build (@astrojs/sitemap 3.7.4 does, on astro 4.16.19).
+# This job installs from the lockfile and builds, so a red build blocks a merge.
+# It builds only; it never deploys (deploys are the manual direct upload in
+# scripts/deploy-pages.sh).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: v2
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Node version
+        run: node --version
+
+      - name: Install from the lockfile
+        run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npx astro build
