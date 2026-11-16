@@ -76,6 +76,7 @@ Config keys:
 | `consent.grantEvent` / `consent.denyEvent` | Optional CustomEvent names, for banners that signal by event. |
 | `init` | Optional PostHog options. Merged **under** the defaults-then-forced options below. |
 | `legacy_page_view` | Opt in to the custom `page_view` during the retirement soak. See below. |
+| `cookieless` | `true` = load on every page in PostHog cookieless mode and upgrade to cookies on consent. See below. |
 
 ## Consent: adapt, do not converge
 
@@ -91,9 +92,28 @@ names its CustomEvents in `consent.grantEvent` / `consent.denyEvent`, or calls
 `window.phConsent(true)` directly.
 
 Events fired before consent are **buffered in memory, not dropped**, and
-replayed in order once consent is granted and PostHog has loaded. Nothing
+replayed in order once consent is granted and PostHog has loaded. In the default mode nothing
 leaves the browser pre-consent and the queue dies with the page. A denial
 clears the queue and calls `opt_out_capturing()`.
+
+## Cookieless mode (opt-in per site)
+
+With `cookieless: true`, the module boots PostHog on every production page with
+`cookieless_mode: 'on_reject'` and `opt_out_capturing_by_default: true`.
+Undecided and declined visitors are counted cookieless: nothing is written to
+the device and PostHog groups events from a server-side hash that rotates daily.
+A grant calls `opt_in_capturing()` and switches to normal cookie-based
+analytics; a later decline calls `opt_out_capturing()` and drops back to
+cookieless. The site's own banner and `read()` adapter stay as they are.
+
+It needs the PostHog project setting "cookieless server hash mode" (project
+160291: on since 2026-11-16), or PostHog discards the cookieless events.
+
+Why: on 2026-11-16 consent-gated loading had left theaudacity.io and
+miketineo.com with near-zero events while Cloudflare showed steady traffic. Most
+visitors never click either banner button, and nearly every remaining event was
+the owner's own visits. miketineo.com and theaudacity.io (whose Analytics.astro
+inlines the same pattern) run cookieless; washiiba does not set the flag.
 
 ## Environment: exact-host allowlist, skip off production
 

@@ -20,8 +20,15 @@
  * before this file has parsed, before consent, and before PostHog has loaded.
  * On execution this module overwrites the three globals and drains __PH_Q.
  *
- * Nothing leaves the browser before consent is granted. The queue is in-memory
- * and dies with the page, so buffering pre-consent events is GDPR-safe.
+ * Default: nothing leaves the browser before consent is granted. The queue is
+ * in-memory and dies with the page, so buffering pre-consent events is
+ * GDPR-safe.
+ *
+ * Opt-in `cookieless: true` in a site's config: PostHog loads on every page in
+ * cookieless mode (nothing stored on the device, visits counted from a daily-
+ * rotating server-side hash) and upgrades to cookie-based analytics only when
+ * consent is granted. Requires "cookieless server hash mode" in the PostHog
+ * project. miketineo.com and theaudacity.io run this since 2026-11-16.
  *
  * No bundler, no modules, no build step: this is loaded as a plain <script src>
  * because two of the three sites have nothing that could process it.
@@ -90,6 +97,7 @@
   var ready = false;   // loaded callback fired
   var granted = null;  // true | false | null (undecided)
   var queue = [];      // ['capture', event, props] | ['register', props]
+  var cookieless = cfg.cookieless === true;
 
   function flush() {
     while (queue.length) {
@@ -101,11 +109,22 @@
     }
   }
 
-  // Held until consent is granted AND PostHog has loaded, then replayed in order.
+  // Held until consent is granted (or always, in cookieless mode) AND PostHog
+  // has loaded, then replayed in order.
   function pump() {
-    if (granted !== true) return;
+    if (granted !== true && !cookieless) return;
     if (!booted) boot();
     if (ready) flush();
+  }
+
+  // Cookieless mode: line PostHog's own consent state up with the site's.
+  // Granted = cookie-based; declined or undecided = cookieless.
+  function syncMode(ph) {
+    try {
+      var status = ph.get_explicit_consent_status();
+      if (granted === true && status !== 'granted') ph.opt_in_capturing({ captureEventName: false });
+      if (granted === false && status !== 'denied') ph.opt_out_capturing();
+    } catch (e) {}
   }
 
   function track(event, props) { queue.push(['capture', event, props]); pump(); }
@@ -113,6 +132,11 @@
 
   function consent(g) {
     granted = !!g;
+    if (cookieless) {
+      if (ready) syncMode(w.posthog);
+      pump();
+      return;
+    }
     if (granted) { pump(); return; }
     queue.length = 0;
     try { w.posthog && w.posthog.opt_out_capturing && w.posthog.opt_out_capturing(); } catch (e) {}
@@ -129,8 +153,13 @@
     opts.autocapture = true;
     opts.capture_pageview = true;
     opts.capture_pageleave = true;
+    if (cookieless) {
+      opts.cookieless_mode = 'on_reject';
+      opts.opt_out_capturing_by_default = true;
+    }
 
     opts.loaded = function (ph) {
+      if (cookieless) syncMode(ph);
       ready = true;
       // Dual-register for one cycle: saved insights filter on `app`, new ones
       // use `product`. Same value in both, so no dashboard breaks on ship day.
