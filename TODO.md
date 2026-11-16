@@ -26,6 +26,10 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-opus-5-5` 2026-11-11: Retire the v1 archive (the original black and lime site at /v1/): files removed, /v1/ 301 to /, CSP drops the v1-only labs.miketineo.com origin. PR #50 merged, deployed to Pages production 2026-11-11, cache purged, /v1/* 301 to / confirmed live.
 
+- [x] `miguel` `cc+claude-sonnet-5-5` 2026-11-16: Dependabot alert sweep of `/v2`. Lockfile refresh (PR #52) closed 20 alerts and the built `dist` is byte-identical to a build of `main`; new `build` check on every PR (PR #51) because the gitleaks scan alone let broken bumps show green. Merged only, nothing deployed (the served bytes did not change). 33 alerts stay open (astro, vite, sharp, esbuild, zod): none has a patched release on the 4.x tree.
+
+- [ ] `miguel` `cc+claude-sonnet-5-5` 2026-11-16: Review and merge draft PR #54 (astro 4 to 7 with `@astrojs/sitemap` 3.7.4, `npm audit` clean, closes the remaining alerts). Needs a visual check of every page, and Node 22.23.4 or newer for any build, including the atlas deploy recipe (`node:20-alpine` fails on astro 7). Dependabot #5 and #6 fail the build on their own and should close when #54 merges; #4 (`actions/checkout` 4 to 7) is a major bump left open.
+
 ---
 
 ## Status Summary
