@@ -144,8 +144,11 @@ const recoveryRoom = byId('recovery-room');
     {ordered.map((item, i) => {
       const g = galleries[item.id];
       const n = String(i + 1).padStart(2, '0');
+      // Astro 5+ renders booleans as "true"/"false"; '' keeps the bare
+      // attribute Astro 4 emitted, so the [data-flip='true'] rule stays
+      // unmatched, as it always has been on the live site.
       return (
-        <article class="project" id={item.id} data-flip={i % 2 === 1}>
+        <article class="project" id={item.id} data-flip={i % 2 === 1 ? '' : undefined}>
           <div class="container project__grid">
             <div class="project__body" data-animate>
               <p class="project__index" aria-hidden="true">{n}</p>
