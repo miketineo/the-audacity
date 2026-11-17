@@ -1,0 +1,46 @@
+<script type="module">
+  (function () {
+    const KEY = 'audacity-theme';
+    const order = ['light', 'dark', 'system'];
+    const label = { light: 'Light', dark: 'Dark', system: 'System' };
+
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    const txt = btn?.querySelector('.theme-toggle__text');
+    const live = document.getElementById('theme-live');
+    const mql = matchMedia('(prefers-color-scheme: dark)');
+    if (!btn) return;
+
+    const getPref = () => localStorage.getItem(KEY) || 'light';
+    const resolve = (p) => (p === 'system' ? (mql.matches ? 'dark' : 'light') : p);
+
+    function apply(pref, announce) {
+      const resolved = resolve(pref);
+      root.setAttribute('data-theme', resolved);
+      root.setAttribute('data-theme-pref', pref);
+      if (txt) txt.textContent = label[pref];
+      btn.setAttribute('aria-label', `Theme: ${label[pref].toLowerCase()}. Activate to switch theme.`);
+      if (announce && live) live.textContent = `Theme set to ${label[pref].toLowerCase()}`;
+    }
+
+    apply(getPref(), false);
+
+    // Report theme changes through the shared tracker (defined by Analytics,
+    // whose script runs before any click can reach here).
+    function report(event, props) {
+      try { if (window.audacityTrack) window.audacityTrack(event, props); } catch (e) {}
+    }
+
+    btn.addEventListener('click', () => {
+      const next = order[(order.indexOf(getPref()) + 1) % order.length];
+      localStorage.setItem(KEY, next);
+      apply(next, true);
+      report('theme_toggled', { pref: next });
+    });
+
+    // Follow OS only while preference is 'system'.
+    mql.addEventListener('change', () => {
+      if (getPref() === 'system') apply('system', false);
+    });
+  })();
+</script>

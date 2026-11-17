@@ -1,0 +1,279 @@
+/* Contact page (/contact/) and its booking embed.
+   Ported from the stylesheet the Astro build compiled: selectors and values are
+   unchanged, only laid out one declaration per line and commented. Rules are scoped by the
+   data-s-<name> attribute that the templates stamp on every element of that page or component
+   (what Astro called data-astro-cid-<hash>). */
+
+/* Booking embed */
+.booking[data-s-booking] {
+  gap: var(--space-sm);
+  display: grid;
+}
+.booking__frame[data-s-booking] {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  width: 100%;
+  min-height: clamp(560px,78vh,760px);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.booking__fallback[data-s-booking] {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  padding: var(--space-lg);
+  gap: var(--space-2xs);
+  display: grid;
+}
+.booking__fallback-title[data-s-booking] {
+  font-weight: 650;
+}
+.booking__alt[data-s-booking] {
+  font-size: var(--text-sm);
+}
+
+/* Hero */
+.hero[data-s-contact] {
+  padding-block: var(--space-2xl) var(--space-lg);
+  gap: var(--space-md);
+  justify-items: start;
+  display: grid;
+}
+.hero[data-s-contact] h1[data-s-contact] {
+  font-size: var(--text-2xl);
+  max-width: 18ch;
+}
+.hero__lede[data-s-contact] {
+  font-size: var(--text-md);
+  max-width: 52ch;
+}
+.hero__jump[data-s-contact] {
+  gap: var(--space-sm);
+  margin-top: var(--space-2xs);
+  flex-wrap: wrap;
+  display: flex;
+}
+.hero__jump[data-s-contact] .btn {
+  min-height: 44px;
+}
+
+/* What happens next */
+.next[data-s-contact] {
+  padding-block: var(--space-md) var(--space-lg);
+  gap: var(--space-sm);
+  display: grid;
+}
+.next__steps[data-s-contact] {
+  gap: var(--space-md);
+  grid-template-columns: repeat(3,1fr);
+  display: grid;
+}
+.next__step[data-s-contact] {
+  gap: var(--space-2xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--border);
+  align-content: start;
+  display: grid;
+}
+.next__n[data-s-contact] {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: .04em;
+  color: var(--text-dim);
+}
+.next__body[data-s-contact] {
+  font-size: var(--text-sm);
+  max-width: 32ch;
+}
+
+/* Surfaces */
+.surface[data-s-contact] {
+  padding-block: var(--space-xl);
+  border-top: 1px solid var(--border);
+  gap: var(--space-lg);
+  display: grid;
+}
+.surface__head[data-s-contact] {
+  gap: var(--space-md);
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  display: grid;
+}
+.surface__index[data-s-contact] {
+  padding-top: .35rem;
+}
+.surface__head[data-s-contact] h2[data-s-contact] {
+  font-size: var(--text-xl);
+}
+.surface__body[data-s-contact] {
+  font-size: var(--text-md);
+  margin-top: var(--space-2xs);
+  max-width: 56ch;
+}
+
+/* Forms */
+.form[data-s-contact] {
+  gap: var(--space-lg);
+  max-width: 46rem;
+  display: grid;
+}
+.form__grid[data-s-contact] {
+  gap: var(--space-md);
+  grid-template-columns: repeat(2,1fr);
+  display: grid;
+}
+.field[data-s-contact] {
+  gap: var(--space-2xs);
+  display: grid;
+}
+.form__more[data-s-contact] {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-xs);
+}
+.form__more-summary[data-s-contact] {
+  align-items: center;
+  gap: var(--space-2xs);
+  min-height: 44px;
+  font-size: var(--text-sm);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+}
+.form__more-summary[data-s-contact]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+.form__more-grid[data-s-contact] {
+  margin-top: var(--space-sm);
+}
+.field--full[data-s-contact] {
+  grid-column: 1/-1;
+}
+.field[data-s-contact] label[data-s-contact] {
+  font-size: var(--text-sm);
+  color: var(--text);
+  font-weight: 600;
+}
+.req[data-s-contact] {
+  color: var(--accent);
+}
+.field[data-s-contact] input[data-s-contact],
+.field[data-s-contact] textarea[data-s-contact],
+.field[data-s-contact] select[data-s-contact] {
+  width: 100%;
+  font-size: var(--text-base);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  padding: .7em .85em;
+}
+.field[data-s-contact] textarea[data-s-contact] {
+  resize: vertical;
+  min-height: 3.5rem;
+  line-height: var(--leading-snug);
+}
+.field[data-s-contact] select[data-s-contact] {
+  appearance: none;
+  cursor: pointer;
+  background-image: none;
+}
+.field[data-s-contact] input[data-s-contact]:hover,
+.field[data-s-contact] textarea[data-s-contact]:hover,
+.field[data-s-contact] select[data-s-contact]:hover {
+  border-color: var(--text-dim);
+}
+.field[data-s-contact] input[data-s-contact]:focus-visible,
+.field[data-s-contact] textarea[data-s-contact]:focus-visible,
+.field[data-s-contact] select[data-s-contact]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  border-color: #0000;
+}
+.field[data-s-contact] [data-s-contact][aria-invalid=true] {
+  border-color: #d23b2f;
+}
+:root[data-theme=dark] .field[data-s-contact] [data-s-contact][aria-invalid=true] {
+  border-color: #ff6b5e;
+}
+.field__err[data-s-contact] {
+  font-size: var(--text-xs);
+  color: #c2362b;
+  font-weight: 500;
+}
+:root[data-theme=dark] .field__err[data-s-contact] {
+  color: #ff8a80;
+}
+.form__footer[data-s-contact] {
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  display: flex;
+}
+.form__status[data-s-contact] {
+  font-size: var(--text-sm);
+  min-height: 1.2em;
+}
+.form__note[data-s-contact] {
+  font-size: var(--text-xs);
+}
+.form__note[data-s-contact] a[data-s-contact] {
+  color: inherit;
+}
+.form[data-s-contact].is-done .form__note[data-s-contact] {
+  display: none;
+}
+.form__status[data-s-contact].is-error {
+  color: #c2362b;
+}
+.form__status[data-s-contact].is-success {
+  color: var(--text);
+  font-weight: 600;
+}
+:root[data-theme=dark] .form__status[data-s-contact].is-error {
+  color: #ff8a80;
+}
+.form__status[data-s-contact].is-success:before {
+  content: "";
+  background: var(--accent);
+  vertical-align: middle;
+  border-radius: 50%;
+  width: .6em;
+  height: .6em;
+  margin-right: .5em;
+  display: inline-block;
+}
+.form[data-s-contact].is-done .form__grid[data-s-contact] {
+  display: none;
+}
+.form[data-s-contact].is-done .form__status[data-s-contact] {
+  font-size: var(--text-md);
+}
+.hp[data-s-contact] {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  left: -9999px;
+  overflow: hidden;
+}
+@media (width<=40rem) {
+  .next__steps[data-s-contact] {
+    gap: var(--space-sm);
+    grid-template-columns: 1fr;
+  }
+  .surface__head[data-s-contact] {
+    gap: var(--space-2xs);
+    grid-template-columns: 1fr;
+  }
+  .surface__index[data-s-contact] {
+    padding-top: 0;
+  }
+  .form__grid[data-s-contact] {
+    grid-template-columns: 1fr;
+  }
+}

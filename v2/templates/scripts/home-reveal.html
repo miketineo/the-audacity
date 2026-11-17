@@ -1,0 +1,22 @@
+<script type="module">
+  // Purposeful reveal: fade elements into view once, then stop observing.
+  // Content is visible by default; the hidden state (.is-armed) is added here,
+  // only to elements below the fold, so no-JS and reduced-motion users never
+  // see it.
+  (function () {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduce.matches || !('IntersectionObserver' in window)) return;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'))
+      .filter((el) => el.getBoundingClientRect().top >= window.innerHeight);
+    els.forEach((el) => el.classList.add('is-armed'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach((el) => io.observe(el));
+  })();
+</script>

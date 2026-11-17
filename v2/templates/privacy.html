@@ -1,0 +1,51 @@
+{#- Privacy (/privacy/): plain-language privacy policy in the firm's voice. Covers exactly what the
+    site does: the project-brief form, cookieless visit counting with opt-in analytics cookies, and
+    UTM/referrer attribution. Processors are named generically, per house rules: no vendor names in
+    public copy. The sections live in data/privacy.json; "{email}" in a paragraph stands for
+    site.email. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set site = load_data(path="data/site.json") -%}
+{{<site.head title={"Privacy · " ~ site.brand} description="What The Audacity collects through this site, why, who processes it, how long it is kept, and how to exercise your rights." path="/privacy/" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{{<jsonld.breadcrumb items={[{"name": "Home", "path": "/"}, {"name": "Privacy", "path": "/privacy/"}]} />}}
+{% endblock jsonld %}
+
+{% block css %}
+{% include "styles/privacy.html" %}
+{% endblock css %}
+
+{% block content %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set privacy = load_data(path="data/privacy.json") -%}
+{%- filter spaceless -%}
+<header class="container hero" data-s-privacy>
+  <p class="eyebrow" data-s-privacy>Privacy</p>
+  <h1 class="hero__title" data-s-privacy>Short, because we collect little.</h1>
+  <p class="hero__lede text-dim" data-s-privacy>This site does three things with data: it takes project briefs, it counts visits without cookies (with analytics cookies only if you opt in), and it notes which link brought you here. This page covers all three. Last updated {{ privacy.updated }}.</p>
+</header>
+
+<div class="container policy" data-s-privacy>
+  {% for s in privacy.sections -%}
+  <section class="policy__section" id="{{ s.id }}" aria-labelledby="{{ s.id }}-h" data-s-privacy>
+    <h2 id="{{ s.id }}-h" class="policy__title" data-s-privacy>{{ s.title }}</h2>
+    <div class="policy__body" data-s-privacy>
+      {% for p in s.body -%}
+      <p class="text-dim" data-s-privacy>{{ p | replace(from="{email}", to=site.email) }}</p>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="policy__section" id="contact" aria-labelledby="contact-h" data-s-privacy>
+    <h2 id="contact-h" class="policy__title" data-s-privacy>Contact</h2>
+    <div class="policy__body" data-s-privacy>
+      <p class="text-dim" data-s-privacy>Anything about this policy or your data: <a href="mailto:{{ site.email }}?subject=Privacy" data-s-privacy>{{ site.email }}</a>.</p>
+    </div>
+  </section>
+</div>
+{%- endfilter -%}
+{% endblock content %}

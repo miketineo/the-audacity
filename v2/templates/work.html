@@ -1,0 +1,195 @@
+{#- Work (/work/): Bloop, Washiiba, Kerf and Recovery Room as capability proof. Each block leads
+    with the product, then a "What it shows" line that sells the studio's claim.
+
+    Honest framing (docs/copy/REGISTER.md):
+      Bloop          own product, in build and piloting; emphasis on the live conversational concierge.
+      Washiiba       build-capability proof ONLY: no commercial state, roadmap or exit intent.
+      Kerf           a case study on public data, not validated in the field. A desktop web app, so
+                     its gallery uses the `overlap` frame (two cropped wide tiles) instead of the
+                     phone frame. Its screenshots always carry the data-licence caption from
+                     proof.json, and it links out to its own site.
+      Recovery Room  a pilot at a gym in Cagliari. The club's name and logo stay out of the copy and
+                     screenshots, and the app is not linked.
+
+    Copy from data/proof.json and data/pages.json; the screenshot galleries from
+    data/screenshots.json (the "work" entry). shots[0] is the thumbnail shown by default, and the
+    click-to-expand lightbox reveals the full set in source order. Frames: 'phone' and 'web' show
+    shots[0] alone; 'overlap' shows shots[0] and shots[1] as two square-cropped tiles, `pos` being
+    the object-position of each crop. Dimensions are set on every <img> to kill layout shift. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set pages = load_data(path="data/pages.json") -%}
+{{<site.head title={pages.work.seo.title} description={pages.work.seo.description} path="/work/" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{#- Structured data picks items by id, never by position, so reordering proof.json is safe. -#}
+{%- set proof = load_data(path="data/proof.json") -%}
+{%- set bloop = [i for i in proof.items if i.id == "bloop"] | first -%}
+{%- set washiiba = [i for i in proof.items if i.id == "washiiba"] | first -%}
+{%- set kerf = [i for i in proof.items if i.id == "kerf"] | first -%}
+{%- set recovery_room = [i for i in proof.items if i.id == "recovery-room"] | first -%}
+{{<jsonld.breadcrumb items={[{"name": "Home", "path": "/"}, {"name": "Work", "path": "/work/"}]} />}}
+{{<jsonld.software_application name={bloop.name} description={bloop.summary} />}}
+{{<jsonld.creative_work name={washiiba.name} description={washiiba.summary} />}}
+{{<jsonld.creative_work name={kerf.name} description={kerf.summary} genre="Case study" url={kerf.link.href} />}}
+{{<jsonld.creative_work name={recovery_room.name} description={recovery_room.summary} />}}
+{% endblock jsonld %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ get_url(path="css/work.css", cachebust=true) | replace(from=config.base_url, to="") }}">
+{% endblock css %}
+
+{% block content %}
+{%- set pages = load_data(path="data/pages.json") -%}
+{%- set proof = load_data(path="data/proof.json") -%}
+{%- set screenshots = load_data(path="data/screenshots.json") -%}
+{%- set galleries = screenshots.work -%}
+{%- set work = pages.work -%}
+{%- filter spaceless -%}
+
+{#- ---------- Hero ---------- -#}
+<header class="container hero" data-animate data-s-work>
+  <p class="eyebrow" data-s-work>{{ work.hero.eyebrow }}</p>
+  <h1 class="hero__title" data-s-work>{{ work.hero.headline }}</h1>
+  <p class="hero__lede text-dim" data-s-work>{{ work.hero.lede }}</p>
+</header>
+
+{#- ---------- Projects ---------- #}
+<div class="projects" data-s-work>
+  {% for item in proof.items -%}
+  {%- set g = galleries[item.id] -%}
+  {%- set thumb = g[0] -%}
+  {%- set more = g | length - 1 -%}
+  {%- set lb_id = "lb-" ~ item.id -%}
+  {%- set overlap = thumb.frame == "overlap" -%}
+  {#- Odd-numbered projects get a bare data-flip (value ""), which keeps the CSS rule
+      [data-flip='true'] unmatched, as it always has been on the live site. #}
+  <article class="project" id="{{ item.id }}"{% if loop.index0 % 2 == 1 %} data-flip{% endif %} data-s-work>
+    <div class="container project__grid" data-s-work>
+      <div class="project__body" data-animate data-s-work>
+        <p class="project__index" aria-hidden="true" data-s-work>{{ ("0" ~ loop.index) if loop.index < 10 else loop.index }}</p>
+        <div class="project__head" data-s-work>
+          <h2 class="project__name" data-s-work>{{ item.name }}</h2>
+          <p class="project__kind eyebrow" data-s-work>{{ item.kind }}</p>
+        </div>
+        <p class="project__one" data-s-work>{{ item.tagline }}</p>
+        <div class="built" data-s-work>
+          <p class="built__label eyebrow" data-s-work>What we built</p>
+          <p class="project__summary text-dim" data-s-work>{{ item.built }}</p>
+        </div>
+
+        <div class="proves" data-s-work>
+          <p class="proves__label eyebrow" data-s-work>What it shows</p>
+          <p class="proves__text" data-s-work>{{ item.proves }}</p>
+        </div>
+
+        <ul class="stack" role="list" aria-label="{{ item.name }} highlights" data-s-work>
+          {% for s in item.tags -%}
+          <li class="chip" data-s-work>{{ s }}</li>
+          {% endfor %}
+        </ul>
+
+        {% if item.link -%}
+        <p class="project__link" data-s-work>
+          <a href="{{ item.link.href }}" rel="noopener" data-s-work>
+            <span data-s-work>{{ item.link.label }}</span>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-s-work>
+              <path d="M7 17L17 7M8 7h9v9" data-s-work></path>
+            </svg>
+          </a>
+        </p>
+        {%- endif %}
+      </div>
+
+      <div class="gallery gallery--{{ thumb.frame }}" data-animate data-s-work>
+        {#- Single thumbnail (overlap: a pair of tiles). No-JS: the anchor resolves to the full
+            image. JS: enhanced into a real dialog trigger (see the work-gallery script). #}
+        <a class="{{ "thumb thumb--overlap" if overlap else "thumb frame frame--" ~ thumb.frame }}" href="/{{ thumb.src }}" data-lightbox-open="{{ lb_id }}" aria-label="{{ ("View " ~ item.name ~ " screenshots at full size") if overlap else ("See " ~ more ~ " more " ~ item.name ~ " screenshots") }}" data-s-work>
+          {% if thumb.frame == "web" -%}
+          <span class="frame__chrome" aria-hidden="true" data-s-work>
+            <span class="frame__dot" data-s-work></span><span class="frame__dot" data-s-work></span><span class="frame__dot" data-s-work></span>
+          </span>
+          {%- endif %}
+          {% if overlap -%}
+          {#- Two square crops of the full screenshots. The wrapper's aspect-ratio reserves the space
+              (no layout shift). Tile a is pinned top-left, tile b bottom-right and above it. #}
+          {% for s in g[:2] -%}
+          <figure class="tile tile--{{ "a" if loop.index0 == 0 else "b" }} frame" data-s-work>
+            <img src="/{{ s.src }}" width="{{ s.w }}" height="{{ s.h }}" alt="{{ s.alt }}" style="object-position:{{ s.pos or "50% 50%" }}" loading="lazy" decoding="async" data-s-work>
+          </figure>
+          {% endfor %}
+          {%- else -%}
+          <figure class="shot" data-s-work>
+            <img src="/{{ thumb.src }}" width="{{ thumb.w }}" height="{{ thumb.h }}" alt="{{ thumb.alt }}" loading="lazy" decoding="async" data-s-work>
+          </figure>
+          {%- endif %}
+          {#- overlap: both tiles are visible, so the hint says what a click does. #}
+          <span class="thumb__hint" aria-hidden="true" data-s-work>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-s-work>
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" data-s-work></path>
+            </svg>
+            <span data-s-work>{{ "View full size" if overlap else "+" ~ more ~ " more" }}</span>
+          </span>
+        </a>
+
+        {#- No-JS fallback: plain links to every screenshot. #}
+        <noscript>
+          <ul class="gallery__fallback" role="list" data-s-work>
+            {% for s in g -%}
+            <li data-s-work><a href="/{{ s.src }}" data-s-work>{{ s.alt }}</a></li>
+            {% endfor %}
+          </ul>
+        </noscript>
+
+        {#- Data-licence attribution, always visible under the screenshots. #}
+        {% if item.caption %}<p class="gallery__caption" data-s-work>{{ item.caption }}</p>{% endif %}
+
+        {#- Lightbox. Native <dialog> gives focus trap + Escape close. #}
+        <dialog class="lightbox" id="{{ lb_id }}" aria-label="{{ item.name }} screenshots" data-s-work>
+          <div class="lightbox__panel" data-s-work>
+            <div class="lightbox__bar" data-s-work>
+              <p class="lightbox__title" data-s-work>{{ item.name }}</p>
+              <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close screenshots" data-s-work>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" data-s-work>
+                  <path d="M6 6l12 12M18 6L6 18" data-s-work></path>
+                </svg>
+              </button>
+            </div>
+            <div class="{{ "lightbox__grid lightbox__grid--wide" if overlap else "lightbox__grid" }}" data-s-work>
+              {% for s in g -%}
+              <figure class="shot frame frame--{{ s.frame }}" data-s-work>
+                {% if s.frame == "web" -%}
+                <span class="frame__chrome" aria-hidden="true" data-s-work>
+                  <span class="frame__dot" data-s-work></span><span class="frame__dot" data-s-work></span><span class="frame__dot" data-s-work></span>
+                </span>
+                {%- endif %}
+                <img src="/{{ s.src }}" width="{{ s.w }}" height="{{ s.h }}" alt="{{ s.alt }}" loading="lazy" decoding="async" data-s-work>
+                <figcaption data-s-work>{{ s.alt }}</figcaption>
+              </figure>
+              {% endfor %}
+            </div>
+            {% if item.caption %}<p class="lightbox__credit" data-s-work>{{ item.caption }}</p>{% endif %}
+          </div>
+        </dialog>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+{#- ---------- CTA band ---------- #}
+<section class="container cta" data-animate data-s-work>
+  <div class="cta__inner" data-s-work>
+    <h2 class="cta__title" data-s-work>{{ work.cta.title }}</h2>
+    <p class="cta__body text-dim" data-s-work>{{ work.cta.body }}</p>
+    {{<ui.button href={"/" ~ work.cta.button.href} variant="primary" size="lg" cta="work-book-call" scope="work" label={work.cta.button.label} />}}
+  </div>
+</section>
+{%- endfilter -%}
+{% endblock content %}
+
+{% block scripts -%}
+{% include "scripts/work-gallery.html" %}
+{%- endblock scripts %}

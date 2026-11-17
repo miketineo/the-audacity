@@ -1,0 +1,16 @@
+# The Audacity v2: static site built with Zola (see scripts/zola at the repo root).
+base_url = "https://theaudacity.io"
+output_dir = "dist"
+
+# Nothing but pages and static files.
+generate_feeds = false
+build_search_index = false
+compile_sass = false
+taxonomies = []
+
+# static/robots.txt is the one robots.txt; do not let Zola write its own over it.
+generate_robots_txt = false
+
+[markdown]
+# Astro rendered the essay with smartypants; this keeps its curly apostrophes and quotes.
+smart_punctuation = true

@@ -1,0 +1,39 @@
+{#- Blog index (/blog/): every essay under content/blog/, newest first (the section sorts by date). -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set site = load_data(path="data/site.json") -%}
+{{<site.head title={"Blog · " ~ site.brand} description="Essays from The Audacity on agentic engineering, evaluation and running AI agents in production." path="/blog/" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{{<jsonld.breadcrumb items={[{"name": "Home", "path": "/"}, {"name": "Blog", "path": "/blog/"}]} />}}
+{% endblock jsonld %}
+
+{% block css %}
+{% include "styles/blog.html" %}
+{% endblock css %}
+
+{% block content %}
+{%- filter spaceless -%}
+<header class="container hero" data-s-blog>
+  <p class="eyebrow" data-s-blog>Blog</p>
+  <h1 class="hero__title" data-s-blog>Notes on putting AI agents into production</h1>
+  <p class="hero__lede text-dim" data-s-blog>Essays from the studio on agentic engineering, evaluation and running agents in production.</p>
+</header>
+
+<div class="container posts" data-s-blog>
+  <ul class="posts__list" role="list" data-s-blog>
+    {% for post in section.pages -%}
+    <li class="posts__item" data-s-blog>
+      <a class="posts__link" href="/blog/{{ post.slug }}/" data-s-blog>
+        <time class="eyebrow" datetime="{{ post.date | date(format="%Y-%m-%d") }}" data-s-blog>{{ post.date | date(format="%-d %B %Y") }}</time>
+        <h2 class="posts__title" data-s-blog>{{ post.title }}</h2>
+        <p class="text-dim" data-s-blog>{{ post.description }}</p>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{%- endfilter -%}
+{% endblock content %}

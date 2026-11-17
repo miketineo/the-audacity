@@ -1,0 +1,56 @@
+{
+  "updated": "November 2026",
+  "sections": [
+    {
+      "id": "controller",
+      "title": "Who is responsible",
+      "body": [
+        "The Audacity operates this site and decides how the data described here is used. That makes the studio the data controller. Questions, requests and complaints all go to {email}."
+      ]
+    },
+    {
+      "id": "collect",
+      "title": "What we collect, and when",
+      "body": [
+        "If you send a project brief, we receive what you type into the form: your name, email, company or project name, what you want to build, rough budget, rough timeline, and anything else you add.",
+        "We count visits without cookies. Every visitor sends product analytics about how the site is used: pages viewed, buttons clicked, page performance and similar usage events. Until you accept analytics cookies, nothing is stored on your device, your IP address is discarded, and the analytics provider groups your visit using a server-side hash that it rotates every day, so it cannot follow you from one day to the next.",
+        "If you accept analytics cookies, the provider also stores an identifier in your browser so it can recognise you on later visits, and may record a replay of your session with form inputs masked. Declining keeps analytics cookieless and changes nothing about how the site works.",
+        "We also record basic attribution when it is present: campaign parameters in the link you arrived from and the page that referred you. It tells us which of our own efforts brought you here."
+      ]
+    },
+    {
+      "id": "use",
+      "title": "What we use it for",
+      "body": [
+        "To reply to you. A brief exists so we can answer it.",
+        "To run the studio: knowing which pages and campaigns actually work, and keeping the forms free of spam.",
+        "We do not sell your data. We do not run ad trackers. We do not send marketing you did not ask for."
+      ]
+    },
+    {
+      "id": "recipients",
+      "title": "Who else sees it",
+      "body": [
+        "Two categories of processor, both bound by their own data-processing terms: a transactional email provider, which delivers the emails we send and receive through the forms, and an analytics provider in the EU, which stores the usage events described above.",
+        "Form submissions and site delivery run on our hosting infrastructure. No one else receives your data unless the law requires it."
+      ]
+    },
+    {
+      "id": "retention",
+      "title": "How long we keep it",
+      "body": [
+        "Briefs and the correspondence they start: for the life of the conversation and up to two years after the last exchange, so a returning project does not start from zero.",
+        "Emails from our former updates list: until you unsubscribe or ask us to remove you.",
+        "Analytics events: per the analytics provider’s standard retention, and your consent choice is stored in your own browser, where you can change it anytime from the footer."
+      ]
+    },
+    {
+      "id": "rights",
+      "title": "Your rights",
+      "body": [
+        "You can ask what we hold about you, ask for a copy, ask us to correct it, or ask us to delete it. You can withdraw consent to analytics cookies at any time from the footer’s cookie settings, and you can object to any processing described here, including cookieless visit counting.",
+        "One email to {email} is enough. We answer within one business day, the same as everything else. If you are in the EU and unhappy with our answer, you can complain to your local data-protection authority."
+      ]
+    }
+  ]
+}

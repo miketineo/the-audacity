@@ -1,0 +1,46 @@
+<script type="module">
+  (function () {
+    const KEY = 'audacity-consent';
+    const V1_KEY = 'audacity-cookie-consent';
+    const banner = document.getElementById('consent-banner');
+    if (!banner) return;
+
+    const show = () => { banner.hidden = false; };
+    const hide = () => { banner.hidden = true; };
+
+    function set(choice) {
+      localStorage.setItem(KEY, choice);
+      hide();
+      if (choice === 'granted') {
+        window.dispatchEvent(new CustomEvent('audacity:consent-granted'));
+      } else {
+        window.dispatchEvent(new CustomEvent('audacity:consent-denied'));
+      }
+    }
+
+    // v1 (pre-2026-07-07, still archived at /v1/) stored {accepted, ...} under a
+    // different key. Carry a prior acceptance over so we do not silently
+    // re-prompt everyone who had already opted in.
+    try {
+      if (!localStorage.getItem(KEY)) {
+        const v1 = JSON.parse(localStorage.getItem(V1_KEY) || 'null');
+        if (v1 && v1.accepted === true) localStorage.setItem(KEY, 'granted');
+      }
+    } catch (e) { /* noop */ }
+
+    const stored = localStorage.getItem(KEY);
+    if (stored === 'granted') {
+      // already opted in — boot consumers without showing the banner
+      window.dispatchEvent(new CustomEvent('audacity:consent-granted'));
+    } else if (stored !== 'denied') {
+      show();
+    }
+
+    banner.querySelectorAll('[data-consent]').forEach((b) =>
+      b.addEventListener('click', () => set(b.getAttribute('data-consent')))
+    );
+
+    // Footer "Cookie settings" re-opens the banner to let the choice change.
+    window.addEventListener('audacity:open-consent', show);
+  })();
+</script>

@@ -1,0 +1,16 @@
+{#- Button: the one CTA / button primitive (was components/Button.astro).
+
+    Renders <a> when `href` is set, else <button>. Only the primary variant uses the accent as a fill.
+    `scope` is the page or component whose styles scope the button: Astro's scoped CSS stamped that
+    scope's attribute (data-s-<scope>="true") on the button as well as the button's own.
+    `label` is the label text exactly as it should appear, whitespace included. -#}
+{% component ui.button(href = "", variant = "primary", size = "md", type = "button", cls = "", cta = "", scope = "", label = "") %}
+{%- set classes = "btn btn--" ~ variant ~ " btn--" ~ size ~ (" " ~ cls if cls else "") -%}
+{%- if href -%}
+<a class="{{ classes }}" href="{{ href }}"{% if cta %} data-cta="{{ cta }}"{% endif %}{% if scope %} data-s-{{ scope }}="true"{% endif %} data-s-button="true">
+{%- else -%}
+<button class="{{ classes }}" type="{{ type }}"{% if cta %} data-cta="{{ cta }}"{% endif %}{% if scope %} data-s-{{ scope }}="true"{% endif %} data-s-button="true">
+{%- endif -%}
+<span class="btn__label" data-s-button>{{ label }}</span>
+{%- if href -%}</a>{%- else -%}</button>{%- endif -%}
+{% endcomponent ui.button %}

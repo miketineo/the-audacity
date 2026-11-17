@@ -1,0 +1,184 @@
+{#- Contact (/contact/): the conversion page. Two surfaces, one job each.
+      1. Book a call   -> the booking component (Cal.com embed).
+      2. Send a brief  -> inquiry form, POST /api/inquiry (+ UTM, + the optional ?interest= intent
+                          carried in a hidden field).
+    Booking leads (every "Book a call" link targets #book); the brief follows for people who would
+    rather write. A "what happens next" strip renders when the content provides it.
+
+    All copy comes from data/{pages,site}.json. The form is progressively enhanced: the
+    server-validating endpoint backs it up, and the contact-form script adds inline validation,
+    aria-live status, disabled-on-submit, success/error states and a honeypot. No blocking dialogs. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set pages = load_data(path="data/pages.json") -%}
+{{<site.head title={pages.contact.seo.title} description={pages.contact.seo.description} path="/contact/" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{#- ContactPage stays inline (not part of the shared jsonld components); the breadcrumb uses the
+    shared one. -#}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set pages = load_data(path="data/pages.json") -%}
+{%- set page_url = site.url ~ "/contact/" -%}
+{%- set contact_ld = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": page_url,
+  "url": page_url,
+  "name": pages.contact.seo.title,
+  "description": pages.contact.seo.description,
+  "isPartOf": {"@type": "Organization", "name": site.brand, "url": site.url}
+} -%}
+<script type="application/ld+json">{{ contact_ld | json_encode | safe }}</script>
+{{<jsonld.breadcrumb items={[{"name": "Home", "path": "/"}, {"name": "Contact", "path": "/contact/"}]} />}}
+{% endblock jsonld %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ get_url(path="css/contact.css", cachebust=true) | replace(from=config.base_url, to="") }}">
+{% endblock css %}
+
+{% block content %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set pages = load_data(path="data/pages.json") -%}
+{%- set c = pages.contact -%}
+{%- set s = c.surfaces -%}
+{#- "What happens next" strip: owned by content (pages.json contact.nextSteps). Rendered only when
+    the block exists. -#}
+{%- set next_steps = c.nextSteps?.steps or [] -%}
+{%- filter spaceless -%}
+
+{#- ---------------------------------------------------------------- Hero -#}
+<section class="container hero" data-s-contact>
+  <p class="eyebrow" data-s-contact>{{ c.hero.eyebrow }}</p>
+  <h1 data-s-contact>{{ c.hero.headline }}</h1>
+  <p class="hero__lede text-dim" data-s-contact>{{ c.hero.lede }}</p>
+  <nav class="hero__jump" aria-label="On this page" data-s-contact>
+    {{<ui.button href="/contact/#book" variant="primary" size="lg" cta="contact-jump-book" scope="contact" label="Book a call" />}}
+    {{<ui.button href="#brief" variant="secondary" size="lg" cta="contact-jump-brief" scope="contact" label="Send a brief" />}}
+  </nav>
+</section>
+
+{#- --------------------------------------------- What happens next strip #}
+{% if next_steps | length > 0 -%}
+<section class="container next" aria-label="{{ c.nextSteps.eyebrow or "What happens next" }}" data-s-contact>
+  <p class="eyebrow" data-s-contact>{{ c.nextSteps.eyebrow or "What happens next" }}</p>
+  <ol class="next__steps" role="list" data-s-contact>
+    {% for step in next_steps -%}
+    <li class="next__step" data-s-contact>
+      <span class="next__n" aria-hidden="true" data-s-contact>{{ ("0" ~ loop.index) if loop.index < 10 else loop.index }}</span>
+      <p class="next__body" data-s-contact>{{ step }}</p>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{%- endif %}
+
+{#- ------------------------------------------------------------ 1. Book #}
+<section id="book" class="container surface" aria-labelledby="book-title" data-s-contact>
+  <header class="surface__head" data-s-contact>
+    <p class="surface__index eyebrow" data-s-contact>01</p>
+    <div data-s-contact>
+      <h2 id="book-title" data-s-contact>{{ s.booking.title }}</h2>
+      <p class="surface__body text-dim" data-s-contact>{{ s.booking.body }}</p>
+    </div>
+  </header>
+  {{<ui.booking title={s.booking.title} email={site.email} />}}
+</section>
+
+{#- ----------------------------------------------------------- 2. Brief #}
+<section id="brief" class="container surface" aria-labelledby="brief-title" data-s-contact>
+  <header class="surface__head" data-s-contact>
+    <p class="surface__index eyebrow" data-s-contact>02</p>
+    <div data-s-contact>
+      <h2 id="brief-title" data-s-contact>{{ s.inquiry.title }}</h2>
+      <p class="surface__body text-dim" data-s-contact>{{ s.inquiry.body }}</p>
+    </div>
+  </header>
+
+  {#- data-sitekey is the Cloudflare Turnstile site key (public by design); the secret is
+      TURNSTILE_SECRET on the Pages project and is checked server-side in functions/_lib/guard.js. #}
+  <form class="form" id="inquiry-form" novalidate data-endpoint="/api/inquiry" data-kind="inquiry" aria-describedby="inquiry-status" data-s-contact>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAFFLInkUh_qI20ft" data-appearance="interaction-only" data-s-contact></div>
+    {#- honeypot: real people leave this empty; bots fill it #}
+    <div class="hp" aria-hidden="true" data-s-contact>
+      <label for="inq-company-url" data-s-contact>Company website</label>
+      <input id="inq-company-url" name="company_url" type="text" tabindex="-1" autocomplete="off" data-s-contact>
+    </div>
+
+    {#- intent carried in from CTAs elsewhere (e.g. contact/?interest=audit); populated from the
+        URL by the contact-form script so it survives into the payload #}
+    <input type="hidden" name="interest" id="inq-interest" data-s-contact>
+
+    <div class="form__grid" data-s-contact>
+      <div class="field" data-s-contact>
+        <label for="inq-name" data-s-contact>{{ s.inquiry.fields.name }} <span class="req" aria-hidden="true" data-s-contact>*</span></label>
+        <input id="inq-name" name="name" type="text" required autocomplete="name" aria-describedby="inq-name-err" data-msg-empty="{{ s.inquiry.messages.name }}" data-s-contact>
+        <p class="field__err" id="inq-name-err" hidden data-s-contact></p>
+      </div>
+
+      <div class="field" data-s-contact>
+        <label for="inq-email" data-s-contact>{{ s.inquiry.fields.email }} <span class="req" aria-hidden="true" data-s-contact>*</span></label>
+        <input id="inq-email" name="email" type="email" required autocomplete="email" inputmode="email" aria-describedby="inq-email-err" data-msg-empty="{{ s.inquiry.messages.email }}" data-msg-format="{{ s.inquiry.messages.emailFormat }}" data-s-contact>
+        <p class="field__err" id="inq-email-err" hidden data-s-contact></p>
+      </div>
+
+      <div class="field field--full" data-s-contact>
+        <label for="inq-idea" data-s-contact>{{ s.inquiry.fields.project_idea }} <span class="req" aria-hidden="true" data-s-contact>*</span></label>
+        <textarea id="inq-idea" name="project_idea" rows="4" required aria-describedby="inq-idea-err" data-msg-empty="{{ s.inquiry.messages.project_idea }}" data-s-contact></textarea>
+        <p class="field__err" id="inq-idea-err" hidden data-s-contact></p>
+      </div>
+
+      <div class="field" data-s-contact>
+        <label for="inq-budget" data-s-contact>{{ s.inquiry.fields.budget }}</label>
+        {#- Options aligned with the confirmed Studio Sprint price bands, in the "X to Y" form (no
+            em-dash phrase separators per house rules). #}
+        <select id="inq-budget" name="budget" data-s-contact>
+          <option value="" data-s-contact>Select a range</option>
+          {% for o in ["Under €6k", "€6k to €15k", "€15k to €30k", "€30k or more", "Retainer, from €4k a month", "Not sure yet"] -%}
+          <option value="{{ o }}" data-s-contact>{{ o }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {#- Optional fields sit in a disclosure. They stay in the form, so FormData still carries
+          every field whether it is open or closed. #}
+      <details class="form__more field--full" data-s-contact>
+        <summary class="form__more-summary" data-s-contact>{{ s.inquiry.moreDetails }}</summary>
+        <div class="form__grid form__more-grid" data-s-contact>
+          <div class="field field--full" data-s-contact>
+            <label for="inq-company" data-s-contact>{{ s.inquiry.fields.company }}</label>
+            <input id="inq-company" name="company" type="text" autocomplete="organization" data-s-contact>
+          </div>
+
+          <div class="field" data-s-contact>
+            <label for="inq-timeline" data-s-contact>{{ s.inquiry.fields.timeline }}</label>
+            <select id="inq-timeline" name="timeline" data-s-contact>
+              <option value="" data-s-contact>Select a timeline</option>
+              {% for o in ["As soon as possible", "1 to 3 months", "3 to 6 months", "Just exploring"] -%}
+              <option value="{{ o }}" data-s-contact>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field field--full" data-s-contact>
+            <label for="inq-message" data-s-contact>{{ s.inquiry.fields.message }}</label>
+            <textarea id="inq-message" name="message" rows="3" data-s-contact></textarea>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="form__footer" data-s-contact>
+      {{<ui.button type="submit" variant="primary" size="md" cls="form__submit" scope="contact" label={s.inquiry.submit} />}}
+      <p class="form__status" id="inquiry-status" role="status" aria-live="polite" data-success="{{ s.inquiry.success }}" data-error="{{ s.inquiry.error }}" data-spam="{{ s.inquiry.spam }}" data-summary="{{ s.inquiry.summary }}" data-s-contact></p>
+    </div>
+    <p class="form__note text-dim" data-s-contact>We only use this to reply to you. <a href="/privacy/" data-s-contact>Privacy policy</a>.</p>
+  </form>
+</section>
+
+{#- ----- Shared, dependency-free form + attribution + tracking logic ----- #}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% include "scripts/contact-form.html" %}
+{%- endfilter -%}
+{% endblock content %}

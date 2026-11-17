@@ -1,0 +1,266 @@
+{#- Home (/): the studio's thin, confident sales surface.
+
+    One scroll: hero, the stack every build includes, the proofs (teasers), how it works, the offer
+    with prices, who it is for and not for, straight answers (FAQ), a closing book-a-call band.
+    All copy comes from data/{pages,offer,proof,faq}.json. The product screenshots on each proof
+    card come from data/screenshots.json (the "home" entry). Content hrefs in the JSON are
+    root-relative without the leading slash. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set pages = load_data(path="data/pages.json") -%}
+{{<site.head title={pages.home.seo.title} description={pages.home.seo.description} path="/" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{{<jsonld.organization />}}
+{{<jsonld.service />}}
+{% endblock jsonld %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ get_url(path="css/home.css", cachebust=true) | replace(from=config.base_url, to="") }}">
+{% endblock css %}
+
+{% block content %}
+{%- set pages = load_data(path="data/pages.json") -%}
+{%- set offer = load_data(path="data/offer.json") -%}
+{%- set proof = load_data(path="data/proof.json") -%}
+{%- set screenshots = load_data(path="data/screenshots.json") -%}
+{%- set shots = screenshots.home -%}
+{%- set faq = load_data(path="data/faq.json", required=false) -%}
+{%- set faq_items = faq?.items or [] -%}
+{%- set home = pages.home -%}
+{%- filter spaceless -%}
+
+{#- ===================== HERO ===================== -#}
+<section class="hero" data-s-home>
+  <div class="container hero__inner" data-s-home>
+    <p class="eyebrow eyebrow--mark" data-reveal data-s-home>{{ home.hero.eyebrow }}</p>
+    <h1 class="hero__headline" data-reveal data-s-home>{{ home.hero.headline }}<span class="dot" aria-hidden="true" data-s-home></span></h1>
+    <p class="hero__lede text-dim" data-reveal data-s-home>{{ home.hero.lede }}</p>
+    <p class="hero__price" data-reveal data-s-home>{{ home.hero.priceLine }}</p>
+    <div class="hero__cta" data-reveal data-s-home>
+      {{<ui.button href={"/" ~ home.hero.ctaPrimary.href} variant="primary" size="lg" cta="hero-book-call" scope="home" label={home.hero.ctaPrimary.label} />}}
+      {{<ui.button href={"/" ~ home.hero.ctaSecondary.href} variant="secondary" size="lg" cta="hero-see-work" scope="home" label={home.hero.ctaSecondary.label} />}}
+    </div>
+    {#- Product visual on the right of the hero, 1024px and wider only. Width and height reserve the
+        frame's space (no layout shift). #}
+    <figure class="hero__visual" data-s-home>
+      <img src="/work/washiiba/03-order.png" width="1284" height="2778" alt="A Washiiba order on mobile with a live status tracker, service line items, pickup window and total." loading="eager" decoding="async" data-s-home>
+    </figure>
+  </div>
+
+  {#- What every package includes, labelled. #}
+  <div class="container" data-s-home>
+    <div class="stack" data-reveal data-s-home>
+      <p class="stack__label" id="stack-label" data-s-home>Every build includes</p>
+      <ul class="stack__list" role="list" aria-labelledby="stack-label" data-s-home>
+        {% for s in ["Login and accounts", "Database", "Live launch", "Automatic releases (continuous delivery)"] -%}
+        <li class="stack__item" data-s-home>{{ s }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{#- ===================== PROOF TEASER ===================== #}
+<section class="section proof" aria-labelledby="proof-h" data-s-home>
+  <div class="container" data-s-home>
+    <header class="section__head" data-s-home>
+      <p class="eyebrow eyebrow--mark" data-reveal data-s-home>{{ home.proofTeaser.eyebrow }}</p>
+      <h2 id="proof-h" data-reveal data-s-home>{{ home.proofTeaser.title }}</h2>
+      <p class="section__lede text-dim" data-reveal data-s-home>{{ home.proofTeaser.body }}</p>
+    </header>
+
+    <ul class="proofs" role="list" data-s-home>
+      {% for it in proof.items -%}
+      {%- set shot_set = shots[it.id] -%}
+      <li class="proof-card{% if shot_set?.layout == "overlap" %} proof-card--feature{% endif %}" data-reveal data-s-home>
+        {% if shot_set?.layout == "phone" -%}
+        {#- one portrait shot in the card's right column #}
+        <figure class="proof-card__shot" data-s-home>
+          <img src="/{{ shot_set.shots[0].src }}" width="{{ shot_set.shots[0].w }}" height="{{ shot_set.shots[0].h }}" alt="{{ shot_set.shots[0].alt }}" loading="lazy" decoding="async" data-s-home>
+        </figure>
+        {%- elif shot_set?.layout == "overlap" -%}
+        {#- two square crops overlap on a diagonal; `pos` is each crop's object-position #}
+        <figure class="proof-card__pair" data-s-home>
+          <div class="pair" data-s-home>
+            {% for s in shot_set.shots[:2] -%}
+            <img class="pair__tile pair__tile--{{ "a" if loop.index0 == 0 else "b" }}" src="/{{ s.src }}" width="{{ s.w }}" height="{{ s.h }}" alt="{{ s.alt }}" style="object-position:{{ s.pos or "50% 50%" }}" loading="lazy" decoding="async" data-s-home>
+            {% endfor %}
+          </div>
+          {% if it.caption %}<figcaption class="proof-card__credit" data-s-home>{{ it.caption }}</figcaption>{% endif %}
+        </figure>
+        {%- endif %}
+        <div class="proof-card__text" data-s-home>
+          <p class="proof-card__kind eyebrow" data-s-home>{{ it.kind }}</p>
+          {#- The whole card is one link (stretched over the card) to its /work/ section. #}
+          <h3 class="proof-card__name" data-s-home>
+            <a class="proof-card__link" href="/work/#{{ it.id }}" data-cta="proof-card-{{ it.id }}" data-s-home>{{ it.name }}</a>
+          </h3>
+          <p class="proof-card__one" data-s-home>{{ it.oneLiner }}</p>
+          <p class="proof-card__summary text-dim" data-s-home>{{ it.summary }}</p>
+          <ul class="chips" role="list" aria-label="Stack" data-s-home>
+            {% for s in it.stack -%}
+            <li class="chip" data-s-home>{{ s }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="proof__more" data-reveal data-s-home>
+      {{<ui.button href={"/" ~ home.proofTeaser.cta.href} variant="secondary" size="md" cta="proof-see-work" scope="home" label={home.proofTeaser.cta.label ~ " →\n        "} />}}
+    </div>
+  </div>
+</section>
+
+{#- ===================== PROCESS ===================== #}
+<section class="section process" id="how-it-works" aria-labelledby="process-h" data-s-home>
+  <div class="container" data-s-home>
+    <header class="section__head" data-s-home>
+      <p class="eyebrow eyebrow--mark" data-reveal data-s-home>{{ home.process.eyebrow }}</p>
+      <h2 id="process-h" data-reveal data-s-home>{{ home.process.title }}</h2>
+    </header>
+    <ol class="steps" role="list" data-s-home>
+      {% for s in home.process.steps -%}
+      <li class="step" data-reveal data-s-home>
+        <span class="step__n" aria-hidden="true" data-s-home>{{ s.n }}</span>
+        <h3 class="step__title" data-s-home>{{ s.title }}</h3>
+        <p class="text-dim" data-s-home>{{ s.body }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+{#- ===================== OFFER ===================== #}
+<section class="section offer" id="pricing" aria-labelledby="offer-h" data-s-home>
+  <div class="container" data-s-home>
+    <header class="section__head" data-s-home>
+      <p class="eyebrow eyebrow--mark" data-reveal data-s-home>{{ offer.eyebrow }}</p>
+      <h2 id="offer-h" data-reveal data-s-home>{{ offer.title }}</h2>
+      <p class="section__lede text-dim" data-reveal data-s-home>{{ offer.lede }}</p>
+    </header>
+
+    <ul class="packages" role="list" data-s-home>
+      {% for p in offer.packages -%}
+      <li class="pkg{% if p.id == "launch" %} pkg--flagship{% endif %}" data-reveal data-s-home>
+        <div class="pkg__top" data-s-home>
+          {% if p.id == "launch" %}<span class="pkg__flag" data-s-home>Flagship</span>{% endif %}
+          <h3 class="pkg__name" data-s-home>{{ p.name }}</h3>
+          <p class="pkg__scope text-dim" data-s-home>{{ p.scope }}</p>
+        </div>
+        <p class="pkg__price" data-s-home>{{ p.priceFrom }}</p>
+        <p class="pkg__meta" data-s-home>{{ p.timeline }} · {{ p.model }}</p>
+        {#- Below 600px the list collapses behind "See what's included" (the details script closes
+            it there); open, with no summary shown, above. #}
+        <details class="pkg__details" open data-s-home>
+          <summary class="pkg__details-summary" data-s-home>
+            <span data-s-home>{{ offer.includesLabel }}</span>
+            <span class="faq__marker" aria-hidden="true" data-s-home></span>
+          </summary>
+          {% if p.rows -%}
+          <dl class="pkg__rows" data-s-home>
+            {% for r in p.rows -%}
+            <div class="pkg__row" data-s-home><dt data-s-home>{{ r.label }}</dt><dd data-s-home>{{ r.value }}</dd></div>
+            {% endfor %}
+          </dl>
+          {%- else -%}
+          <ul class="pkg__includes" role="list" data-s-home>
+            {% for inc in p.includes -%}
+            <li data-s-home>{{ inc }}</li>
+            {% endfor %}
+          </ul>
+          {%- endif %}
+        </details>
+        <div class="pkg__cta" data-s-home>
+          {{<ui.button href={"/" ~ p.cta.href} variant={"primary" if p.id == "launch" else "secondary"} size="md" cta={"pkg-" ~ p.id ~ "-book-call"} scope="home" label={p.cta.label} />}}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {#- Secondary funnel-in: the audit, framed as the low-commitment first step. #}
+    <div class="audit" data-reveal data-s-home>
+      <div class="audit__copy" data-s-home>
+        <p class="eyebrow audit__eyebrow" data-s-home>{{ offer.audit.eyebrow }}</p>
+        <h3 class="audit__name" data-s-home>{{ offer.audit.name }}</h3>
+        <p class="text-dim" data-s-home>{{ offer.audit.summary }}</p>
+        {% if offer.audit.crosslink -%}
+        <p class="audit__funnel text-dim" data-s-home>{{ offer.audit.crosslink.lead }} <a href="{{ offer.audit.crosslink.href }}" rel="noopener" data-s-home>{{ offer.audit.crosslink.label }} →</a></p>
+        {%- endif %}
+      </div>
+      <div class="audit__aside" data-s-home>
+        <p class="audit__price" data-s-home>{{ offer.audit.priceFrom }}</p>
+        <p class="pkg__meta" data-s-home>{{ offer.audit.timeline }} · {{ offer.audit.model }}</p>
+        {{<ui.button href={"/" ~ offer.audit.cta.href} variant="secondary" size="md" cta="offer-start-audit" scope="home" label={offer.audit.cta.label} />}}
+      </div>
+    </div>
+  </div>
+</section>
+
+{#- ===================== WHO IT'S NOT FOR ===================== #}
+<section class="section notfor" aria-labelledby="notfor-h" data-s-home>
+  <div class="container notfor__inner" data-s-home>
+    <div class="notfor__head" data-s-home>
+      <p class="eyebrow eyebrow--mark" data-reveal data-s-home>Fit</p>
+      <h2 id="notfor-h" data-reveal data-s-home>{{ offer.notFor.title }}</h2>
+    </div>
+    <div class="notfor__lists" data-s-home>
+      <ul class="notfor__list" role="list" aria-labelledby="notfor-h" data-s-home>
+        {% for item in offer.notFor.items -%}
+        <li class="notfor__item" data-reveal data-s-home>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      <h3 id="notfor-not-h" class="notfor__subhead" data-reveal data-s-home>{{ offer.notFor.notTitle }}</h3>
+      <ul class="notfor__list" role="list" aria-labelledby="notfor-not-h" data-s-home>
+        {% for item in offer.notFor.notItems -%}
+        <li class="notfor__item" data-reveal data-s-home>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{#- ===================== FAQ (renders only when faq.json has items) ===================== #}
+{% if faq_items | length > 0 -%}
+<section class="section faq" id="faq" aria-labelledby="faq-h" data-s-home>
+  <div class="container" data-s-home>
+    <header class="section__head" data-s-home>
+      <p class="eyebrow eyebrow--mark" data-reveal data-s-home>{{ faq.eyebrow or "FAQ" }}</p>
+      <h2 id="faq-h" data-reveal data-s-home>{{ faq.title or "Straight answers" }}</h2>
+    </header>
+    <div class="faq__list" data-s-home>
+      {% for item in faq_items -%}
+      {% if item.q and item.a -%}
+      <details class="faq__item" data-reveal data-s-home>
+        <summary class="faq__q" data-s-home>
+          <span data-s-home>{{ item.q }}</span>
+          <span class="faq__marker" aria-hidden="true" data-s-home></span>
+        </summary>
+        <p class="faq__a text-dim" data-s-home>{{ item.a }}</p>
+      </details>
+      {%- endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+{#- ===================== CLOSING CTA BAND ===================== #}
+<section class="cta-band" aria-labelledby="ctaband-h" data-s-home>
+  <div class="container cta-band__inner" data-reveal data-s-home>
+    <h2 id="ctaband-h" class="cta-band__title" data-s-home>{{ home.ctaBand.title }}</h2>
+    <p class="cta-band__body text-dim" data-s-home>{{ home.ctaBand.body }}</p>
+    {{<ui.button href={"/" ~ home.ctaBand.cta.href} variant="primary" size="lg" cta="band-book-call" scope="home" label={home.ctaBand.cta.label} />}}
+  </div>
+</section>
+{%- endfilter -%}
+{% endblock content %}
+
+{% block scripts -%}
+{% include "scripts/home-details.html" %}
+{%- include "scripts/home-reveal.html" -%}
+{%- endblock scripts %}

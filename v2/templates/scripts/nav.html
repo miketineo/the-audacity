@@ -1,0 +1,20 @@
+<script type="module">
+  (function () {
+    const burger = document.querySelector('.nav__burger');
+    const menu = document.getElementById('nav-menu');
+    if (!burger || !menu) return;
+    const close = () => {
+      burger.setAttribute('aria-expanded', 'false');
+      burger.setAttribute('aria-label', 'Open menu');
+      document.body.classList.remove('nav-open');
+    };
+    burger.addEventListener('click', () => {
+      const open = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!open));
+      burger.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+      document.body.classList.toggle('nav-open', !open);
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  })();
+</script>

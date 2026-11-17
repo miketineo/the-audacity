@@ -1,6 +1,7 @@
 # Stage C promotion (2026-07-07): v2 now serves at root; v1 archived at /v1/.
 /v2/* /:splat 301
-/sitemap.xml /sitemap-index.xml 301
+/sitemap-index.xml /sitemap.xml 301
+/sitemap-0.xml /sitemap.xml 301
 /logs/* / 301
 # v1 archive retired 2026-11-11 (PR #50); this rule shipped then but was only committed 2026-11-16.
 /v1/* / 301
