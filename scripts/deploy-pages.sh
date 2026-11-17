@@ -9,7 +9,8 @@
 #   scripts/deploy-pages.sh <bundle-dir> preview-<topic>   # preview deployment
 #   scripts/deploy-pages.sh <bundle-dir> main              # PRODUCTION + cache purge
 #
-# The bundle dir must hold v2/dist/* at its root, plus v1/ and _redirects.
+# The bundle dir must hold v2/dist/* at its root, plus _redirects (v1/ was
+# retired on 2026-11-11 and is no longer part of the bundle).
 # Run from the REPO ROOT so wrangler picks up functions/ (the deploy log must
 # show the Functions bundle uploading).
 #
@@ -23,7 +24,6 @@ BRANCH=${2:?usage: deploy-pages.sh <bundle-dir> <branch>}
 ZONE_ID=afdcc29c67c775fcc01a765e0caa37b8   # theaudacity.io
 
 test -f "$BUNDLE_DIR/_redirects" || { echo "bundle has no _redirects; wrong dir?" >&2; exit 1; }
-test -d "$BUNDLE_DIR/v1" || { echo "bundle has no v1/; wrong dir?" >&2; exit 1; }
 test -d functions || { echo "run from the repo root: functions/ not found" >&2; exit 1; }
 
 # wrangler needs Node >= 20.
