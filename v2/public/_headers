@@ -4,7 +4,11 @@
 # and Google Fonts. 'unsafe-inline' stays for scripts because Astro and the
 # consent/analytics loaders ship inline <script> blocks; every other source
 # is pinned. Adding a third party means adding its origin here.
+# Pages adds Access-Control-Allow-Origin: * to static files by default; the
+# site is never read cross-origin, so it is detached. /api/ sets its own,
+# pinned to https://theaudacity.io.
 /*
+  ! Access-Control-Allow-Origin
   Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
