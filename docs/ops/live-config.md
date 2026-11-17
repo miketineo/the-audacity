@@ -34,7 +34,7 @@ and body `{"rules": [<rule above>]}`. The PUT replaces every rule in that phase.
 ## PostHog project "The Audacity" (EU, 160291)
 
 - `cookieless_server_hash_mode = 2` (stateful), since 2026-11-16. Required by
-  the cookieless mode in `v2/src/components/Analytics.astro` and the shared
+  the cookieless mode in `v2/static/js/analytics.js` and the shared
   loader's `cookieless: true`. Without it PostHog drops every event from
   visitors who have not accepted cookies, and the site goes quiet.
 - `anonymize_ips = true`.

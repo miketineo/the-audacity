@@ -1,0 +1,5 @@
+<script type="module">
+  document.getElementById('open-cookie-settings')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('audacity:open-consent'));
+  });
+</script>

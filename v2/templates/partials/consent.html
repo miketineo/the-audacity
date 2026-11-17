@@ -1,0 +1,14 @@
+{#- Opt-in consent for analytics cookies (was components/ConsentBanner.astro). analytics.js counts
+    every visit cookieless and only switches to cookie-based analytics after the visitor accepts
+    here. Non-blocking: a dismissible region pinned bottom-left, hidden until the script shows it. -#}
+<aside class="consent" id="consent-banner" role="region" aria-label="Cookie consent" hidden data-s-consent>
+  <div class="consent__body" data-s-consent>
+    <p class="consent__title" data-s-consent>We count visits without cookies.</p>
+    <p class="consent__copy text-dim" data-s-consent>Accept to allow analytics cookies, which show us how people use the site across visits. No ad trackers, ever. You can change this anytime from the footer. Details in the <a href="/privacy/" data-s-consent>privacy policy</a>.</p>
+  </div>
+  <div class="consent__actions" data-s-consent>
+    <button type="button" class="consent__btn consent__btn--ghost" data-consent="denied" data-s-consent>Decline</button>
+    <button type="button" class="consent__btn consent__btn--primary" data-consent="granted" data-s-consent>Accept</button>
+  </div>
+</aside>
+{% include "scripts/consent.html" %}

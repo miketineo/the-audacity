@@ -44,7 +44,7 @@ Light / dark / system, default light. Header on every page. Persists to `localSt
 
 ## Logo (CHOSEN 2026-06-27)
 
-**Direction C "Bracketed period"** — engineering brackets framing a period: `[.]` THE AUDACITY. Monochrome (currentColor), no accent color. Canonical source `v2/public/logo.svg`; inline component `v2/src/components/Logo.astro` (default `direction="c"`); favicon `v2/public/favicon.svg` uses a bolder mark tuned for 16px. Raster set generated: `og-image.png`, `apple-touch-icon.png`, `favicon.ico`. Mark + wordmark, works light/dark/monochrome, 16px favicon to hero, all SVG.
+**Direction C "Bracketed period"** — engineering brackets framing a period: `[.]` THE AUDACITY. Monochrome (currentColor), no accent color. Canonical source `v2/static/logo.svg`; inline component `v2/templates/components/logo.html`; favicon `v2/static/favicon.svg` uses a bolder mark tuned for 16px. Raster set generated: `og-image.png`, `apple-touch-icon.png`, `favicon.ico`. Mark + wordmark, works light/dark/monochrome, 16px favicon to hero, all SVG.
 
 ---
 
@@ -59,7 +59,7 @@ Light / dark / system, default light. Header on every page. Persists to `localSt
 
 ## Generated output (emails, reports, dashboards, PDFs)
 
-The one place agents take the brand from. Anything a template, ritual, skill or persona generates uses these values and points back here instead of carrying its own palette. Source of truth for the hex values: `v2/src/styles/global.css`.
+The one place agents take the brand from. Anything a template, ritual, skill or persona generates uses these values and points back here instead of carrying its own palette. Source of truth for the hex values: `v2/static/css/base.css`.
 
 ```
                  Light (default)   Dark
@@ -90,7 +90,7 @@ Slack attachment bars use dim `#5B5B5F`, because ink disappears on Slack's dark 
 - Web pages and PDFs: Big Shoulders Display 900 for the title and one hero figure, in the case it was written (never forced to uppercase). Inter for body. Space Mono for small labels.
 - Email: no webfonts, because Gmail strips them and the fallback was Impact. Sans `Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif` for everything including headings, mono `ui-monospace,'SFMono-Regular',Menlo,Consolas,'Courier New',monospace` for small labels only. Never Impact, never Arial Narrow. Email is light only: `<meta name="color-scheme" content="light">`.
 
-**Logo.** Direction C. Inline `v2/public/logo.svg` where SVG renders (web pages, PDFs). Email clients drop SVG, so email sets the mark as text: `[.] THE AUDACITY` in the mono stack.
+**Logo.** Direction C. Inline `v2/static/logo.svg` where SVG renders (web pages, PDFs). Email clients drop SVG, so email sets the mark as text: `[.] THE AUDACITY` in the mono stack.
 
 **Retired, do not generate.** Lime `#C4FF00`, the pitch-black canvas (`#080808`, `#0A0A0A`), red and amber badges and accent bars, Impact, forced-uppercase display headlines, `//` section labels, noise textures, glows.
 

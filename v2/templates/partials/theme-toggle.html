@@ -1,0 +1,18 @@
+{#- Theme toggle: light / dark / system, default light (was components/ThemeToggle.astro). One
+    cycling button; the three glyphs are shown one at a time by CSS from [data-theme-pref]. -#}
+<button class="theme-toggle" type="button" aria-label="Theme: light. Activate to switch theme." title="Switch theme" data-s-theme-toggle>
+  <svg class="ico ico--light" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" data-s-theme-toggle>
+    <circle cx="12" cy="12" r="4.2" data-s-theme-toggle></circle>
+    <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19" data-s-theme-toggle></path>
+  </svg>
+  <svg class="ico ico--dark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-s-theme-toggle>
+    <path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z" data-s-theme-toggle></path>
+  </svg>
+  <svg class="ico ico--system" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-s-theme-toggle>
+    <rect x="3" y="4.5" width="18" height="12" rx="1.6" data-s-theme-toggle></rect>
+    <path d="M8.5 20h7M12 16.5V20" data-s-theme-toggle></path>
+  </svg>
+  <span class="theme-toggle__text" aria-hidden="true" data-s-theme-toggle>Light</span>
+</button>
+<span class="visually-hidden" role="status" aria-live="polite" id="theme-live" data-s-theme-toggle></span>
+{% include "scripts/theme-toggle.html" %}

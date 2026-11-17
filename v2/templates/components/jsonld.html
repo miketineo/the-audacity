@@ -1,0 +1,127 @@
+{#- Structured data (was components/jsonld/*.astro). Each component builds the object as a map and
+    prints it with json_encode, the way the Astro components used JSON.stringify. The site facts
+    come from data/site.json, the offer from data/offer.json. -#}
+
+{#- BreadcrumbList for any non-home page. `items` is an ordered list of {name, path}; path is the
+    page path under the site ("/", "/work/"). -#}
+{% component jsonld.breadcrumb(items) %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": i + 1, "name": items[i].name, "item": site.url ~ items[i].path}
+    for i in range(end=items | length)
+  ]
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.breadcrumb %}
+
+{#- Organization, home page only. Stable @id so Service.provider can point at it. -#}
+{% component jsonld.organization() %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": site.url ~ "/#organization",
+  "name": site.brand,
+  "url": site.url,
+  "email": site.email,
+  "description": site.elevator,
+  "slogan": site.tagline
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.organization %}
+
+{#- Service for the Studio Sprint, home page only: each package and the audit become an Offer with
+    its price band as a PriceSpecification.description. -#}
+{% component jsonld.service() %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set offer = load_data(path="data/offer.json") -%}
+{%- set package_offers = [
+  {
+    "@type": "Offer",
+    "name": p.name,
+    "description": p.scope,
+    "priceCurrency": "EUR",
+    "priceSpecification": {"@type": "PriceSpecification", "description": p.priceRange}
+  }
+  for p in offer.packages
+] -%}
+{%- set audit_offer = {
+  "@type": "Offer",
+  "name": offer.audit.name,
+  "description": offer.audit.scope,
+  "priceCurrency": "EUR",
+  "priceSpecification": {"@type": "PriceSpecification", "description": offer.audit.priceRange}
+} -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": site.url ~ "/#studio-sprint",
+  "name": offer.title,
+  "serviceType": "Agentic engineering: product design and development",
+  "description": offer.lede,
+  "provider": {
+    "@type": "Organization",
+    "@id": site.url ~ "/#organization",
+    "name": site.brand,
+    "url": site.url
+  },
+  "areaServed": "Worldwide",
+  "offers": [...package_offers, audit_offer]
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.service %}
+
+{#- SoftwareApplication, used for Bloop on the Work page. No offers or price: the proofs are
+    capability receipts, not commercial listings. -#}
+{% component jsonld.software_application(name, description, application_category = "LifestyleApplication", operating_system = "iOS, Android, Web") %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": name,
+  "applicationCategory": application_category,
+  "operatingSystem": operating_system,
+  "description": description,
+  "creator": {"@type": "Organization", "name": site.brand, "url": site.url}
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.software_application %}
+
+{#- CreativeWork, used for Washiiba, Kerf and Recovery Room on the Work page. `url` is optional:
+    pass it only for a work with its own public site (Kerf). -#}
+{% component jsonld.creative_work(name, description, genre = "Software product", url = "") %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set own_site = {"url": url} if url else {} -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": name,
+  "genre": genre,
+  "description": description,
+  ...own_site,
+  "creator": {"@type": "Organization", "name": site.brand, "url": site.url}
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.creative_work %}
+
+{#- Article for one blog essay. The studio is the author, so author and publisher are the
+    organization (docs/copy/REGISTER.md: no person names on public surfaces). `url` is the
+    absolute URL of the essay, `date` an ISO date. -#}
+{% component jsonld.article(headline, description, date, url) %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- set publisher = {"@type": "Organization", "name": site.brand, "url": site.url} -%}
+{%- set data = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": headline,
+  "description": description,
+  "datePublished": date,
+  "author": publisher,
+  "publisher": publisher,
+  "mainEntityOfPage": url
+} -%}
+<script type="application/ld+json">{{ data | json_encode | safe }}</script>
+{% endcomponent jsonld.article %}

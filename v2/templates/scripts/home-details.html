@@ -1,0 +1,11 @@
+<script type="module">
+  // O5: pricing card lists start collapsed below 600px and stay open above.
+  (function () {
+    const mq = matchMedia('(max-width: 599px)');
+    const sync = () => document.querySelectorAll('.pkg__details').forEach((d) => {
+      d.open = !mq.matches;
+    });
+    sync();
+    mq.addEventListener('change', sync);
+  })();
+</script>

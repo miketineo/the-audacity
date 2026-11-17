@@ -23,12 +23,12 @@ canonical:  shared/analytics/posthog-setup.js
             shared/analytics/check-analytics.sh
             scripts/sync-analytics.sh
 
-vendored →  v2/public/analytics/                  (Astro copies public/ verbatim)
+vendored →  v2/static/analytics/                  (Zola copies static/ verbatim)
          →  miketineo.com/js/                     (CI copies js/)
          →  washiiba/site/public/assets/          (rsync, no build step)
 ```
 
-`shared/` sits at the repo root, outside Astro's build output, so Pages never
+`shared/` sits at the repo root, outside the site build's output, so Pages never
 publishes it. `scripts/sync-analytics.sh` regenerates the hash and copies the
 module, its hash and the guard into all three destinations.
 
@@ -112,7 +112,7 @@ It needs the PostHog project setting "cookieless server hash mode" (project
 Why: on 2026-11-16 consent-gated loading had left theaudacity.io and
 miketineo.com with near-zero events while Cloudflare showed steady traffic. Most
 visitors never click either banner button, and nearly every remaining event was
-the owner's own visits. miketineo.com and theaudacity.io (whose Analytics.astro
+the owner's own visits. miketineo.com and theaudacity.io (whose `v2/static/js/analytics.js`
 inlines the same pattern) run cookieless; washiiba does not set the flag.
 
 ## Environment: exact-host allowlist, skip off production
@@ -147,8 +147,8 @@ is what keeps the shared file byte-identical. CI stamps it:
 The `grep` before the `sed` is load-bearing: it fails loudly if the placeholder
 is renamed, instead of silently shipping a literal token forever — which is
 exactly how `1.0.0+b2aaeff` went three months stale. theaudacity.io needs no CI
-step; Pages sets `CF_PAGES_COMMIT_SHA` during `astro build` and Astro frontmatter
-runs in Node, so `Base.astro` inlines `__PH_CONFIG` directly. If a stamp is
+step: its `v2/static/js/analytics.js` does not read `__PH_CONFIG`, so it has no
+release id to stamp. If a stamp is
 missed the module reports `release_id: 'unstamped'` rather than the raw token.
 
 ## `app` vs `product`

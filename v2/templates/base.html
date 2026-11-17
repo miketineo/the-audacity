@@ -1,0 +1,64 @@
+{#- The single shell for every page (was layouts/Base.astro).
+
+    Owns the <head> boilerplate, the no-flash theme script (runs before first paint, default light,
+    persists to localStorage), the stylesheet links, and the Nav + content + Footer frame. A page
+    template extends this and fills:
+
+      meta     the site.head component: title, description, canonical, Open Graph
+      jsonld   structured data scripts
+      css      the page's stylesheet link or inline style
+      content  the page body, inside <main>
+      scripts  page scripts, after </html>: Astro put a page's own <script> tags there, outside the
+               layout, and browsers parse them into the body
+
+    Local CSS and JS are linked with get_url(cachebust=true), which returns an absolute URL; the
+    replace strips the site URL back to the root-relative form (/css/base.css?h=...).
+
+    Output is compact, like the Astro build: spaceless removes whitespace between tags. The content
+    block sits outside it so that Markdown output (the blog essay) keeps its own newlines; page
+    templates apply spaceless to their own content. -#}
+{% filter spaceless %}<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {#- No-flash theme: resolve light/dark/system BEFORE first paint.
+        Default preference is light; 'system' follows prefers-color-scheme. #}
+    <script>
+      (function () {
+        try {
+          var pref = localStorage.getItem('audacity-theme') || 'light';
+          var resolved = pref === 'system'
+            ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : pref;
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-pref', pref);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    {% block meta %}{% endblock meta %}
+    {% block jsonld %}{% endblock jsonld %}
+    <link rel="stylesheet" href="{{ get_url(path="css/base.css", cachebust=true) | replace(from=config.base_url, to="") }}">
+    {% block css %}{% endblock css %}
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {% include "partials/nav.html" %}
+    <main id="main">
+{%- endfilter -%}
+{% block content %}{% endblock content %}
+{%- filter spaceless -%}
+    </main>
+    {% include "partials/footer.html" %}
+    {% include "partials/consent.html" %}
+    <script type="module" src="{{ get_url(path="js/analytics.js", cachebust=true) | replace(from=config.base_url, to="") }}"></script>
+  </body>
+</html>
+{%- endfilter -%}
+{% block scripts %}{% endblock scripts -%}

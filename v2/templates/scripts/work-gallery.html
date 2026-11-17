@@ -1,0 +1,64 @@
+<script type="module">
+  // Reveal-on-scroll. Only arms when motion is allowed AND JS runs, so no-JS
+  // and reduced-motion users always see fully-rendered content (no FOUC trap).
+  const motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const nodes = document.querySelectorAll('[data-animate]');
+  if (motionOK && 'IntersectionObserver' in window) {
+    nodes.forEach((n) => n.classList.add('is-ready'));
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            obs.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+    );
+    nodes.forEach((n) => io.observe(n));
+  }
+
+  // Click-to-expand lightbox. Progressive enhancement: each thumbnail ships as
+  // a plain <a> that resolves to the full image. If native <dialog> is
+  // available we upgrade it into a real dialog trigger (button semantics,
+  // focus management, Escape + backdrop close). No-JS users keep the anchor and
+  // the <noscript> link list.
+  document.querySelectorAll('[data-lightbox-open]').forEach((el) => {
+    const id = el.getAttribute('data-lightbox-open');
+    const dialog = id ? document.getElementById(id) : null;
+    if (!dialog || typeof dialog.showModal !== 'function') return; // keep anchor fallback
+
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-haspopup', 'dialog');
+    el.setAttribute('aria-controls', id);
+
+    let lastFocus = null;
+    const open = (e) => {
+      e.preventDefault();
+      lastFocus = document.activeElement;
+      dialog.showModal();
+      const closeBtn = dialog.querySelector('[data-lightbox-close]');
+      if (closeBtn) closeBtn.focus();
+    };
+
+    el.addEventListener('click', open);
+    // Anchors fire click on Enter natively; add Space for button parity.
+    el.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Spacebar') open(e);
+    });
+
+    dialog.querySelectorAll('[data-lightbox-close]').forEach((b) =>
+      b.addEventListener('click', () => dialog.close())
+    );
+    // Backdrop click: the dialog fills the viewport, the panel is a child, so a
+    // click whose target is the dialog itself is outside the panel.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    // Fires on close button, Escape, and backdrop. Restore focus to trigger.
+    dialog.addEventListener('close', () => {
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    });
+  });
+</script>

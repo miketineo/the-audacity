@@ -1,0 +1,148 @@
+{
+  "home": {
+    "bloop": {
+      "layout": "phone",
+      "shots": [
+        {
+          "src": "work/bloop/feed.png",
+          "w": 1206,
+          "h": 2622,
+          "alt": "Bloop's mobile feed of live events across the city."
+        }
+      ]
+    },
+    "washiiba": {
+      "layout": "phone",
+      "shots": [
+        {
+          "src": "work/washiiba/02-home.png",
+          "w": 1284,
+          "h": 2778,
+          "alt": "The Washiiba home screen on mobile with services to book and a list of active orders."
+        }
+      ]
+    },
+    "kerf": {
+      "layout": "overlap",
+      "shots": [
+        {
+          "src": "work/kerf/overview.jpg",
+          "w": 1040,
+          "h": 820,
+          "pos": "0% 50%",
+          "alt": "Kerf's map viewer showing overhead lines over aerial photography, each span coloured by how close the vegetation is to the clearance zone."
+        },
+        {
+          "src": "work/kerf/span.jpg",
+          "w": 1040,
+          "h": 820,
+          "pos": "0% 50%",
+          "alt": "Kerf's 3D view of one overhead-line span, with LiDAR points for the vegetation and a callout reading 5.7 m inside clearance."
+        }
+      ]
+    },
+    "recovery-room": {
+      "layout": "overlap",
+      "shots": [
+        {
+          "src": "work/recovery-room/member.jpg",
+          "w": 1040,
+          "h": 820,
+          "pos": "50% 50%",
+          "alt": "Recovery Room's booking page, where a member chooses a massage chair or pressotherapy."
+        },
+        {
+          "src": "work/recovery-room/staff.jpg",
+          "w": 1040,
+          "h": 820,
+          "pos": "0% 0%",
+          "alt": "Recovery Room's staff page with the day's bookings for each seat, shown with example data."
+        }
+      ]
+    }
+  },
+  "work": {
+    "bloop": [
+      {
+        "src": "work/bloop/concierge.png",
+        "w": 1206,
+        "h": 2622,
+        "frame": "phone",
+        "alt": "Bloop's home screen, where you ask what you feel like doing."
+      },
+      {
+        "src": "work/bloop/feed.png",
+        "w": 1206,
+        "h": 2622,
+        "frame": "phone",
+        "alt": "Bloop's mobile feed of live events across the city."
+      },
+      {
+        "src": "work/bloop/admin.png",
+        "w": 1514,
+        "h": 985,
+        "frame": "web",
+        "alt": "Bloop's web admin for curating the events catalogue."
+      }
+    ],
+    "washiiba": [
+      {
+        "src": "work/washiiba/03-order.png",
+        "w": 1284,
+        "h": 2778,
+        "frame": "phone",
+        "alt": "A Washiiba order on mobile with a live status tracker, service line items, pickup window and total."
+      },
+      {
+        "src": "work/washiiba/02-home.png",
+        "w": 1284,
+        "h": 2778,
+        "frame": "phone",
+        "alt": "The Washiiba home screen on mobile with services to book and a list of active orders."
+      },
+      {
+        "src": "work/washiiba/01-signin.png",
+        "w": 1284,
+        "h": 2778,
+        "frame": "phone",
+        "alt": "Signing in to Washiiba on mobile."
+      }
+    ],
+    "kerf": [
+      {
+        "src": "work/kerf/overview.jpg",
+        "w": 1040,
+        "h": 820,
+        "frame": "overlap",
+        "pos": "0% 50%",
+        "alt": "Kerf's map viewer showing overhead lines over aerial photography, each span coloured by how close the vegetation is to the clearance zone."
+      },
+      {
+        "src": "work/kerf/span.jpg",
+        "w": 1040,
+        "h": 820,
+        "frame": "overlap",
+        "pos": "0% 50%",
+        "alt": "Kerf's 3D view of one overhead-line span, with LiDAR points for the vegetation and a callout reading 5.7 m inside clearance."
+      }
+    ],
+    "recovery-room": [
+      {
+        "src": "work/recovery-room/member.jpg",
+        "w": 1040,
+        "h": 820,
+        "frame": "overlap",
+        "pos": "50% 50%",
+        "alt": "Recovery Room's booking page, where a member chooses a massage chair or pressotherapy."
+      },
+      {
+        "src": "work/recovery-room/staff.jpg",
+        "w": 1040,
+        "h": 820,
+        "frame": "overlap",
+        "pos": "0% 0%",
+        "alt": "Recovery Room's staff page with the day's bookings for each seat, shown with example data."
+      }
+    ]
+  }
+}

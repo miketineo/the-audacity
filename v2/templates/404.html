@@ -1,0 +1,32 @@
+{#- 404 (any missing URL): says plainly what happened and offers a way on. Zola writes it to
+    dist/404.html, at the root of the Pages bundle, so Cloudflare Pages serves it with status 404
+    for any path that has no file. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{{<site.head title="Page not found · The Audacity" description="The link may be old or mistyped." path="/404.html" site_url={config.base_url} />}}
+{% endblock meta %}
+
+{% block css %}
+{% include "styles/not-found.html" %}
+{% endblock css %}
+
+{% block content %}
+{%- filter spaceless -%}
+<section class="container notfound" data-s-not-found>
+  <h1 class="notfound__title" data-s-not-found>This page doesn't exist</h1>
+  <p class="notfound__lede text-dim" data-s-not-found>The link may be old or mistyped. Try one of these:</p>
+  <ul class="notfound__links" role="list" data-s-not-found>
+    {% for l in [
+      {"label": "Home", "href": "/"},
+      {"label": "Our work", "href": "/work/"},
+      {"label": "Prices", "href": "/#pricing"},
+      {"label": "Contact", "href": "/contact/"},
+    ] -%}
+    <li data-s-not-found><a href="{{ l.href }}" data-s-not-found>{{ l.label }}</a></li>
+    {% endfor %}
+  </ul>
+  {{<ui.button href="/contact/#book" variant="primary" size="lg" scope="not-found" label="Book a call" />}}
+</section>
+{%- endfilter -%}
+{% endblock content %}

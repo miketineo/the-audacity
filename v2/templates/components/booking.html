@@ -1,0 +1,15 @@
+{#- The booking surface on the contact page: a Cal.com inline embed with live theme sync and event
+    tracking (was components/BookingEmbed.astro). The embed's script is scripts/booking.html; it
+    loads Cal.com's script, so only the markup lives here. The fallback the Astro component
+    rendered while the Cal link was unconfigured was not ported: the link is configured.
+
+    Event type "Diagnostic call" (id 6241493) on account the-audacity-io (Google Calendar
+    connected, Meet links, 25 min, day cap 3, qualifier question). API key in Vault at
+    secret/projects/theaudacity/cal. -#}
+{% component ui.booking(title = "Book a diagnostic call", email = "obviously@theaudacity.io") %}
+<div class="booking" data-booking data-provider="cal.com" data-configured="true" data-cal-link="the-audacity-io/diagnostic-call" data-cal-namespace="diagnostic-call" data-s-booking>
+  <div class="booking__frame" id="cal-inline" aria-label="{{ title }}" data-s-booking></div>
+  <p class="booking__alt text-dim" data-s-booking>Prefer email? Write to <a href="mailto:{{ email }}?subject=Diagnostic%20call" data-s-booking>{{ email }}</a></p>
+</div>
+{% include "scripts/booking.html" %}
+{% endcomponent ui.booking %}

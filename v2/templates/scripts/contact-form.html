@@ -1,0 +1,207 @@
+<script type="module">
+    (function () {
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const ATTR_KEY = 'audacity-attribution';
+
+      // ---- Tracking shim: Analytics.astro defines window.audacityTrack and its
+      // script runs before any submit can reach here.
+      function track(event, props) {
+        try { if (window.audacityTrack) window.audacityTrack(event, props); } catch (e) {}
+      }
+
+      // ---- UTM / attribution capture (first-touch + last-touch), persisted.
+      function readParams() {
+        const p = new URLSearchParams(location.search);
+        const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid'];
+        const out = {};
+        keys.forEach((k) => { const v = p.get(k); if (v) out[k] = v; });
+        return out;
+      }
+      function collectAttribution() {
+        let store = {};
+        try { store = JSON.parse(localStorage.getItem(ATTR_KEY) || '{}'); } catch (e) {}
+        const now = readParams();
+        const hasNow = Object.keys(now).length > 0;
+        const touch = {
+          ...now,
+          referrer: document.referrer || '',
+          landing_page: location.pathname + location.search,
+          ts: new Date().toISOString(),
+        };
+        if (!store.first_touch) store.first_touch = touch;
+        if (hasNow || !store.last_touch) store.last_touch = touch;
+        try { localStorage.setItem(ATTR_KEY, JSON.stringify(store)); } catch (e) {}
+        return store;
+      }
+      // Persist on load so attribution survives even if the user never submits.
+      const attribution = collectAttribution();
+
+      // ---- Intent handoff: CTAs elsewhere link to contact/?interest=<x>
+      // (e.g. the audit CTA). Copy the param into the hidden field so it
+      // travels with the inquiry payload.
+      const interestEl = document.getElementById('inq-interest');
+      if (interestEl) {
+        const interest = new URLSearchParams(location.search).get('interest');
+        if (interest) interestEl.value = interest;
+      }
+
+      // ---- Field-level error helpers
+      function setError(input, msgEl, message) {
+        input.setAttribute('aria-invalid', 'true');
+        if (msgEl) { msgEl.textContent = message; msgEl.hidden = false; }
+      }
+      function clearError(input, msgEl) {
+        input.removeAttribute('aria-invalid');
+        if (msgEl) { msgEl.textContent = ''; msgEl.hidden = true; }
+      }
+      function errEl(form, input) {
+        const id = input.getAttribute('aria-describedby');
+        return id ? form.querySelector('#' + id) : null;
+      }
+
+      // Check one field; returns true when it passes. Messages come from
+      // content (data-msg-empty / data-msg-format on the field).
+      function checkField(form, el) {
+        const msgEl = errEl(form, el);
+        const value = (el.value || '').trim();
+        if (el.hasAttribute('required') && !value) {
+          setError(el, msgEl, el.getAttribute('data-msg-empty') || '');
+          return false;
+        }
+        if (el.type === 'email' && value && !EMAIL_RE.test(value)) {
+          setError(el, msgEl, el.getAttribute('data-msg-format') || '');
+          return false;
+        }
+        clearError(el, msgEl);
+        return true;
+      }
+
+      // Returns the number of fields that need attention; focuses the first.
+      function validate(form) {
+        let bad = 0;
+        let firstBad = null;
+        form.querySelectorAll('input, textarea, select').forEach((el) => {
+          if (el.name === 'company_url' || el.type === 'hidden') return; // honeypot and hidden fields, never validated
+          if (!checkField(form, el)) { bad++; firstBad = firstBad || el; }
+        });
+        if (firstBad) firstBad.focus();
+        return bad;
+      }
+
+      function payloadFor(form, kind, data) {
+        // inquiry: full brief + attribution
+        return {
+          name: data.name,
+          email: data.email,
+          company: data.company || '',
+          project_idea: data.project_idea || '',
+          budget: data.budget || '',
+          timeline: data.timeline || '',
+          message: data.message || '',
+          interest: data.interest || '',
+          utm: attribution,
+          turnstile: data['cf-turnstile-response'] || '',
+        };
+      }
+
+      function wire(form) {
+        if (!form) return;
+        const kind = form.getAttribute('data-kind');
+        const endpoint = form.getAttribute('data-endpoint');
+        const statusEl = form.querySelector('.form__status');
+        const submitBtn = form.querySelector('button[type="submit"], .form__submit');
+
+        // Field errors show only after a submit attempt or once the field has
+        // been edited: re-check on input while a message is showing, and on
+        // blur after the user has changed the field. Never touch the value.
+        form.querySelectorAll('input, textarea, select').forEach((el) => {
+          if (el.name === 'company_url' || el.type === 'hidden') return;
+          el.addEventListener('input', () => {
+            el.dataset.edited = 'true';
+            if (el.getAttribute('aria-invalid') === 'true') checkField(form, el);
+          });
+          el.addEventListener('blur', () => {
+            if (el.dataset.edited === 'true') checkField(form, el);
+          });
+        });
+
+        function setStatus(kindClass, message) {
+          if (!statusEl) return;
+          statusEl.textContent = message;
+          statusEl.classList.remove('is-error', 'is-success');
+          if (kindClass) statusEl.classList.add(kindClass);
+        }
+        function busy(on) {
+          if (!submitBtn) return;
+          if (on) {
+            submitBtn.setAttribute('aria-disabled', 'true');
+            submitBtn.setAttribute('aria-busy', 'true');
+          } else {
+            submitBtn.removeAttribute('aria-disabled');
+            submitBtn.removeAttribute('aria-busy');
+          }
+        }
+        function succeed() {
+          form.classList.add('is-done');
+          setStatus('is-success', statusEl.getAttribute('data-success') || 'Done.');
+          // Remove fields from tab order once submitted successfully.
+          form.querySelectorAll('input, textarea, select, button').forEach((el) => {
+            if (el !== statusEl) el.setAttribute('disabled', '');
+          });
+        }
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (form.classList.contains('is-done')) return;
+
+          // Honeypot: silently pretend success, send nothing.
+          const hp = form.querySelector('input[name="company_url"]');
+          if (hp && hp.value.trim() !== '') { succeed(); return; }
+
+          const bad = validate(form);
+          if (bad) {
+            // Summary only when two or more fields need attention.
+            const summary = statusEl ? statusEl.getAttribute('data-summary') || '' : '';
+            setStatus(bad > 1 ? 'is-error' : '', bad > 1 ? summary.replace('{n}', String(bad)) : '');
+            return;
+          }
+
+          const data = {};
+          new FormData(form).forEach((v, k) => { data[k] = typeof v === 'string' ? v.trim() : v; });
+          const body = payloadFor(form, kind, data);
+
+          busy(true);
+          setStatus('', 'Sending…');
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            let ok = res.ok;
+            let reason = '';
+            try {
+              const j = await res.json();
+              if (j && typeof j.ok === 'boolean') ok = j.ok;
+              if (j && j.error) reason = String(j.error);
+            } catch (e2) {}
+            if (!ok) throw new Error(reason || 'bad_response');
+
+            track('inquiry_submitted', {
+              source: location.pathname,
+            });
+            succeed();
+          } catch (err) {
+            // A Turnstile token is single-use: get a fresh one for the retry.
+            const widget = form.querySelector('.cf-turnstile');
+            if (widget && window.turnstile) window.turnstile.reset(widget);
+            busy(false);
+            const spam = err && err.message === 'bot_check_failed';
+            setStatus('is-error', statusEl.getAttribute(spam ? 'data-spam' : 'data-error') || '');
+          }
+        });
+      }
+
+      wire(document.getElementById('inquiry-form'));
+    })();
+  </script>

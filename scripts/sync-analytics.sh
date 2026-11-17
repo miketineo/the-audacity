@@ -19,11 +19,11 @@ SRC="$ROOT/shared/analytics"
 # edit fails assertion 1 in CI.
 (cd "$SRC" && sha256sum posthog-setup.js > posthog-setup.js.sha256)
 
-# Astro copies public/ verbatim; miketineo's CI copies js/; washiiba rsyncs
+# Zola copies static/ verbatim; miketineo's CI copies js/; washiiba rsyncs
 # site/public/. Each destination therefore needs the module, its hash and the
 # guard script.
 DESTS="
-$ROOT/v2/public/analytics
+$ROOT/v2/static/analytics
 $ROOT/../../miketineo.com/js
 $ROOT/../projects/washiiba/site/public/assets
 "

@@ -1,12 +1,6 @@
 # build output
 dist/
 
-# dependencies
-node_modules/
-
-# astro
-.astro/
-
 # env
 .env
 .env.production

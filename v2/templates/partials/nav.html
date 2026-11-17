@@ -1,0 +1,33 @@
+{#- Sticky site header (was components/Nav.astro): brand, the page links, the theme toggle and the
+    primary call to action. Below 52rem the links collapse behind a disclosure button.
+    aria-current marks the link for the page being rendered. -#}
+{%- set current = current_path | default(value="") -%}
+<header class="site-header" data-s-nav>
+  <div class="container site-header__inner" data-s-nav>
+    <a class="brand" href="/" aria-label="The Audacity, home" data-s-nav>{{<ui.logo />}}</a>
+
+    <nav class="nav" aria-label="Primary" data-s-nav>
+      <button class="nav__burger" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu" data-s-nav>
+        <span data-s-nav></span><span data-s-nav></span>
+      </button>
+
+      <div class="nav__menu" id="nav-menu" data-s-nav>
+        <ul class="nav__links" role="list" data-s-nav>
+          {% for l in [
+            {"label": "Home", "href": "/"},
+            {"label": "Work", "href": "/work/"},
+            {"label": "Blog", "href": "/blog/"},
+            {"label": "Contact", "href": "/contact/"},
+          ] -%}
+          <li data-s-nav><a class="nav__link" href="{{ l.href }}"{% if current == l.href %} aria-current="page"{% endif %} data-s-nav>{{ l.label }}</a></li>
+          {% endfor %}
+        </ul>
+        <div class="nav__actions" data-s-nav>
+          {% include "partials/theme-toggle.html" %}
+          {{<ui.button href="/contact/#book" variant="primary" size="sm" cta="nav-book-call" scope="nav" label="\n            Book a call\n          " />}}
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+{% include "scripts/nav.html" %}

@@ -1,0 +1,35 @@
+{#- Footer: legal, contact, cookie settings (was components/Footer.astro). "Cookie settings"
+    re-opens the consent banner through the 'audacity:open-consent' event. -#}
+<footer class="site-footer" data-s-footer>
+  <div class="container site-footer__inner" data-s-footer>
+    <div class="site-footer__brand" data-s-footer>
+      <span class="brand__wordmark" data-s-footer>The Audacity</span>
+      <p class="text-dim site-footer__tag" data-s-footer>An Agentic Engineering Studio. AI agents build. One human ensures quality.</p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer" data-s-footer>
+      <ul role="list" data-s-footer>
+        {% for l in [
+          {"label": "Home", "href": "/"},
+          {"label": "Work", "href": "/work/"},
+          {"label": "Blog", "href": "/blog/"},
+          {"label": "Contact", "href": "/contact/"},
+        ] -%}
+        <li data-s-footer><a href="{{ l.href }}" data-s-footer>{{ l.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="site-footer__meta" data-s-footer>
+      <a href="mailto:obviously@theaudacity.io" data-s-footer>obviously@theaudacity.io</a>
+      <a href="/privacy/" data-s-footer>Privacy</a>
+      <button type="button" class="site-footer__cookies" id="open-cookie-settings" data-s-footer>Cookie settings</button>
+    </div>
+  </div>
+
+  <div class="container site-footer__legal" data-s-footer>
+    <p class="eyebrow" data-s-footer>© {{ now() | date(format="%Y") }} The Audacity · P. IVA IT04098710926</p>
+    <p class="eyebrow" data-s-footer>Built with audacity.</p>
+  </div>
+</footer>
+{% include "scripts/footer.html" %}

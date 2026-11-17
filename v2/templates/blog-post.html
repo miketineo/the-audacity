@@ -1,0 +1,35 @@
+{#- One essay (/blog/<slug>/), rendered from content/blog/<slug>.md. The studio is the author (no
+    byline). The Markdown body is printed outside spaceless, so it keeps the newlines Markdown
+    puts between blocks. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{%- set site = load_data(path="data/site.json") -%}
+{{<site.head title={page.title ~ " · " ~ site.brand} description={page.description} path={page.path} site_url={config.base_url} og_type="article" />}}
+{% endblock meta %}
+
+{% block jsonld %}
+{{<jsonld.article headline={page.title} description={page.description} date={page.date | date(format="%Y-%m-%d")} url={page.permalink} />}}
+{{<jsonld.breadcrumb items={[{"name": "Home", "path": "/"}, {"name": "Blog", "path": "/blog/"}, {"name": page.title, "path": page.path}]} />}}
+{% endblock jsonld %}
+
+{% block css %}
+{% include "styles/blog-post.html" %}
+{% endblock css %}
+
+{% block content %}
+{%- filter spaceless -%}
+<article class="container post" data-s-blog-post>
+  <header class="post__header" data-s-blog-post>
+    <a class="post__back eyebrow" href="/blog/" data-s-blog-post>← Blog</a>
+    <h1 class="post__title" data-s-blog-post>{{ page.title }}</h1>
+    <p class="post__meta text-dim" data-s-blog-post><time datetime="{{ page.date | date(format="%Y-%m-%d") }}" data-s-blog-post>{{ page.date | date(format="%-d %B %Y") }}</time></p>
+  </header>
+  <div class="post__body" data-s-blog-post>
+{%- endfilter -%}
+{{ page.content | safe }}
+{%- filter spaceless -%}
+  </div>
+</article>
+{%- endfilter -%}
+{% endblock content %}

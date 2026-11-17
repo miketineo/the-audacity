@@ -37,7 +37,10 @@ export CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
 CLOUDFLARE_API_TOKEN=$(vault kv get -field=api_token secret/projects/atlas/cloudflare)
 CLOUDFLARE_ACCOUNT_ID=$(vault kv get -field=account_id secret/projects/atlas/cloudflare)
 
-npx -y wrangler pages deploy "$BUNDLE_DIR" --project-name=the-audacity --branch="$BRANCH"
+# Pinned: an unpinned npx would run whatever was published last, with the
+# Cloudflare token in the environment. Bump on purpose, to a release at least
+# 7 days old.
+npx -y wrangler@4.160.0 pages deploy "$BUNDLE_DIR" --project-name=the-audacity --branch="$BRANCH"
 
 if [ "$BRANCH" = "main" ]; then
   # The zone caches aggressively (see the 2026-08-04 incident in the spec):

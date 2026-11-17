@@ -1,0 +1,13 @@
+{#- Logo: inline brand lockup, direction "c" (brackets around a period), mark plus wordmark.
+    Inlined, not <img>, so currentColor follows the theme's --text (was components/Logo.astro; the
+    unused directions "a" and "b" and the mark-only mode were not ported). -#}
+{% component ui.logo() %}
+<svg class="logo" viewBox="0 0 300 56" role="img" aria-label="The Audacity" xmlns="http://www.w3.org/2000/svg" data-s-logo>
+  <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" data-s-logo>
+    <path d="M25 12 H14 V46 H25" data-s-logo></path>
+    <path d="M39 12 H50 V46 H39" data-s-logo></path>
+  </g>
+  <circle cx="32" cy="42" r="3.6" fill="var(--accent, currentColor)" data-s-logo></circle>
+  <text x="66" y="39" font-family="var(--font-display, 'Big Shoulders Display'), 'Arial Narrow', sans-serif" font-size="32" font-weight="900" letter-spacing="0.5" fill="currentColor" data-s-logo>THE AUDACITY</text>
+</svg>
+{% endcomponent ui.logo %}
