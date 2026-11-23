@@ -55,7 +55,7 @@ creates nothing; a paid session whose hold is gone or whose slot was taken pings
 
 | | TheAudacity `acct_1UJAotBTV7RTQ8BS` | Miketineo `acct_1SJYbHPXtXscVHuv` |
 |---|---|---|
-| Product | `prod_VgLCEZbbyJZ8Rs` "Diagnostic call (45 min)" | `prod_VgGyibAJ6RwXcx` "Diagnostic call (45 min)" (existing product, renamed) |
+| Product | `prod_VgLCEZbbyJZ8Rs` "Diagnostic call (45 min)" | `prod_VgGyibAJ6RwXcx` "Diagnostic call (45 min)" (existing product, renamed, description rewritten) |
 | Price EUR 175 | `price_1UeyWABTV7RTQ8BSqvCjVlLM` | `price_1UeyWEPXtXscVHuvJrC7ayde` (default; the EUR 250 `price_1UeuQOPXtXscVHuvF7ZVZvZ6` is kept for the revert) |
 | Payment Link | `plink_1UeyWMBTV7RTQ8BSWcEtvpTu` | `plink_1UeyWRPXtXscVHuvhZSORZ3e` |
 | After payment | `https://theaudacity.io/contact/booked/` | `https://miketineo.com/booked.html` |
@@ -63,7 +63,14 @@ creates nothing; a paid session whose hold is gone or whose slot was taken pings
 
 TheAudacity also has a hidden EUR 1 test link (`plink_1UeyWPBTV7RTQ8BS1CVsLk1h`, product
 `prod_VgLCsUHnJPPhV3`), used only when the hold carries `BOOKING_TEST_TOKEN`
-(`/contact/?booking_test=<token>#book`). Delete the token secret when no test is running.
+(`/contact/?booking_test=<token>#book`; the button then reads "Pay €1 to book (test)").
+The token is deleted after each test: set it again with `wrangler pages secret put`, redeploy
+(secrets reach new deployments only), test, delete it, redeploy. Last test: 2026-11-23, passed
+(payment, event with Meet link, confirmation email from miguel@theaudacity.io, Slack ping), refunded.
+
+All three links accept `card` and `link` only (Apple Pay and Google Pay ride on card). The
+webhook books only sessions that are `paid` at completion, so delayed methods (SEPA, bank
+redirects) must stay off or a paid booking would be lost.
 
 Automatic tax is off on both links (not decided). The stray EUR 250 link
 `plink_1UeuRYPXtXscVHuvaArmybW5` on Miketineo is deactivated.
