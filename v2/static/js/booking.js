@@ -201,8 +201,38 @@
     if (two && window.matchMedia('(max-width: 960px)').matches) shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Loading mark: the logo's [ . ] characters, moving through three loops (scan,
+  // breathe, fill), the next one picked at random each time one finishes. The
+  // mark is aria-hidden: the status text is what screen readers hear. It stops
+  // once the status is replaced, and stays still under prefers-reduced-motion.
+  const loops = [
+    { ms: 180, f: ['[.  ]', '[ . ]', '[  .]', '[ . ]'] },
+    { ms: 220, f: ['[.]', '[ . ]', '[  .  ]', '[ . ]'] },
+    { ms: 240, f: ['[   ]', '[.  ]', '[.. ]', '[...]'] },
+  ];
+  const still = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: true };
+  function busy(el, text) {
+    const mark = h('span', { class: 'bk-load', 'aria-hidden': 'true' }, '[ . ]');
+    el.replaceChildren(mark, text);
+    if (still.matches) return;
+    let loop = null, last = -1, i = 0;
+    (function tick() {
+      if (!mark.isConnected) return;
+      if (!loop || i === loop.f.length) {
+        let n;
+        do n = Math.floor(Math.random() * loops.length); while (n === last);
+        last = n;
+        loop = loops[n];
+        i = 0;
+      }
+      mark.textContent = loop.f[i++];
+      setTimeout(tick, loop.ms);
+    })();
+  }
+
   async function load(note) {
-    calStatus.textContent = note || 'Loading open times.';
+    if (note) calStatus.textContent = note;
+    else busy(calStatus, 'Loading open times.');
     calStatus.hidden = false;
     try {
       const r = await fetch(`${api}/slots?brand=${encodeURIComponent(brand)}`, { headers: { Accept: 'application/json' } });
@@ -257,7 +287,7 @@
       return;
     }
     submit.disabled = true;
-    formStatus.textContent = 'Holding your time.';
+    busy(formStatus, 'Holding your time.');
     try {
       const r = await fetch(`${api}/hold`, {
         method: 'POST',
@@ -267,7 +297,7 @@
       const data = await r.json().catch(() => ({}));
       if (r.ok && data.ok && data.url) {
         track('book_call_checkout');
-        formStatus.textContent = 'Opening the payment page.';
+        busy(formStatus, 'Opening the payment page.');
         location.assign(data.url);
         return;
       }
