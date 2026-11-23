@@ -94,7 +94,8 @@ Set with `wrangler pages secret put` (production, and preview for the first two)
 
 ### Price
 
-EUR 175 until 30 November 2026, normally EUR 250. On 29 November decide: extend, or switch
+EUR 175 until 31 December 2026, normally EUR 250 (extended once from 30 November by Miguel on
+2026-11-23; the Stripe price did not change). On 30 December decide: extend, or switch
 both Payment Links to the EUR 250 price and change the copy (`v2/data/pages.json`,
 `v2/data/faq.json`, `v2/static/llms.txt`, `data-price` in `components/booking.html`,
 `amount` in `functions/_lib/booking.js`, and the miketineo.com pages) in the same change.

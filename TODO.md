@@ -40,7 +40,9 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-fable-5-2` 2026-11-23: Washiiba build time on the Work page only, approved by Miguel: "The first working version of all three was built in eight weeks." Kept away from the offer and prices (eight weeks is longer than the Launch package). Also the same day (PR #69): hero strip rewritten as what the buyer gets, proof intro cut to three sentences, booked page without a personal address, `scripts/broadcast.js` on SES.
 
-- [ ] Copy review, 11 items waiting on a decision (full table in local-only `~/reports/theaudacity-copy-review-2026-11-23.md`): the call price after 30 November, the deposit amount, the free-fix period, what a retainer month delivers, what the Launch AI assistant does, a FAQ entry for non-technical founders, the six-agent roster in the agent manifest, the sender named on the booked page, and privacy wording for the mail path and retention periods.
+- [ ] **30 December:** the EUR 175 call price is published as "until 31 December" (extended once from 30 November, Miguel 2026-11-23). Decide again by then: extend, or switch both Stripe Payment Links to EUR 250 and change the copy on both sites in the same change (`docs/ops/live-config.md`, section Price).
+
+- [ ] Copy review, 10 items waiting on a decision (full table in local-only `~/reports/theaudacity-copy-review-2026-11-23.md`): the deposit amount, the free-fix period, what a retainer month delivers, what the Launch AI assistant does, a FAQ entry for non-technical founders, the six-agent roster in the agent manifest, the sender named on the booked page, and privacy wording for the mail path and retention periods.
 
 ---
 
