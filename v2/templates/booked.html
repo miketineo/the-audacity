@@ -1,0 +1,29 @@
+{#- Booked (/contact/booked/): where the Stripe Payment Link sends a booker after paying for the
+    diagnostic call. The calendar event and confirmation email are created by the Stripe webhook
+    (functions/api/booking/webhook/[brand].js), not by this page, so the page only says what
+    happens next. Not indexed. -#}
+{% extends "base.html" %}
+
+{% block meta %}
+{{<site.head title="Call booked · The Audacity" description="Your diagnostic call is booked." path="/contact/booked/" site_url={config.base_url} />}}
+<meta name="robots" content="noindex">
+{% endblock meta %}
+
+{% block css %}
+{% include "styles/not-found.html" %}
+{% endblock css %}
+
+{% block content %}
+{%- set site = load_data(path="data/site.json") -%}
+{%- filter spaceless -%}
+<section class="container notfound" data-s-not-found>
+  <h1 class="notfound__title" data-s-not-found>Payment received. Your call is booked.</h1>
+  <p class="notfound__lede text-dim" data-s-not-found>A confirmation from miguel@theaudacity.io arrives within a few minutes, with the Google Meet link and a calendar file. The fee comes off the project price if you go ahead.</p>
+  <p class="notfound__lede text-dim" data-s-not-found>No email after ten minutes? Check spam, then write to <a href="mailto:{{ site.email }}?subject=Diagnostic%20call" data-s-not-found>{{ site.email }}</a>.</p>
+  {{<ui.button href="/work/" variant="secondary" size="lg" scope="not-found" label="See the work" />}}
+</section>
+<script>
+  try { window.audacityTrack && window.audacityTrack('book_call_completed', { provider: 'stripe', brand: 'audacity' }); } catch (e) {}
+</script>
+{%- endfilter -%}
+{% endblock content %}
