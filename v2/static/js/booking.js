@@ -158,7 +158,7 @@
       const open = byDay.has(k);
       const cls = `bk-cell${k === todayKey ? ' bk-cell--today' : ''}`;
       cells.push(open
-        ? h('button', { type: 'button', class: `${cls} bk-cell--open`, 'aria-pressed': String(k === dayKey), 'aria-label': `${fullDayFmt.format(date)}, ${byDay.get(k).length} times open`, onclick: () => pickDay(k) }, String(d))
+        ? h('button', { type: 'button', class: `${cls} bk-cell--open`, 'aria-pressed': String(k === dayKey), 'aria-label': `${fullDayFmt.format(date)}, ${byDay.get(k).length} ${byDay.get(k).length === 1 ? 'time' : 'times'} open`, onclick: () => pickDay(k) }, String(d))
         : h('span', { class: cls, 'aria-hidden': 'true' }, String(d)));
     }
     grid.replaceChildren(...cells);

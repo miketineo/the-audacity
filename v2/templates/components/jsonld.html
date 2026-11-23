@@ -76,7 +76,7 @@
 
 {#- SoftwareApplication, used for Bloop on the Work page. No offers or price: the proofs are
     capability receipts, not commercial listings. -#}
-{% component jsonld.software_application(name, description, application_category = "LifestyleApplication", operating_system = "iOS, Android, Web") %}
+{% component jsonld.software_application(name, description, application_category = "LifestyleApplication", operating_system = "iOS") %}
 {%- set site = load_data(path="data/site.json") -%}
 {%- set data = {
   "@context": "https://schema.org",
