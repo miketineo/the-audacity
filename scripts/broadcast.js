@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Broadcast sender for The Audacity waitlist.
 //
-// Reads a JSON list of recipients and sends one email to each via Resend.
+// Reads a JSON list of recipients and sends one email to each via Amazon SES
+// (functions/_lib/ses.js, the same client the site uses).
 // Does NOT talk to Cloudflare KV directly — pipe recipients in via a file
 // so this works without wrangler (needs node 20+) and without admin API.
 //
@@ -11,7 +12,7 @@
 //   { "keys": [{ "name": "email:a@b.com" }, ...] }  // shape from `wrangler kv key list`
 //
 // Usage:
-//   RESEND_API_KEY=re_xxx node scripts/broadcast.js \
+//   SES_ACCESS_KEY_ID=... SES_SECRET_ACCESS_KEY=... SES_REGION=eu-west-1 node scripts/broadcast.js \
 //     --input waitlist-export.json \
 //     --subject "Your subject" \
 //     --html emails/broadcast-001.html \
@@ -20,11 +21,12 @@
 //     [--reply-to obviously@theaudacity.io] \
 //     [--dry-run] \
 //     [--limit 50] \
-//     [--rate 2]            # requests per second, defaults to 2 (Resend free)
+//     [--rate 2]            # requests per second, defaults to 2
 //     [--log broadcast.log] # JSONL log file, defaults to ./broadcast-<ts>.log
 
 import { readFile, writeFile, appendFile } from 'node:fs/promises';
 import { argv, exit } from 'node:process';
+import { sendEmail, sesKeys } from '../functions/_lib/ses.js';
 
 function parseArgs(argv) {
   const args = {};
@@ -64,29 +66,6 @@ async function loadRecipients(path) {
   die(`unrecognized input format: ${path}`);
 }
 
-async function sendOne({ apiKey, from, to, subject, html, text, replyTo }) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject,
-      html,
-      text,
-      reply_to: replyTo,
-    }),
-  });
-  if (!response.ok) {
-    const errText = await response.text().catch(() => '');
-    throw new Error(`resend_http_${response.status}: ${errText}`);
-  }
-  return await response.json();
-}
-
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
@@ -96,8 +75,8 @@ async function main() {
   if (!args.subject) die('missing --subject <text>');
   if (!args.html) die('missing --html <path>');
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey && !args['dry-run']) die('RESEND_API_KEY env var required (or pass --dry-run)');
+  const keys = sesKeys(process.env);
+  if (!keys && !args['dry-run']) die('SES_ACCESS_KEY_ID, SES_SECRET_ACCESS_KEY and SES_REGION env vars required (or pass --dry-run)');
 
   const from = args.from || 'The Audacity <obviously@theaudacity.io>';
   const replyTo = args['reply-to'] || 'obviously@theaudacity.io';
@@ -132,8 +111,8 @@ async function main() {
       continue;
     }
     try {
-      const result = await sendOne({
-        apiKey,
+      const result = await sendEmail({
+        keys,
         from,
         to: r.email,
         subject: args.subject,
@@ -142,8 +121,8 @@ async function main() {
         replyTo,
       });
       sent++;
-      console.log(`  OK   ${r.email}  id=${result?.id || '-'}`);
-      await appendFile(logPath, JSON.stringify({ ...entry, status: 'sent', id: result?.id }) + '\n');
+      console.log(`  OK   ${r.email}  id=${result?.MessageId || '-'}`);
+      await appendFile(logPath, JSON.stringify({ ...entry, status: 'sent', id: result?.MessageId }) + '\n');
     } catch (err) {
       failed++;
       console.error(`  FAIL ${r.email}  ${err.message}`);

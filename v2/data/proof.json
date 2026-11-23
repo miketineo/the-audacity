@@ -1,7 +1,7 @@
 {
   "eyebrow": "Proof",
   "title": "Proof starts with three products of our own",
-  "lede": "Bloop is an AI concierge app that finds events and things to do in your city, in build and piloting in Bologna. Washiiba is a full marketplace platform with a customer app, a supplier portal and an admin back office, built end to end. Kerf is a case study on public data. Recovery Room is a booking pilot, live at a gym in Cagliari. Client work follows as it ships.",
+  "lede": "Three products we built ourselves and one pilot at a gym. Each card says what it is and where it stands. Client work follows as it ships.",
   "items": [
     {
       "id": "bloop",
