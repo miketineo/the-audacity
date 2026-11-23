@@ -2,20 +2,20 @@
   "home": {
     "seo": {
       "title": "The Audacity · Agentic Engineering Studio",
-      "description": "An Agentic Engineering Studio: AI agents build, senior judgment owns architecture, security and quality. Idea to deployed product in weeks. Book a call."
+      "description": "An Agentic Engineering Studio. Your product live in weeks at a fixed price, from €6k. Price and deadline go in the contract before any code. Book a call."
     },
     "hero": {
       "eyebrow": "Agentic Engineering Studio",
       "headline": "Your product live in weeks, at a fixed price",
       "lede": "We build the whole product: sign-up and login, database, and launch on the web or app stores, with payments and analytics when you need them. The price and deadline go in the contract before any code, and you pay per finished milestone.",
-      "priceLine": "From €6k. Prices are listed below.",
+      "priceLine": "From €6k for a 2 to 3 week Pilot. Every price is on this page.",
       "ctaPrimary": { "label": "Book a call", "href": "contact/#book" },
       "ctaSecondary": { "label": "See the work", "href": "work/" }
     },
     "proofTeaser": {
       "eyebrow": "Proof",
       "title": "Proof starts with three products of our own",
-      "body": "Bloop is in build and piloting in Bologna. Washiiba is a laundry marketplace built end to end. Kerf is a case study on public data. Recovery Room is a pilot, live at a gym in Cagliari. Client work follows as it ships.",
+      "body": "Bloop is an AI concierge app that finds events and things to do in your city, in build and piloting in Bologna. Washiiba is a full marketplace platform with a customer app, a supplier portal and an admin back office, built end to end. Kerf is a case study on public data. Recovery Room is a booking pilot, live at a gym in Cagliari. Client work follows as it ships.",
       "cta": { "label": "See the work", "href": "work/" }
     },
     "process": {
@@ -23,25 +23,25 @@
       "title": "Three steps take your idea from agreed scope to production",
       "steps": [
         { "n": "01", "title": "Scope", "body": "We agree one outcome, a price and a deadline before any code is written." },
-        { "n": "02", "title": "Build", "body": "You see working software early and often. AI agents do the build. Senior judgment owns architecture, security and code review." },
+        { "n": "02", "title": "Build", "body": "You see working software early and often, and you sign off each milestone before you pay for it. AI agents do the build. Senior judgment owns architecture, security and code review." },
         { "n": "03", "title": "Ship", "body": "Your product goes live in production with automatic releases, ready for real users." }
       ]
     },
     "ctaBand": {
       "title": "Tell us the idea that should already be live",
-      "body": "Book a 45-minute diagnostic call for €175 until 30 November (normally €250). The fee comes off the project price if you go ahead. We tell you what it takes to ship it and whether we are the right studio. A fixed-price proposal follows within 2 business days.",
+      "body": "In a 45-minute diagnostic call we tell you what it takes to ship it and whether we are the right studio. A written fixed-price proposal follows within 2 business days. The call is €175 until 30 November (normally €250), and the fee comes off the project price if you go ahead.",
       "cta": { "label": "Book a call", "href": "contact/#book" }
     }
   },
   "work": {
     "seo": {
       "title": "Work · Bloop, Washiiba, Kerf and Recovery Room · The Audacity",
-      "description": "Three products of our own: Bloop (an AI events concierge), Washiiba (a laundry marketplace) and Kerf (a case study on public LiDAR data), plus Recovery Room, a booking pilot at a gym in Cagliari."
+      "description": "Bloop, an AI concierge app for events in your city. Washiiba, a full marketplace platform. Kerf, a case study on public LiDAR data. Recovery Room, a gym booking pilot."
     },
     "hero": {
       "eyebrow": "Work",
       "headline": "Three products of our own show how we build",
-      "lede": "Bloop, Washiiba and Kerf are products we build ourselves. Kerf is a case study on public data. Recovery Room is a pilot, live at a gym in Cagliari. Each section lists what we built, its status and what it shows."
+      "lede": "Bloop is an AI concierge app that finds events and things to do in your city. Washiiba is a full marketplace platform. Kerf is a case study that turns public LiDAR data into work orders. Recovery Room is a booking pilot, live at a gym in Cagliari. The first three are our own products. Each section lists what we built, its status and what it shows."
     },
     "cta": {
       "title": "Bring the product you want live in weeks",
@@ -52,7 +52,7 @@
   "contact": {
     "seo": {
       "title": "Book a call · The Audacity",
-      "description": "Book a 45-minute diagnostic call or send a project brief to The Audacity, an Agentic Engineering Studio. Fixed-price proposal within 2 business days."
+      "description": "Book a paid 45-minute diagnostic call or send a project brief to The Audacity, an Agentic Engineering Studio. Fixed-price proposal within 2 business days."
     },
     "hero": {
       "eyebrow": "Contact",
@@ -62,7 +62,7 @@
     "nextSteps": {
       "eyebrow": "What happens next",
       "steps": [
-        "A 45-minute diagnostic call. The fee comes off the project price.",
+        "A paid 45-minute diagnostic call. The fee comes off the project price if you go ahead.",
         "A written fixed-price proposal within 2 business days.",
         "A deposit, a start date, and the build begins."
       ]

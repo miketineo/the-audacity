@@ -6,26 +6,31 @@
   "status": "operational",
   "contact": {
     "email": "obviously@theaudacity.io",
-    "book_a_call": "https://theaudacity.io/contact/",
+    "book_a_call": "https://theaudacity.io/contact/#book",
+    "diagnostic_call": {
+      "length": "45 minutes",
+      "terms": "Paid when you book. The fee comes off the project price if you go ahead.",
+      "follow_up": "A written fixed-price proposal within 2 business days."
+    },
     "project_brief": "https://theaudacity.io/contact/"
   },
-  "stack": ["One codebase for web and mobile", "Managed backend", "AI assistant layer", "Continuous delivery", "Store or web deployment"],
+  "stack": ["Web and mobile apps", "Sign-up, login and database", "AI assistant (Launch package)", "Automatic releases", "Launch on the web or app stores"],
   "capabilities": [
     {
       "id": "studio_sprint_pilot",
       "name": "Studio Sprint: Pilot",
       "description": "Test one idea with real users. One user flow built end to end, on web or mobile, with login and data, live in production with automatic releases.",
       "timeline": "2 to 3 weeks",
-      "price": "from EUR 6k to 10k",
-      "model": "fixed milestone"
+      "price": "EUR 6k to 10k",
+      "model": "fixed price, paid per milestone"
     },
     {
       "id": "studio_sprint_launch",
       "name": "Studio Sprint: Launch",
-      "description": "A product ready for users or investors. Several user flows, web and mobile from one codebase, login and data, an AI assistant, analytics with cookie consent, payments when needed, launch on the web or app stores with automatic releases.",
+      "description": "A product ready for users or investors. Several user flows on web and mobile, login and data, an AI assistant, analytics with cookie consent, payments when needed, launch on the web or app stores with automatic releases.",
       "timeline": "4 to 6 weeks",
-      "price": "from EUR 15k to 30k",
-      "model": "fixed milestone"
+      "price": "EUR 15k to 30k",
+      "model": "fixed price, paid per milestone"
     },
     {
       "id": "build_partner_retainer",
@@ -38,9 +43,9 @@
     {
       "id": "ai_readiness_build_audit",
       "name": "AI-Readiness & Build Audit",
-      "description": "A fixed-scope audit of your idea, codebase or AI ambition, delivered as a written report you can act on.",
+      "description": "A fixed-scope audit of your idea, your existing code or your AI plans, delivered as a written report you can act on.",
       "timeline": "about 1 week",
-      "price": "from EUR 1.5k to 3k",
+      "price": "EUR 1.5k to 3k",
       "model": "fixed scope, written report"
     }
   ],
@@ -50,22 +55,22 @@
       "name": "Bloop",
       "type": "own_product",
       "stage": "in build, piloting in Bologna",
-      "description": "An AI events concierge for Bologna. You chat in plain language and it proposes real events from a live catalogue. Italian first, with English, and a web admin for curating the catalogue.",
-      "demonstrates": "We can build a conversational AI product that answers from live data."
+      "description": "An AI concierge app that finds events and things to do in your city. You chat in plain language and it proposes real events from a live catalogue, never invented ones. Italian first, with English, and a web admin for curating the catalogue.",
+      "demonstrates": "We can build an AI assistant your users talk to in plain language, and have it answer from your own live data."
     },
     {
       "id": "washiiba",
       "name": "Washiiba",
       "type": "own_product",
       "stage": "built end to end",
-      "description": "A laundry marketplace built end to end. Customer flows for ordering, pickup windows and live order status, an admin backend, and web and mobile from a single codebase.",
-      "demonstrates": "We can build a full marketplace across web and mobile, end to end."
+      "description": "A full marketplace platform for laundry, built end to end: a customer mobile app for ordering, pickup windows and live order status, a supplier web portal where laundries accept and handle orders, and an admin back office for managing orders, suppliers and users.",
+      "demonstrates": "We can build every side of a marketplace: the app customers use, the portal suppliers work in and the back office the operator runs it from."
     },
     {
       "id": "kerf",
       "name": "Kerf",
       "type": "own_product",
-      "stage": "case study on public data, not yet validated in the field",
+      "stage": "case study on public data, not yet validated in the field, no paying customer",
       "url": "https://projectkerf.com",
       "description": "Kerf turns free national LiDAR (IGN LiDAR HD in France) into a ranked list of overhead-line spans where vegetation is inside the clearance zone, measured in metres, then a work order for trimming crews. It is made for small electricity distributors and vegetation management contractors. A LiDAR processing pipeline, a web map viewer with the ranked span list and per-span measurements, work order export (CSV) and a printable report. The case-study run covers 345 spans on 28.4 km of overhead line: 829.5 million LiDAR points, scanned in June 2021, processed in 83 seconds on one server.",
       "demonstrates": "We can take raw public data to a ranked, measured result and a work order.",
@@ -76,7 +81,7 @@
       "name": "Recovery Room",
       "type": "pilot",
       "stage": "pilot, live at a gym in Cagliari",
-      "description": "A booking app for a gym's massage chairs and pressotherapy. A booking page for phones, Italian first with English: pick a seat and a time, with no app and no password. A staff page with the day's schedule, no-show counts and the member list. Confirmation emails come from the gym's own address and bookings sync to its Google Calendar.",
+      "description": "Booking for a gym's massage chairs and pressotherapy. A booking page for phones, Italian first with English: pick a seat and a time, with no app and no password. A staff page with the day's schedule, no-show counts and the member list. Confirmation emails come from the gym's own address and bookings sync to its Google Calendar.",
       "demonstrates": "We can get a small business a working tool in days, on its real member list."
     }
   ],
@@ -96,6 +101,5 @@
   },
   "interoperability": {
     "llms_txt": "https://theaudacity.io/llms.txt"
-  },
-  "_comment": "Promoted to root 2026-07-07. v1 is archived at /v1/."
+  }
 }

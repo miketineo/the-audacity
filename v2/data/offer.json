@@ -5,7 +5,7 @@
   "includesLabel": "See what's included",
   "pattern": {
     "title": "Your build runs on one spine, proven on our products",
-    "body": "Every build runs on one repeatable spine: web and mobile from one codebase, a managed backend, an AI assistant layer, continuous delivery and production deployment. It is proven on our own products: Bloop, an AI events concierge in build and piloting in Bologna, and Washiiba, a laundry marketplace built end to end. A standard scope protects your timeline and keeps senior attention on architecture and security. The same spine fits founder MVPs, internal tools, customer portals and ops automation."
+    "body": "Every build runs on one repeatable spine: sign-up and login, a database, automatic releases and launch on the web or app stores. The Launch package adds an AI assistant, analytics and payments when needed. It is proven on our own products: Bloop, an AI concierge app that finds events and things to do in your city, in build and piloting in Bologna, and Washiiba, a full marketplace platform built end to end. A standard scope protects your timeline and keeps senior attention on architecture and security. The same spine fits founder MVPs, internal tools, customer portals and ops automation."
   },
   "packages": [
     {
@@ -15,11 +15,11 @@
       "timeline": "2 to 3 weeks",
       "priceFrom": "from €6k",
       "priceRange": "€6k to €10k",
-      "model": "fixed milestone",
+      "model": "fixed price, paid per milestone",
       "rows": [
         {
           "label": "User flows",
-          "value": "1, built end to end"
+          "value": "One, built end to end"
         },
         {
           "label": "Platforms",
@@ -58,7 +58,7 @@
       "timeline": "4 to 6 weeks",
       "priceFrom": "from €15k",
       "priceRange": "€15k to €30k",
-      "model": "fixed milestone",
+      "model": "fixed price, paid per milestone",
       "rows": [
         {
           "label": "User flows",
@@ -66,7 +66,7 @@
         },
         {
           "label": "Platforms",
-          "value": "Web and mobile from one codebase"
+          "value": "Web and mobile"
         },
         {
           "label": "Login and data",
@@ -116,7 +116,7 @@
   "audit": {
     "eyebrow": "Start small",
     "name": "AI-Readiness & Build Audit",
-    "scope": "A fixed-scope audit of your idea, codebase or AI ambition, delivered as a report you can act on.",
+    "scope": "A fixed-scope audit of your idea, your existing code or your AI plans, delivered as a report you can act on.",
     "summary": "Not sure what to build yet? In about a week we review what you have, what it would take to ship, and where AI is worth using. You keep the written report whether or not you build with us.",
     "timeline": "about 1 week",
     "priceFrom": "from €1.5k",
@@ -138,7 +138,7 @@
       "You want a working product in production, not a mockup.",
       "You want one studio to own delivery, not extra hands to manage.",
       "You care more about the right outcome and a predictable timeline than the lowest bid.",
-      "You see AI agents as the way to do serious engineering.",
+      "You are comfortable with AI agents doing the engineering, inside human-owned code review and security gates.",
       "You want a partner with opinions on scope and architecture."
     ],
     "notTitle": "When it is not",

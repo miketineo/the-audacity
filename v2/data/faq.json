@@ -24,11 +24,11 @@
     },
     {
       "q": "Who does the work?",
-      "a": "The studio is two founders working with AI agents. The agents do the engineering, inside human-owned architecture, code review and security gates. Senior judgment decides what to build, how it is architected and secured, and what is ready to ship."
+      "a": "The studio is two founders working with AI agents. The agents design, write, test and ship the software. The founders own the architecture, the code review and the security gates, and decide what is ready to ship."
     },
     {
       "q": "Where can I see your work?",
-      "a": "We show our own products first. Bloop, an AI events concierge, is in build and piloting in Bologna. Washiiba, a laundry marketplace on web and mobile from one codebase, is built end to end. Kerf is a case study on public LiDAR data from June 2021. One run covered 345 spans on 28.4 km of overhead line and 829.5 million LiDAR points in 83 seconds on one server. Kerf is not yet validated in the field and has no paying customer. It has its own site, projectkerf.com. Recovery Room, a booking app, is a pilot live at a gym in Cagliari."
+      "a": "On the Work page. We show our own products first. Bloop, an AI concierge app that finds events and things to do in your city, is in build and piloting in Bologna. Washiiba, a full marketplace platform with a customer app, a supplier portal and an admin back office, is built end to end. Kerf is a case study on public LiDAR data. It is not yet validated in the field and has no paying customer, and it has its own site, projectkerf.com. Recovery Room, a booking tool, is a pilot live at a gym in Cagliari."
     },
     {
       "q": "What happens after I book a call?",
