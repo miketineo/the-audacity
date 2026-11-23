@@ -36,6 +36,10 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-opus-5-5` 2026-11-23: Booking loading mark: the three booking status lines (loading open times, holding your time, opening the payment page) lead with the logo's `[ . ]` characters in three loops (scan, breathe, fill, Miguel picked B, C, D from five drafts), the next picked at random when one ends. Fixed 7ch width (text never moves), aria-hidden, still under reduced motion. PR #66 merged, deployed to Pages production 2026-11-23 (preview first, bundle diffed against live: only `js/booking.js` and `css/contact.css` changed), both files purged, live equals build. Same change on miketineo.com (#47, deployed to S3).
 
+- [x] `miguel` `cc+claude-fable-5-2` 2026-11-23: Copy review applied. A Fable workflow (four readers, a fact miner over the Washiiba and Bloop repos, a register and fact checker, a founder read) flagged 129 lines; 55 changes shipped in PR #68. Bloop is "An AI concierge app that finds events and things to do in your city" (Bologna stays as the status); Washiiba is "A full marketplace platform with a customer app, a supplier portal and an admin back office", with automatic order routing and six languages; "one codebase" is gone from every surface; the same descriptors on home, work, FAQ, meta, `llms.txt`, the agent manifest and JSON-LD. No locked commitment changed. Deployed to Pages production 2026-11-23 (preview first), every changed URL purged, live equals build. Same day: inquiry and waitlist emails send through Amazon SES (PR #67).
+
+- [ ] Copy review, 12 items waiting on a decision (full table in local-only `~/reports/theaudacity-copy-review-2026-11-23.md`): the "first working version in eight weeks" Washiiba claim, the call price after 30 November, the deposit amount, the free-fix period, what a retainer month delivers, what the Launch AI assistant does, a FAQ entry for non-technical founders, the six-agent roster in the agent manifest, the sender named on the booked page, and privacy wording for the mail path and retention periods.
+
 ---
 
 ## Status Summary
