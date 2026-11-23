@@ -189,6 +189,16 @@
   color: var(--text-dim);
   font-size: var(--text-sm);
 }
+/* Loading mark: fixed width so the moving brackets never push the text. */
+.booking[data-s-booking] .bk-load {
+  font-family: var(--font-mono);
+  white-space: pre;
+  text-align: center;
+  color: var(--text);
+  width: 7ch;
+  margin-right: 0.5ch;
+  display: inline-block;
+}
 
 /* Times */
 .booking[data-s-booking] .bk-times {
