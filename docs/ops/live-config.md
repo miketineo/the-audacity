@@ -98,3 +98,24 @@ EUR 175 until 30 November 2026, normally EUR 250. On 29 November decide: extend,
 both Payment Links to the EUR 250 price and change the copy (`v2/data/pages.json`,
 `v2/data/faq.json`, `v2/static/llms.txt`, `data-price` in `components/booking.html`,
 `amount` in `functions/_lib/booking.js`, and the miketineo.com pages) in the same change.
+
+## Email sending: Amazon SES (since 2026-11-23)
+
+Inquiry notifications, the approved inquiry auto-reply and the waitlist welcome go out
+through SES API v2 (`functions/_lib/ses.js`, SigV4, no dependencies). Resend was never
+provisioned and is gone.
+
+- AWS account `965547804210` (ops@theaudacity.io), region `eu-west-1`: identity
+  `theaudacity.io` verified with Easy DKIM (three `_domainkey` CNAMEs in Cloudflare),
+  production access on.
+- IAM user `theaudacity-site-mailer`, inline policy `send-as-obviously`: `ses:SendEmail` on
+  the `theaudacity.io` identity only, and only with From `obviously@theaudacity.io`
+  (any other sender is refused with 403, checked live).
+- Key in Vault `secret/projects/theaudacity/ses`. Pages secrets, production only:
+  `SES_ACCESS_KEY_ID`, `SES_SECRET_ACCESS_KEY`, `SES_REGION`. Previews have none, so a
+  preview never sends email (logged no-op).
+- DNS: `_dmarc.theaudacity.io` TXT `v=DMARC1; p=none` (monitor only, added the same day;
+  the zone had no DMARC record).
+- Rotate: create a second access key on the user, `vault kv put` it (from the Mac, the
+  atlas operator token cannot overwrite), `wrangler pages secret put` the three names,
+  deploy, delete the old key.
