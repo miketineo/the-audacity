@@ -1,5 +1,5 @@
 {#- Contact (/contact/): the conversion page. Two surfaces, one job each.
-      1. Book a call   -> the booking component (Cal.com embed).
+      1. Book a call   -> the booking component (slot picker, paid via Stripe).
       2. Send a brief  -> inquiry form, POST /api/inquiry (+ UTM, + the optional ?interest= intent
                           carried in a hidden field).
     Booking leads (every "Book a call" link targets #book); the brief follows for people who would

@@ -1,10 +1,10 @@
-/* Contact page (/contact/) and its booking embed.
+/* Contact page (/contact/) and its booking picker.
    Ported from the stylesheet the Astro build compiled: selectors and values are
    unchanged, only laid out one declaration per line and commented. Rules are scoped by the
    data-s-<name> attribute that the templates stamp on every element of that page or component
    (what Astro called data-astro-cid-<hash>). */
 
-/* Booking embed */
+/* Booking picker */
 .booking[data-s-booking] {
   gap: var(--space-sm);
   display: grid;
@@ -14,9 +14,107 @@
   border-radius: var(--radius-lg);
   background: var(--surface);
   width: 100%;
-  min-height: clamp(560px,78vh,760px);
   box-shadow: var(--shadow);
   overflow: hidden;
+}
+
+/* Slot picker (static/js/booking.js): days, times, then the booker's details. */
+.booking__picker[data-s-booking] {
+  padding: var(--space-md);
+  gap: var(--space-sm);
+  display: grid;
+}
+.booking[data-s-booking] .bk-status,
+.booking[data-s-booking] .bk-tz,
+.booking[data-s-booking] .bk-note {
+  font-size: var(--text-sm);
+}
+.booking[data-s-booking] .bk-days,
+.booking[data-s-booking] .bk-slots {
+  gap: var(--space-2xs);
+  flex-wrap: wrap;
+  display: flex;
+}
+.booking[data-s-booking] .bk-day,
+.booking[data-s-booking] .bk-slot {
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+  padding: .5em .9em;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.booking[data-s-booking] .bk-day:hover,
+.booking[data-s-booking] .bk-slot:hover {
+  border-color: var(--text);
+}
+.booking[data-s-booking] .bk-day[aria-pressed=true],
+.booking[data-s-booking] .bk-slot[aria-pressed=true] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.booking[data-s-booking] .bk-form {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-sm);
+  gap: var(--space-sm);
+  display: grid;
+}
+.booking[data-s-booking] .bk-form[hidden] {
+  display: none;
+}
+.booking[data-s-booking] .bk-chosen {
+  font-weight: 650;
+}
+.booking[data-s-booking] .bk-field {
+  gap: var(--space-3xs);
+  display: grid;
+}
+.booking[data-s-booking] .bk-field label {
+  font-size: var(--text-sm);
+  font-weight: 550;
+}
+.booking[data-s-booking] .bk-field input,
+.booking[data-s-booking] .bk-field textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  min-height: 44px;
+  padding: .6em .75em;
+}
+.booking[data-s-booking] .bk-field textarea {
+  resize: vertical;
+}
+.booking[data-s-booking] .bk-field [aria-invalid=true] {
+  border-color: #b3261e;
+}
+.booking[data-s-booking] .bk-actions {
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  align-items: center;
+  display: flex;
+}
+.booking[data-s-booking] .bk-back {
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 44px;
+}
+.booking[data-s-booking] .bk-form-status {
+  font-size: var(--text-sm);
+  min-height: 1.4em;
 }
 .booking__fallback[data-s-booking] {
   border: 1px dashed var(--border-strong);

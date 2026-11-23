@@ -13,6 +13,7 @@
       "title": "What we collect, and when",
       "body": [
         "If you send a project brief, we receive what you type into the form: your name, email, company or project name, what you want to build, rough budget, rough timeline, and anything else you add.",
+        "If you book a diagnostic call, we receive the name, email and project description you enter, and the time you pick. The payment page collects your card details directly; we see only that the payment went through, the amount and the email used.",
         "We count visits without cookies. Every visitor sends product analytics about how the site is used: pages viewed, buttons clicked, page performance and similar usage events. Until you accept analytics cookies, nothing is stored on your device, your IP address is discarded, and the analytics provider groups your visit using a server-side hash that it rotates every day, so it cannot follow you from one day to the next.",
         "If you accept analytics cookies, the provider also stores an identifier in your browser so it can recognise you on later visits, and may record a replay of your session with form inputs masked. Declining keeps analytics cookieless and changes nothing about how the site works.",
         "We also record basic attribution when it is present: campaign parameters in the link you arrived from and the page that referred you. It tells us which of our own efforts brought you here."
@@ -23,6 +24,7 @@
       "title": "What we use it for",
       "body": [
         "To reply to you. A brief exists so we can answer it.",
+        "To hold the call you booked: the calendar invite, the video-call link and the confirmation email.",
         "To run the studio: knowing which pages and campaigns actually work, and keeping the forms free of spam.",
         "We do not sell your data. We do not run ad trackers. We do not send marketing you did not ask for."
       ]
@@ -31,7 +33,7 @@
       "id": "recipients",
       "title": "Who else sees it",
       "body": [
-        "Two categories of processor, both bound by their own data-processing terms: a transactional email provider, which delivers the emails we send and receive through the forms, and an analytics provider in the EU, which stores the usage events described above.",
+        "Four categories of processor, each bound by its own data-processing terms: a transactional email provider, which delivers the emails we send and receive through the forms; an analytics provider in the EU, which stores the usage events described above; a payment processor, which takes the call fee; and a calendar and email provider, which holds the booking and sends the invite.",
         "Form submissions and site delivery run on our hosting infrastructure. No one else receives your data unless the law requires it."
       ]
     },
@@ -40,6 +42,7 @@
       "title": "How long we keep it",
       "body": [
         "Briefs and the correspondence they start: for the life of the conversation and up to two years after the last exchange, so a returning project does not start from zero.",
+        "Call bookings: the calendar entry and its details as long as the brief they belong to. Payment records: as long as tax law requires.",
         "Emails from our former updates list: until you unsubscribe or ask us to remove you.",
         "Analytics events: per the analytics provider’s standard retention, and your consent choice is stored in your own browser, where you can change it anytime from the footer."
       ]
