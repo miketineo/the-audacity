@@ -52,7 +52,7 @@ test('GET shows the confirm page and never decides', async () => {
   assert.equal(env.WAITLIST.m.has(DECISION_PREFIX + KEY), false);
 });
 
-test('approve with RESEND_API_KEY unset: logged no-op, recorded, then refused on replay', async () => {
+test('approve with the SES keys unset: logged no-op, recorded, then refused on replay', async () => {
   const env = { INQUIRY_APPROVAL_SECRET: SECRET, WAITLIST: kv({ [KEY]: JSON.stringify(RECORD) }) };
   const f = withFetch(() => { throw new Error('no network expected'); });
   const warn = console.warn; const warned = []; console.warn = (...a) => warned.push(a.join(' '));
@@ -62,7 +62,7 @@ test('approve with RESEND_API_KEY unset: logged no-op, recorded, then refused on
     assert.equal(res.status, 200);
     assert.match(await res.text(), /switched off/);
     assert.equal(f.calls.length, 0);
-    assert.ok(warned.some((w) => w.includes('RESEND_API_KEY is not set')));
+    assert.ok(warned.some((w) => w.includes('SES keys are not set')));
     assert.equal(JSON.parse(env.WAITLIST.m.get(DECISION_PREFIX + KEY)).action, 'approve');
     for (const a of ['approve', 'reject']) {
       const again = await decision.onRequestPost({ request: post(t, a), env });
@@ -74,24 +74,27 @@ test('approve with RESEND_API_KEY unset: logged no-op, recorded, then refused on
 });
 
 test('approve with a key sends the FIXED template, no submitter text', async () => {
-  const env = { INQUIRY_APPROVAL_SECRET: SECRET, RESEND_API_KEY: 're_test', WAITLIST: kv({ [KEY]: JSON.stringify(RECORD) }) };
-  const f = withFetch(() => new Response('{"id":"1"}', { status: 200 }));
+  const env = { INQUIRY_APPROVAL_SECRET: SECRET, SES_ACCESS_KEY_ID: 'AKIATEST', SES_SECRET_ACCESS_KEY: 'secret', SES_REGION: 'eu-west-1', WAITLIST: kv({ [KEY]: JSON.stringify(RECORD) }) };
+  const f = withFetch(() => new Response('{"MessageId":"1"}', { status: 200 }));
   try {
     const res = await decision.onRequestPost({ request: post(await mintToken(SECRET, KEY), 'approve'), env });
     assert.equal(res.status, 200);
     assert.equal(f.calls.length, 1);
-    assert.equal(f.calls[0].url, 'https://api.resend.com/emails');
+    assert.equal(f.calls[0].url, 'https://email.eu-west-1.amazonaws.com/v2/email/outbound-emails');
+    assert.match(f.calls[0].init.headers.Authorization, /^AWS4-HMAC-SHA256 Credential=AKIATEST\/\d{8}\/eu-west-1\/ses\/aws4_request, SignedHeaders=content-type;host;x-amz-date, Signature=[0-9a-f]{64}$/);
     const sent = JSON.parse(f.calls[0].init.body);
-    assert.deepEqual(sent.to, ['victim@example.com']);
-    assert.equal(sent.reply_to, 'obviously@theaudacity.io');
-    const all = sent.subject + sent.html + sent.text;
+    assert.equal(sent.FromEmailAddress, 'The Audacity <obviously@theaudacity.io>');
+    assert.deepEqual(sent.Destination.ToAddresses, ['victim@example.com']);
+    assert.deepEqual(sent.ReplyToAddresses, ['obviously@theaudacity.io']);
+    const { Subject, Body } = sent.Content.Simple;
+    const all = Subject.Data + Body.Html.Data + Body.Text.Data;
     for (const bad of ['Evil', 'href=x', 'phish', 'victim']) assert.ok(!all.includes(bad), bad);
-    assert.match(sent.text, /^Hey there,/);
+    assert.match(Body.Text.Data, /^Hey there,/);
   } finally { f.restore(); }
 });
 
 test('reject records the decision and sends nothing; bad inputs refused', async () => {
-  const env = { INQUIRY_APPROVAL_SECRET: SECRET, RESEND_API_KEY: 're_test', WAITLIST: kv({ [KEY]: JSON.stringify(RECORD) }) };
+  const env = { INQUIRY_APPROVAL_SECRET: SECRET, SES_ACCESS_KEY_ID: 'AKIATEST', SES_SECRET_ACCESS_KEY: 'secret', SES_REGION: 'eu-west-1', WAITLIST: kv({ [KEY]: JSON.stringify(RECORD) }) };
   const f = withFetch(() => { throw new Error('no network expected'); });
   try {
     const t = await mintToken(SECRET, KEY);
@@ -127,6 +130,6 @@ test('accepted inquiry: Slack ping carries a working approval link; no email to 
     assert.ok(m, 'approval link present');
     const [key] = [...env.WAITLIST.m.keys()].filter((k) => k.startsWith('inquiry:'));
     assert.deepEqual(await verifyToken(SECRET, m[2]), { ok: true, key });
-    assert.ok(!f.calls.some((c) => c.url.includes('resend') && JSON.parse(c.init.body).to.includes('a@example.com')));
+    assert.ok(!f.calls.some((c) => c.url.includes('amazonaws.com')), 'no email without SES keys');
   } finally { f.restore(); }
 });

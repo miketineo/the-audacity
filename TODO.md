@@ -59,7 +59,7 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 - [x] All work committed + pushed to main (public repo; internal strategy docs gitignored), tag v2.0.0
 - [ ] Start the outreach motion using `docs/gtm/` (target list, templates, follow-up, pipeline)
 - [x] PostHog: option B live (`product` super property on theaudacity.io)
-- [ ] RESEND: the ONE open production item — no account/key/domain verification exists, so inquiry/waitlist emails do not send (leads are safe in KV + Slack pings live). Miguel: resend.com -> add domain theaudacity.io -> paste DNS records + API key
+- [x] `miguel` `cc+claude-fable-5-2` 2026-11-23: Email sending live through Amazon SES (Resend was never provisioned and is removed). `functions/_lib/ses.js` signs SES API v2 requests itself, no dependencies. Send-only IAM user, From locked to obviously@theaudacity.io, production secrets only. Details in `docs/ops/live-config.md`.
 - [ ] Instrument Washiiba / Bloop / miketineo.com with the shared PostHog key + their `product` values (when convenient)
 - [x] Run the v2 build via ultracode
 - [x] Pick a logo direction (C "bracketed period", monochrome)

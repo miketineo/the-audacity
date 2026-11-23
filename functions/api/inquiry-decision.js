@@ -4,10 +4,10 @@
 // POST t=<token>&action=   approve | reject. First decision wins, recorded in KV.
 //
 // Approve sends the FIXED template from _lib/emails/inquiry.js to the stored
-// address. With RESEND_API_KEY unset, sendEmail() is a logged no-op and the
+// address. With the SES keys unset, sendEmail() is a logged no-op and the
 // decision is still recorded. Nothing the submitter wrote is rendered here.
 
-import { sendEmail } from '../_lib/resend.js';
+import { sendEmail, sesKeys } from '../_lib/ses.js';
 import { verifyToken, DECISION_PREFIX } from '../_lib/approval.js';
 import { inquirySubject, inquiryHtml, inquiryText } from '../_lib/emails/inquiry.js';
 
@@ -97,7 +97,7 @@ export async function onRequestPost({ request, env }) {
   }
   try {
     const sent = await sendEmail({
-      apiKey: env.RESEND_API_KEY,
+      keys: sesKeys(env),
       from: 'The Audacity <obviously@theaudacity.io>',
       to,
       subject: inquirySubject,
@@ -107,7 +107,7 @@ export async function onRequestPost({ request, env }) {
     });
     console.log('inquiry_decision', JSON.stringify({ action, key: r.key, sent: sent !== null }));
     return page(200, 'Approved', sent === null
-      ? '<p>Recorded. Email sending is switched off on this deployment (no RESEND_API_KEY), so nothing went out.</p>'
+      ? '<p>Recorded. Email sending is switched off on this deployment (no SES keys), so nothing went out.</p>'
       : '<p>Recorded and sent.</p>');
   } catch (err) {
     console.error('inquiry_decision_send_failed', JSON.stringify({ key: r.key, error: String(err?.message || err).slice(0, 200) }));

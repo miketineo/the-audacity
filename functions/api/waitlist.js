@@ -1,4 +1,4 @@
-import { sendEmail } from '../_lib/resend.js';
+import { sendEmail, sesKeys } from '../_lib/ses.js';
 import { notifySlack } from '../_lib/slack.js';
 import { verifyTurnstile, origin, capture } from '../_lib/guard.js';
 
@@ -63,11 +63,11 @@ export async function onRequestPost(context) {
       origin: sender,
     }));
 
-    // Fire-and-forget welcome. If Resend fails we log and move on — the
+    // Fire-and-forget welcome. If the send fails we log and move on — the
     // signup is already persisted and a missed welcome is not worth failing
     // the API response for.
     const welcomeSend = sendEmail({
-      apiKey: env.RESEND_API_KEY,
+      keys: sesKeys(env),
       from: 'The Audacity <obviously@theaudacity.io>',
       to: email,
       subject: welcomeSubject,
