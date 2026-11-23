@@ -34,6 +34,8 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 
 - [x] `miguel` `cc+claude-opus-5-5` 2026-11-23: Diagnostic call becomes paid: 45 min (was a free 25), EUR 175 until 30 November (normally 250), credited against the project, pay to book. Cal.com removed: our own Cal.com-style calendar picker (brand-reviewed) on /contact/#book and miketineo.com/contact.html#book, booking API in `functions/api/booking/` (KV holds, Stripe Payment Links per brand, signed webhooks), calendar events with Meet links through an Apps Script web app on miguel@miketineo.com. PRs #64, #65 (and miketineo.com #45, #46) merged, deployed to Pages production 2026-11-23, purged. EUR 1 live test passed end to end and was refunded; test token deleted. Live objects in `docs/ops/live-config.md`. 29 Nov: decide to extend EUR 175 or revert to 250 (Stripe price and copy together).
 
+- [x] `miguel` `cc+claude-opus-5-5` 2026-11-23: Booking loading mark: the three booking status lines (loading open times, holding your time, opening the payment page) lead with the logo's `[ . ]` characters in three loops (scan, breathe, fill, Miguel picked B, C, D from five drafts), the next picked at random when one ends. Fixed 7ch width (text never moves), aria-hidden, still under reduced motion. PR #66 merged, deployed to Pages production 2026-11-23 (preview first, bundle diffed against live: only `js/booking.js` and `css/contact.css` changed), both files purged, live equals build. Same change on miketineo.com (#47, deployed to S3).
+
 ---
 
 ## Status Summary
