@@ -4,7 +4,10 @@
     rendered while the Cal link was unconfigured was not ported: the link is configured.
 
     Event type "Diagnostic call" (id 6241493) on account the-audacity-io (Google Calendar
-    connected, Meet links, 25 min, day cap 3, qualifier question). API key in Vault at
+    connected, Meet links, 45 min, day cap 3, qualifier question). Paid: Cal.com's Stripe app,
+    connected to the TheAudacity Stripe account, collects EUR 175 on booking (normally 250, until
+    30 November 2026); the slot confirms only after payment. The price lives in Cal.com, the copy
+    in data/pages.json, data/faq.json and llms.txt: change them together. API key in Vault at
     secret/projects/theaudacity/cal. -#}
 {% component ui.booking(title = "Book a diagnostic call", email = "obviously@theaudacity.io") %}
 <div class="booking" data-booking data-provider="cal.com" data-configured="true" data-cal-link="the-audacity-io/diagnostic-call" data-cal-namespace="diagnostic-call" data-s-booking>
