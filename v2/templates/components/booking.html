@@ -6,7 +6,7 @@
     functions/_lib/booking.js, the copy in data/pages.json, data/faq.json and llms.txt: change
     them together. Live objects: docs/ops/live-config.md. -#}
 {% component ui.booking(title = "Book a diagnostic call", email = "obviously@theaudacity.io") %}
-<div class="booking" data-booking data-provider="stripe" data-brand="audacity" data-api="/api/booking" data-price="€175" data-email="{{ email }}" data-s-booking>
+<div class="booking" data-booking data-provider="stripe" data-brand="audacity" data-api="/api/booking" data-price="€175" data-was="€250" data-until="until 30 Nov" data-email="{{ email }}" data-s-booking>
   <div class="booking__frame booking__picker" data-booking-root aria-label="{{ title }}" data-s-booking>
     <noscript><p class="text-dim" data-s-booking>Booking needs JavaScript. Write to <a href="mailto:{{ email }}?subject=Diagnostic%20call" data-s-booking>{{ email }}</a> and we send you times.</p></noscript>
   </div>

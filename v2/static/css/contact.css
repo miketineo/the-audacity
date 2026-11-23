@@ -14,62 +14,245 @@
   border-radius: var(--radius-lg);
   background: var(--surface);
   width: 100%;
-  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
-/* Slot picker (static/js/booking.js): days, times, then the booker's details. */
+/* Booking picker (static/js/booking.js), Cal.com-like: call details | month | times,
+   then the details form. The bookable date tiles are the one loud element. */
 .booking__picker[data-s-booking] {
+  padding: 0;
+}
+.booking[data-s-booking] .bk {
+  grid-template-columns: minmax(0, 16rem) max-content minmax(11rem, 1fr);
+  display: grid;
+}
+.booking[data-s-booking] .bk[data-step="2"] {
+  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+}
+.booking[data-s-booking] .bk > * {
   padding: var(--space-md);
+  min-width: 0;
+}
+.booking[data-s-booking] .bk > * + * {
+  border-left: 1px solid var(--border);
+}
+.booking[data-s-booking] [hidden] {
+  display: none !important;
+}
+.booking[data-s-booking] .bk-ico {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+/* Call details */
+.booking[data-s-booking] .bk-info {
+  align-content: start;
   gap: var(--space-sm);
   display: grid;
 }
-.booking[data-s-booking] .bk-status,
-.booking[data-s-booking] .bk-tz,
-.booking[data-s-booking] .bk-note {
-  font-size: var(--text-sm);
+.booking[data-s-booking] .bk-title {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-snug);
 }
-.booking[data-s-booking] .bk-days,
-.booking[data-s-booking] .bk-slots {
+.booking[data-s-booking] .bk-meta {
   gap: var(--space-2xs);
-  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+.booking[data-s-booking] .bk-meta li,
+.booking[data-s-booking] .bk-when {
+  gap: var(--space-2xs);
+  align-items: center;
+  color: var(--text-dim);
+  font-size: var(--text-sm);
   display: flex;
 }
-.booking[data-s-booking] .bk-day,
-.booking[data-s-booking] .bk-slot {
-  font: inherit;
-  font-size: var(--text-sm);
+.booking[data-s-booking] .bk-when {
   color: var(--text);
+  font-weight: 600;
+  align-items: flex-start;
+}
+.booking[data-s-booking] .bk-price strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.booking[data-s-booking] .bk-was {
+  margin-left: .4em;
+  color: var(--text-dim);
+  font-size: var(--text-xs);
+}
+.booking[data-s-booking] .bk-until {
+  margin-left: .4em;
+  font-size: var(--text-xs);
+}
+.booking[data-s-booking] .bk[data-step="2"] .bk-fine--info {
+  display: none;
+}
+.booking[data-s-booking] .bk-fine {
+  color: var(--text-dim);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+/* Month */
+.booking[data-s-booking] .bk-cal {
+  align-content: start;
+  gap: var(--space-xs);
+  display: grid;
+}
+.booking[data-s-booking] .bk-cal-head {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+.booking[data-s-booking] .bk-month {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+.booking[data-s-booking] .bk-navs {
+  gap: var(--space-3xs);
+  display: flex;
+}
+.booking[data-s-booking] .bk-nav {
+  color: var(--text);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  place-items: center;
+  display: grid;
+}
+.booking[data-s-booking] .bk-nav:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+.booking[data-s-booking] .bk-nav:disabled {
+  opacity: .3;
+  cursor: default;
+}
+.booking[data-s-booking] .bk-wd,
+.booking[data-s-booking] .bk-grid {
+  grid-template-columns: repeat(7, 2.75rem);
+  gap: .35rem;
+  display: grid;
+}
+.booking[data-s-booking] .bk-wd span {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: var(--text-xs);
+}
+.booking[data-s-booking] .bk-cell {
+  aspect-ratio: 1;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  opacity: .6;
+  border-radius: var(--radius-sm);
+  place-items: center;
+  display: grid;
+  position: relative;
+}
+.booking[data-s-booking] .bk-cell--open {
+  color: var(--text);
+  font-size: var(--text-base);
+  font-weight: 600;
+  opacity: 1;
   background: var(--surface-2);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.booking[data-s-booking] .bk-cell--open:hover {
+  border-color: var(--text);
+}
+.booking[data-s-booking] .bk-cell--open[aria-pressed=true] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.booking[data-s-booking] .bk-cell--today::after {
+  content: "";
+  background: currentColor;
+  border-radius: 50%;
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  bottom: 14%;
+}
+.booking[data-s-booking] .bk-status {
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+}
+
+/* Times */
+.booking[data-s-booking] .bk-times {
+  align-content: start;
+  gap: var(--space-xs);
+  display: grid;
+}
+.booking[data-s-booking] .bk-times-head {
+  font-size: var(--text-base);
+  font-weight: 600;
+  min-height: 40px;
+  align-items: center;
+  display: flex;
+}
+.booking[data-s-booking] .bk-times-list {
+  gap: var(--space-2xs);
+  max-height: 22rem;
+  overflow-y: auto;
+  display: grid;
+}
+.booking[data-s-booking] .bk-time {
+  font: inherit;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   min-height: 44px;
-  padding: .5em .9em;
   cursor: pointer;
-  font-variant-numeric: tabular-nums;
-  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 }
-.booking[data-s-booking] .bk-day:hover,
-.booking[data-s-booking] .bk-slot:hover {
+.booking[data-s-booking] .bk-time:hover {
   border-color: var(--text);
 }
-.booking[data-s-booking] .bk-day[aria-pressed=true],
-.booking[data-s-booking] .bk-slot[aria-pressed=true] {
+.booking[data-s-booking] .bk-time[aria-pressed=true] {
   background: var(--accent);
   color: var(--accent-ink);
   border-color: var(--accent);
 }
+
+/* Details */
 .booking[data-s-booking] .bk-form {
-  border-top: 1px solid var(--border);
-  padding-top: var(--space-sm);
+  align-content: start;
   gap: var(--space-sm);
+  max-width: 32rem;
   display: grid;
 }
-.booking[data-s-booking] .bk-form[hidden] {
-  display: none;
+.booking[data-s-booking] .bk-back {
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  background: none;
+  border: 0;
+  min-height: 40px;
+  padding: 0;
+  cursor: pointer;
+  justify-self: start;
+  align-items: center;
+  gap: var(--space-3xs);
+  display: inline-flex;
 }
-.booking[data-s-booking] .bk-chosen {
-  font-weight: 650;
+.booking[data-s-booking] .bk-back:hover {
+  color: var(--text);
 }
 .booking[data-s-booking] .bk-field {
   gap: var(--space-3xs);
@@ -77,7 +260,7 @@
 }
 .booking[data-s-booking] .bk-field label {
   font-size: var(--text-sm);
-  font-weight: 550;
+  font-weight: 600;
 }
 .booking[data-s-booking] .bk-field input,
 .booking[data-s-booking] .bk-field textarea {
@@ -93,42 +276,64 @@
 .booking[data-s-booking] .bk-field textarea {
   resize: vertical;
 }
-.booking[data-s-booking] .bk-field [aria-invalid=true] {
-  border-color: #b3261e;
-}
-.booking[data-s-booking] .bk-actions {
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-  align-items: center;
-  display: flex;
-}
-.booking[data-s-booking] .bk-back {
-  font: inherit;
-  font-size: var(--text-sm);
+.booking[data-s-booking] .bk-field textarea::placeholder {
   color: var(--text-dim);
-  background: none;
-  border: 0;
-  text-decoration: underline;
-  cursor: pointer;
-  min-height: 44px;
+}
+/* Error reds match the brief form (.field__err); the site has no status token yet. */
+.booking[data-s-booking] .bk-field [aria-invalid=true] {
+  border-color: #d23b2f;
+}
+:root[data-theme=dark] .booking[data-s-booking] .bk-field [aria-invalid=true] {
+  border-color: #ff6b5e;
+}
+.booking[data-s-booking] .bk-err {
+  font-size: var(--text-xs);
+  color: #c2362b;
+  font-weight: 500;
+}
+:root[data-theme=dark] .booking[data-s-booking] .bk-err {
+  color: #ff8a80;
 }
 .booking[data-s-booking] .bk-form-status {
   font-size: var(--text-sm);
   min-height: 1.4em;
 }
-.booking__fallback[data-s-booking] {
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--surface-2);
-  padding: var(--space-lg);
-  gap: var(--space-2xs);
-  display: grid;
+
+@media (max-width: 960px) {
+  .booking[data-s-booking] .bk,
+  .booking[data-s-booking] .bk[data-step="2"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .booking[data-s-booking] .bk-wd,
+  .booking[data-s-booking] .bk-grid {
+    grid-template-columns: repeat(7, minmax(0, 3rem));
+  }
+  .booking[data-s-booking] .bk-price {
+    grid-column: 1 / -1;
+  }
+  .booking[data-s-booking] .bk > * + * {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .booking[data-s-booking] .bk > * {
+    padding: var(--space-sm);
+  }
+  .booking[data-s-booking] .bk-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .booking[data-s-booking] .bk-times-list {
+    grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+    max-height: none;
+  }
+  .booking[data-s-booking] .bk-submit {
+    width: 100%;
+  }
 }
-.booking__fallback-title[data-s-booking] {
-  font-weight: 650;
-}
-.booking__alt[data-s-booking] {
-  font-size: var(--text-sm);
+@media (prefers-reduced-motion: reduce) {
+  .booking[data-s-booking] .bk-cell--open,
+  .booking[data-s-booking] .bk-time {
+    transition: none;
+  }
 }
 
 /* Hero */
