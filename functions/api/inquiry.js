@@ -1,4 +1,4 @@
-import { sendEmail } from '../_lib/resend.js';
+import { sendEmail, sesKeys } from '../_lib/ses.js';
 import { notifySlack } from '../_lib/slack.js';
 import { verifyTurnstile, origin, capture } from '../_lib/guard.js';
 import { mintToken } from '../_lib/approval.js';
@@ -106,7 +106,7 @@ export async function onRequestPost(context) {
   await env.WAITLIST.put(key, JSON.stringify(record));
   capture(context, 'inquiry', raw, sender, 'accepted');
 
-  // Fire-and-forget email. The inquiry is already persisted, so a Resend
+  // Fire-and-forget email. The inquiry is already persisted, so an email
   // hiccup must never fail the API response. Mirror waitlist's pattern:
   // catch on the promise, log, and hand it to ctx.waitUntil.
   const fields = [
@@ -138,7 +138,7 @@ ${fields
 </table>`;
 
   const notify = sendEmail({
-    apiKey: env.RESEND_API_KEY,
+    keys: sesKeys(env),
     from: 'The Audacity <obviously@theaudacity.io>',
     to: 'obviously@theaudacity.io',
     subject: `New inquiry: ${data.name || data.email}`,
