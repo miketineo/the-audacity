@@ -23,7 +23,7 @@
       "stack": ["Customer mobile app", "Supplier web portal", "Admin back office", "Automatic order routing"],
       "summary": "Washiiba is a laundry marketplace we built end to end as a complete platform. Customers order, choose a pickup window and follow the order live in a mobile app. Suppliers accept and handle orders in their own web portal. The operator manages orders, suppliers and users from an admin back office.",
       "tagline": "A full marketplace platform with a customer app, a supplier portal and an admin back office.",
-      "built": "Three connected products. A customer mobile app for ordering, pickup windows and live order status. A supplier web portal where laundries accept incoming orders and move them through each step. An admin back office for managing orders, suppliers and users. Each order is offered to suppliers automatically, and the customer app runs in six languages.",
+      "built": "Three connected products. A customer mobile app for ordering, pickup windows and live order status. A supplier web portal where laundries accept incoming orders and move them through each step. An admin back office for managing orders, suppliers and users. Each order is offered to suppliers automatically, and the customer app runs in six languages. The first working version of all three was built in eight weeks.",
       "proves": "If your idea is a marketplace, we can build every side of it: the app your customers use, the portal your suppliers work in and the back office you run it from.",
       "tags": ["Customer mobile app", "Supplier web portal", "Admin back office", "Automatic order routing"]
     },
