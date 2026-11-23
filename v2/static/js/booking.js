@@ -21,7 +21,8 @@
   const was = attr('data-was', '');
   const until = attr('data-until', '');
   const email = attr('data-email', '');
-  const test = new URLSearchParams(location.search).get('booking_test') || '';
+  // The EUR 1 test link exists only on The Audacity account; the API ignores the token elsewhere.
+  const test = brand === 'audacity' ? new URLSearchParams(location.search).get('booking_test') || '' : '';
   const tz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ''; } })();
 
   const track = (event, props) => {
@@ -117,7 +118,7 @@
     input.setAttribute('aria-describedby', `${id}-err`);
     return h('div', { class: 'bk-field' }, h('label', { for: id }, label), input, h('p', { class: 'bk-err', id: `${id}-err`, hidden: true }));
   };
-  const submit = h('button', { class: 'btn btn--primary btn--md bk-submit', type: 'submit', 'data-s-button': 'true' }, `Pay ${price} to book`);
+  const submit = h('button', { class: 'btn btn--primary btn--md bk-submit', type: 'submit', 'data-s-button': 'true' }, test ? 'Pay €1 to book (test)' : `Pay ${price} to book`);
   const back = h('button', { class: 'bk-back', type: 'button', onclick: () => showStep(1) }, icon('M12.5 15 7.5 10l5-5'), 'Back');
   const formStatus = h('p', { class: 'bk-form-status', role: 'status', 'aria-live': 'polite' });
   const form = h('form', { class: 'bk-form', novalidate: true, hidden: true },
