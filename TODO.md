@@ -1,6 +1,6 @@
 # The Audacity — TODO
 
-> **Last updated:** 2026-07-07
+> **Last updated:** 2026-11-23
 > **Overall health:** GREEN — v2 LIVE at theaudacity.io root; v1 retired 2026-11-11 (/v1/ redirects to /)
 > **Active branch:** main
 
@@ -31,6 +31,8 @@ An **Agentic Engineering Studio** (see `docs/POSITIONING.md`) generating **reven
 - [x] `miguel` `cc+claude-opus-5-5` 2026-11-17: Astro 4.16.19 to 7.4.12 and `@astrojs/sitemap` 3.7.5 (Dependabot #59 plus one fix), PR #61 merged, deployed to Pages production 2026-11-17 (preview first), every page purged, live check green. Dependabot alerts: 0 open (all 33 fixed). Lockfile 388 to 262 packages, `npm audit` clean, `npm audit signatures` verified. Astro 5+ renders boolean attributes as "true"/"false", which would have switched on the never-matched `[data-flip='true']` rule on /work/; the page emits `''` so the live layout is unchanged. Rendered text identical on every page, and 28 full-page screenshots (7 pages, 1440/390 px, light/dark) are pixel-identical to the Astro 4 build. PostHog still cookieless until consent (no cookies pre-consent on live). Builds now need Node >= 22.23.4 (the atlas recipe uses `node:22-alpine`). `scripts/deploy-pages.sh` no longer requires the retired `v1/`. Dependabot #5, #6, #57, #58, #59 closed as superseded; #4 (`actions/checkout` 4 to 7) stays open (workflow change, needs a push from the Mac).
 
 - [x] `miguel` `cc+claude-fable-5-2` 2026-11-17: Site build moved from Astro 7 to Zola 0.23.6 (one Rust binary in a container pinned by digest, `scripts/zola build`), so the build installs no npm packages (was 262). Same site: every page has the same DOM, CSS rules and scripts as the Astro build (scope attributes renamed `data-astro-cid-*` to `data-s-<component>`), 28 full-page screenshots are pixel-identical, and cookies, storage, consent, theme, nav and third-party requests behave the same. Content stays data-driven (`v2/data/*.json`, `v2/content/blog/`). `/sitemap.xml` is now the sitemap; `/sitemap-index.xml` and `/sitemap-0.xml` redirect to it. `scripts/deploy-pages.sh` pins wrangler; Dependabot gets a 7-day cooldown. PR #62 merged, deployed to Pages production 2026-11-17 (preview first, wrangler 4.160.0), every page purged, live check green: 6 pages 200 with no Astro markup left, `/sitemap-index.xml` 301 to `/sitemap.xml`, form API healthy (403/204), no console errors, no cookies before consent. Build recipe on atlas is now `scripts/zola build` (docker only, no node); the deploy still needs the `node`/`npx` wrappers for wrangler. New essays go in `v2/content/blog/`; styles keep Astro's scoping as `data-s-<component>` attributes, so a new element inside a component needs that attribute to pick up its styles.
+
+- [~] `miguel` `cc-web` 2026-11-23: Diagnostic call becomes paid: 45 min (was a free 25), EUR 175 until 30 November (normally 250), credited against the project, pay to book. Cal.com's Stripe app on event 6241493, connected to the TheAudacity Stripe account (dashboard work from the laptop session, with a live test booking and refund). Site copy updated in `v2/data/pages.json`, `v2/data/faq.json`, `v2/static/llms.txt`; live config in `docs/ops/live-config.md`. Deploy from atlas after the Cal.com switch is verified. 29 Nov: decide to extend EUR 175 or revert to 250 (Cal.com price and copy together).
 
 ---
 

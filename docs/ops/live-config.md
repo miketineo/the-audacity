@@ -38,3 +38,26 @@ and body `{"rules": [<rule above>]}`. The PUT replaces every rule in that phase.
   loader's `cookieless: true`. Without it PostHog drops every event from
   visitors who have not accepted cookies, and the site goes quiet.
 - `anonymize_ips = true`.
+
+## Cal.com event "Diagnostic call" (account `the-audacity-io`, event id 6241493)
+
+Booked from the inline embed on /contact/ (`v2/templates/components/booking.html`).
+Settings as of 2026-11-23 (the Stripe part is applied in the Cal.com dashboard,
+not through this repo):
+
+- Length 45 min (was 25), Google Meet link, day cap 3, qualifier question.
+- Google Calendar connected: events go to miguel@miketineo.com.
+- Payments: Cal.com Stripe app, connected through Stripe OAuth to the
+  **TheAudacity** Stripe account (live), not Miketineo. "Collect payment on
+  booking", EUR 175 (normally 250) until 30 November 2026. The slot confirms
+  only after payment.
+- The price is set in Cal.com and repeated in the site copy
+  (`v2/data/pages.json`, `v2/data/faq.json`, `v2/static/llms.txt`). Change
+  both together, or the site and the checkout disagree.
+- The fee is credited against the project if the client goes ahead (handled
+  on the first invoice, outside Stripe).
+
+The EUR 250 payment link `plink_1UeuRYPXtXscVHuvaArmybW5`
+(book.stripe.com/4gM14p2z93jz2hCaIcdfG02) was created on the Miketineo
+account by mistake and is not used by the site; deactivate it once the Cal.com
+flow is verified.
