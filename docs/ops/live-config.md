@@ -100,6 +100,15 @@ both Payment Links to the EUR 250 price and change the copy (`v2/data/pages.json
 `v2/data/faq.json`, `v2/static/llms.txt`, `data-price` in `components/booking.html`,
 `amount` in `functions/_lib/booking.js`, and the miketineo.com pages) in the same change.
 
+### Call-price A/B test (since 2026-11-24)
+
+Three variants of the price sentence, one per page view, assigned in the browser
+(head script in `v2/templates/base.html`, no storage, no PostHog flag). Force one with
+`?price_ab=control`, `struck` or `animated`. PostHog: every event on home, work and contact
+carries `price_variant`; price clicks are `cta_clicked` with `location` = `price-home-band`,
+`price-work-cta`, `price-faq` or `price-contact-hero`. Ends with the offer, decision due
+30 December (see TODO.md).
+
 ## Email sending: Amazon SES (since 2026-11-23)
 
 Inquiry notifications, the approved inquiry auto-reply and the waitlist welcome go out
