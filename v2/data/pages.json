@@ -29,7 +29,7 @@
     },
     "ctaBand": {
       "title": "Tell us the idea that should already be live",
-      "body": "In a 45-minute diagnostic call we tell you what it takes to ship it and whether we are the right studio. A written fixed-price proposal follows within 2 business days. The call is €175 until 31 December (normally €250), and the fee comes off the project price if you go ahead.",
+      "body": "Give us 45 minutes and tell us the idea. We'll say what it takes to ship it, and whether we're the right studio for it. Two business days later you have a fixed-price proposal in writing. The call is €175 until 31 December (normally €250). Go ahead, and we take it off the project price.",
       "cta": { "label": "Book a call", "href": "contact/#book" }
     }
   },
@@ -44,8 +44,8 @@
       "lede": "Bloop is an AI concierge app that finds events and things to do in your city. Washiiba is a full marketplace platform. Kerf is a case study that turns public LiDAR data into work orders. Recovery Room is a booking pilot, live at a gym in Cagliari. The first three are our own products. Each section lists what we built, its status and what it shows."
     },
     "cta": {
-      "title": "Bring the product you want live in weeks",
-      "body": "Book a 45-minute diagnostic call for €175 until 31 December (normally €250). The fee comes off the project price if you go ahead. A written fixed-price proposal follows within 2 business days.",
+      "title": "Your product could be the next one on this page",
+      "body": "Book a 45-minute call and walk us through what you want to build. Within 2 business days you have a fixed-price proposal in writing. The call is €175 until 31 December (normally €250), and it comes off the project price if you hire us.",
       "button": { "label": "Book a call", "href": "contact/#book" }
     }
   },
@@ -57,12 +57,12 @@
     "hero": {
       "eyebrow": "Contact",
       "headline": "Book a call. Tell us what you want to ship.",
-      "lede": "Pick a time for a 45-minute diagnostic call, or send a brief if you'd rather write. The call is €175 until 31 December (normally €250), and the fee comes off the project price if you go ahead. Every message about a real project gets a reply from a person within 1 business day."
+      "lede": "Pick a time for a 45-minute call, or send a brief if you'd rather write. Either way, a person replies within 1 business day."
     },
     "nextSteps": {
       "eyebrow": "What happens next",
       "steps": [
-        "A paid 45-minute diagnostic call. The fee comes off the project price if you go ahead.",
+        "A 45-minute call. If you go ahead, we take the fee off the project price.",
         "A written fixed-price proposal within 2 business days.",
         "A deposit, a start date, and the build begins."
       ]
@@ -70,7 +70,7 @@
     "surfaces": {
       "booking": {
         "title": "Book a call",
-        "body": "Pick a time, then pay to confirm it. The call is €175 until 31 December (normally €250). In 45 minutes we talk through what you want to build, what it takes to ship, and which package fits. The fee comes off the project price if you go ahead."
+        "body": "Pick a time and pay to hold it: €175 until 31 December (normally €250). In 45 minutes we go through what you want to build, what it takes to ship, and which package fits. If you go ahead, the fee comes off the project price."
       },
       "inquiry": {
         "title": "Send a brief",
