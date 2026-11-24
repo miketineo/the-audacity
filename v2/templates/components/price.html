@@ -1,0 +1,19 @@
+{#- Price line: the diagnostic call price inside a sentence, as an A/B test.
+    Copy in data/*.json writes {price} where "EUR 175 until 31 December" goes. This renders all
+    three variants; the head script in base.html picks one per page view (html[data-price-ab])
+    and CSS shows only that one. Without JavaScript the control shows.
+      control   EUR 175 until 31 December (normally EUR 250), plain text
+      struck    EUR 175 ~~EUR 250~~ until 31 December, a link to the booking calendar
+      animated  ~~EUR 250~~ [EUR 175] until 31 December, a link; scripts/price-reveal.html plays
+                the strike and the pop once as it scrolls into view
+    link is false inside the booking box itself. analytics.js tags events with price_variant. -#}
+{% component ui.price(text = "", cta = "", link = true) %}
+{%- set pp = text | split(pat="{price}") -%}
+{{ pp[0] }}{% if pp | length > 1 -%}
+<span class="price-ab" data-price-ab>
+<span class="price-ab__v price-ab__v--control">€175 until 31 December (normally €250)</span>
+<span class="price-ab__v price-ab__v--struck">{% if link %}<a class="price-struck" href="/contact/#book" data-cta="{{ cta }}">{% else %}<span class="price-struck">{% endif %}<strong class="price-struck__now">€175</strong><s class="price-struck__was"><span class="visually-hidden"> was </span>€250</s>{% if link %}</a>{% else %}</span>{% endif %} until 31 December</span>
+<span class="price-ab__v price-ab__v--animated">{% if link %}<a class="price-reveal" href="/contact/#book" data-price-reveal data-cta="{{ cta }}">{% else %}<span class="price-reveal" data-price-reveal>{% endif %}<s class="price-reveal__was"><span class="visually-hidden">was </span>€250</s><strong class="price-reveal__now"><span class="visually-hidden"> now </span>€175</strong>{% if link %}</a>{% else %}</span>{% endif %} until 31 December</span>
+</span>{{ pp[1] }}
+{%- endif %}
+{% endcomponent ui.price %}

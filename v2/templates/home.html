@@ -240,7 +240,7 @@
           <span data-s-home>{{ item.q }}</span>
           <span class="faq__marker" aria-hidden="true" data-s-home></span>
         </summary>
-        <p class="faq__a text-dim" data-s-home>{{ item.a }}</p>
+        <p class="faq__a text-dim" data-s-home>{{<ui.price text={item.a} cta="price-faq" />}}</p>
       </details>
       {%- endif %}
       {% endfor %}
@@ -253,7 +253,7 @@
 <section class="cta-band" aria-labelledby="ctaband-h" data-s-home>
   <div class="container cta-band__inner" data-reveal data-s-home>
     <h2 id="ctaband-h" class="cta-band__title" data-s-home>{{ home.ctaBand.title }}</h2>
-    <p class="cta-band__body text-dim" data-s-home>{{ home.ctaBand.body }}</p>
+    <p class="cta-band__body text-dim" data-s-home>{{<ui.price text={home.ctaBand.body} cta="price-home-band" />}}</p>
     {{<ui.button href={"/" ~ home.ctaBand.cta.href} variant="primary" size="lg" cta="band-book-call" scope="home" label={home.ctaBand.cta.label} />}}
   </div>
 </section>

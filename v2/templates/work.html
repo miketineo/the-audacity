@@ -183,7 +183,7 @@
 <section class="container cta" data-animate data-s-work>
   <div class="cta__inner" data-s-work>
     <h2 class="cta__title" data-s-work>{{ work.cta.title }}</h2>
-    <p class="cta__body text-dim" data-s-work>{{ work.cta.body }}</p>
+    <p class="cta__body text-dim" data-s-work>{{<ui.price text={work.cta.body} cta="price-work-cta" />}}</p>
     {{<ui.button href={"/" ~ work.cta.button.href} variant="primary" size="lg" cta="work-book-call" scope="work" label={work.cta.button.label} />}}
   </div>
 </section>

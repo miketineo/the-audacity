@@ -160,8 +160,15 @@ function getFlatUtm() {
   let pageViewSent = false;
   const queue = [];     // events raised before PostHog is ready (incl. pre-consent)
 
+  // Call-price A/B test: the variant the head script picked, only on pages that
+  // show the price (home, work, contact).
+  function priceVariant() {
+    const v = document.documentElement.getAttribute('data-price-ab');
+    return v && document.querySelector('.price-ab') ? { price_variant: v } : {};
+  }
+
   function flat(props) {
-    return Object.assign({}, getFlatUtm(), props || {});
+    return Object.assign({}, getFlatUtm(), priceVariant(), props || {});
   }
 
   // ---- Canonical tracker the whole site calls. Events raised before PostHog
@@ -262,7 +269,7 @@ function getFlatUtm() {
         // Portfolio convention (PostHog option B): one project, every property
         // registers `product` as a super property so per-product dashboards can
         // filter. Values: theaudacity | washiiba | bloop | miketineo.
-        try { ph.register(Object.assign({ product: 'theaudacity' }, getFlatUtm())); } catch (e) {}
+        try { ph.register(Object.assign({ product: 'theaudacity' }, getFlatUtm(), priceVariant())); } catch (e) {}
         flush();
         sendPageView();
       },

@@ -672,3 +672,109 @@ samp {
   height: 1.6rem;
   color: var(--text);
 }
+
+/* Call-price A/B test (components/price.html): show only the variant the head
+   script picked; the control shows when no variant is set (no JavaScript). */
+.price-ab__v {
+  display: none;
+}
+html:not([data-price-ab]) .price-ab__v--control,
+html[data-price-ab="control"] .price-ab__v--control,
+html[data-price-ab="struck"] .price-ab__v--struck,
+html[data-price-ab="animated"] .price-ab__v--animated {
+  display: inline;
+}
+.price-struck {
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+}
+.price-struck__now {
+  color: var(--text);
+  font-weight: 700;
+}
+.price-struck__was {
+  color: var(--text-dim);
+  margin-left: .3em;
+}
+a.price-struck:hover .price-struck__now,
+a.price-struck:focus-visible .price-struck__now {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+/* Call price, animated variant (components/price.html): ~~€250~~ [€175], a link to the
+   booking calendar. Final state by default; .pr-armed is the start state and
+   .pr-go plays the reveal once (scripts/price-reveal.html). */
+.price-reveal {
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+}
+.price-reveal__was {
+  color: var(--text-dim);
+  background: linear-gradient(currentColor, currentColor) 0 55% / 100% 1.5px no-repeat;
+  text-decoration: none;
+}
+.price-reveal__now {
+  color: var(--text);
+  font-weight: 700;
+  margin-left: .2em;
+  display: inline-block;
+}
+.price-reveal__now::before,
+.price-reveal__now::after {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  display: inline-block;
+}
+.price-reveal__now::before {
+  content: "[";
+  margin-right: .1em;
+}
+.price-reveal__now::after {
+  content: "]";
+  margin-left: .1em;
+}
+a.price-reveal:hover .price-reveal__now,
+a.price-reveal:focus-visible .price-reveal__now {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+.price-reveal.pr-armed .price-reveal__was {
+  color: var(--text);
+  background-size: 0% 1.5px;
+}
+.price-reveal.pr-armed .price-reveal__now {
+  opacity: 0;
+  transform: scale(.6);
+}
+.price-reveal.pr-armed .price-reveal__now::before {
+  opacity: 0;
+  transform: translateX(.45em);
+}
+.price-reveal.pr-armed .price-reveal__now::after {
+  opacity: 0;
+  transform: translateX(-.45em);
+}
+.price-reveal.pr-armed.pr-go .price-reveal__was {
+  color: var(--text-dim);
+  background-size: 100% 1.5px;
+  transition: background-size .45s var(--ease) .2s, color .45s var(--ease) .2s;
+}
+.price-reveal.pr-armed.pr-go .price-reveal__now {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity .2s ease-out .6s, transform .45s cubic-bezier(.34, 1.56, .64, 1) .6s;
+}
+.price-reveal.pr-armed.pr-go .price-reveal__now::before,
+.price-reveal.pr-armed.pr-go .price-reveal__now::after {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity .2s ease-out .85s, transform .3s var(--ease) .85s;
+}
+@media (forced-colors: active) {
+  .price-reveal__was {
+    text-decoration: line-through;
+  }
+}
