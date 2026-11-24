@@ -1,0 +1,22 @@
+<script type="module">
+  // Call price: once, as it scrolls into view, strike the old price and pop the
+  // new one into brackets. The final state is the default; the start state
+  // (.pr-armed) is added here only when motion is allowed, so no-JS and
+  // reduced-motion visitors see the struck price straight away.
+  (function () {
+    if (document.documentElement.getAttribute('data-price-ab') !== 'animated') return;
+    const els = document.querySelectorAll('[data-price-reveal]');
+    if (!els.length) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+    els.forEach((el) => el.classList.add('pr-armed'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('pr-go');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -15% 0px', threshold: 1 });
+    els.forEach((el) => io.observe(el));
+  })();
+</script>

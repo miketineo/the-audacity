@@ -41,6 +41,19 @@
       })();
     </script>
 
+    {#- Call-price A/B test (components/price.html): one variant per page view, picked here
+        before first paint so nothing flips. Nothing is stored. ?price_ab=<variant> forces one. #}
+    <script>
+      (function () {
+        try {
+          var all = ['control', 'struck', 'animated'];
+          var asked = new URLSearchParams(location.search).get('price_ab');
+          var v = all.indexOf(asked) > -1 ? asked : all[Math.floor(Math.random() * all.length)];
+          document.documentElement.setAttribute('data-price-ab', v);
+        } catch (e) {}
+      })();
+    </script>
+
     {% block meta %}{% endblock meta %}
     {% block jsonld %}{% endblock jsonld %}
     <link rel="stylesheet" href="{{ get_url(path="css/base.css", cachebust=true) | replace(from=config.base_url, to="") }}">
@@ -61,4 +74,5 @@
   </body>
 </html>
 {%- endfilter -%}
+{% include "scripts/price-reveal.html" %}
 {% block scripts %}{% endblock scripts -%}

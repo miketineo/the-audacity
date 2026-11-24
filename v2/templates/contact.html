@@ -52,7 +52,7 @@
 <section class="container hero" data-s-contact>
   <p class="eyebrow" data-s-contact>{{ c.hero.eyebrow }}</p>
   <h1 data-s-contact>{{ c.hero.headline }}</h1>
-  <p class="hero__lede text-dim" data-s-contact>{{ c.hero.lede }}</p>
+  <p class="hero__lede text-dim" data-s-contact>{{<ui.price text={c.hero.lede} cta="price-contact-hero" />}}</p>
   <nav class="hero__jump" aria-label="On this page" data-s-contact>
     {{<ui.button href="/contact/#book" variant="primary" size="lg" cta="contact-jump-book" scope="contact" label="Book a call" />}}
     {{<ui.button href="#brief" variant="secondary" size="lg" cta="contact-jump-brief" scope="contact" label="Send a brief" />}}
@@ -80,7 +80,7 @@
     <p class="surface__index eyebrow" data-s-contact>01</p>
     <div data-s-contact>
       <h2 id="book-title" data-s-contact>{{ s.booking.title }}</h2>
-      <p class="surface__body text-dim" data-s-contact>{{ s.booking.body }}</p>
+      <p class="surface__body text-dim" data-s-contact>{{<ui.price text={s.booking.body} cta="price-contact-booking" link={false} />}}</p>
     </div>
   </header>
   {{<ui.booking title={s.booking.title} email={site.email} />}}
