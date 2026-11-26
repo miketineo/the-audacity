@@ -1,0 +1,92 @@
+# deploy.yml: deploy theaudacity.io to Cloudflare Pages from GitHub, so a
+# deploy no longer needs atlas. Same steps as scripts/deploy-pages.sh.
+#
+# Manual only: merging to main still deploys nothing. Run a preview first,
+# then production:
+#   gh workflow run deploy.yml -f target=preview
+#   gh workflow run deploy.yml -f target=production
+#
+# Secret CLOUDFLARE_API_TOKEN: token "theaudacity-pages-deploy-gha"
+# (Pages Edit on the account, Cache Purge on theaudacity.io, expires 2027-11-25).
+# Variable CLOUDFLARE_ACCOUNT_ID: the account id (not secret).
+name: Deploy site
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: preview (preview-gha branch) or production (main)
+        type: choice
+        options: [preview, production]
+        default: preview
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Production only from main
+        if: inputs.target == 'production' && github.ref != 'refs/heads/main'
+        run: |
+          echo "production deploys only from main, not ${GITHUB_REF}" >&2
+          exit 1
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Build
+        run: scripts/zola build
+
+      - name: Assemble bundle (v2/dist + _redirects)
+        run: |
+          mkdir bundle
+          cp -R v2/dist/. bundle/
+          cp _redirects bundle/
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      # Pinned: an unpinned npx would run whatever was published last, with
+      # the Cloudflare token in the environment. Keep in step with deploy-pages.sh.
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH: ${{ inputs.target == 'production' && 'main' || 'preview-gha' }}
+        run: |
+          npx -y wrangler@4.160.0 pages deploy bundle --project-name=the-audacity \
+            --branch="$BRANCH" --commit-hash="$GITHUB_SHA" --commit-dirty=false
+
+      # The zone caches aggressively: purge both site hostnames after a
+      # production deploy, or old bytes keep serving.
+      - name: Purge cache
+        if: inputs.target == 'production'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          zone=afdcc29c67c775fcc01a765e0caa37b8 # theaudacity.io
+          curl -sf -X POST "https://api.cloudflare.com/client/v4/zones/$zone/purge_cache" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" \
+            --data '{"hosts":["theaudacity.io","www.theaudacity.io"]}' \
+            | jq -e '.success' >/dev/null && echo "cache purge: ok"
+
+      - name: Smoke test
+        if: inputs.target == 'production'
+        run: |
+          set -u
+          check() {
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X "$1" --max-time 15 "$2")
+            echo "$1 $2 -> $code (want $3)"
+            [ "$code" = "$3" ]
+          }
+          sleep 10
+          check GET https://theaudacity.io/ 200
+          check GET https://theaudacity.io/api/inquiry-decision 403
+          check OPTIONS https://theaudacity.io/api/inquiry 204
